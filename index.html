@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Pennyledger by kevinau</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Pennyledger</h1>
+        <p>PennyLedger open-source, document based, accounting system</p>
+
+        <p class="view"><a href="https://github.com/kevinau/pennyledger">View the Project on GitHub <small>kevinau/pennyledger</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/kevinau/pennyledger/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kevinau/pennyledger/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kevinau/pennyledger">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a id="what-is-this" class="anchor" href="#what-is-this" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is this?</h3>
+
+<p>PennyLedger is an accounting system for home used, clubs and societies and small business.  As far as possible, it uses source documents as the basis for all accounting entries.  The source documents can be PDF's or scanned images of paper documents.</p>
+
+<p>PennyLedger is written in Java, using <a href="http://wiki.osgi.org/wiki/Main_Page">OSGi</a>.  It is a client-server application, with the clients being any modern web browser. </p>
+
+<p>PennyLedger is still under development.  It has not been finished yet, but work is proceeding at pace.</p>
+
+<h3>
+<a id="in-more-detail" class="anchor" href="#in-more-detail" aria-hidden="true"><span class="octicon octicon-link"></span></a>In more detail</h3>
+
+<p>PennyLedger tries to do as much as possible to capture accounting information without configuration.  The steps are:
+1. Source documents are imported.  Source documents can be PDF's, scanned images or text files.  Other document types could also be supported.  The "import" can be done by uploading a file using a web client, or dropping the document into a "hot" folder.  PennyLedger watches "hot" folders and imports any documents it finds there.  PennyLedger can also watch email folders and import attached documents from there.</p>
+
+<ol>
+<li><p>All the text is extracted from the from the PDF's and OCR scanned images.  If a PDF contains a background image, or consists entirely of scanned images, these are also OCR'd and the text extracted.  The <a href="https://github.com/tesseract-ocr">Tesseract OCR</a> engine is used by default, but other OCR engines can be substituted.</p></li>
+<li>
+<p>Machine learning techniques are used to classify the imported document.  It uses the <a href="http://www.cs.waikato.ac.nz/%7Eremco/weka_bn/">Weka Bayesian Network</a> classifier to determine what type of document is being imported (invoice, statement, payment advice, etc), and what business entity produced the document (in Australia, Telstra, Optus, Commonwealth Bank, etc).  </p>
+
+<p>This works well, even when there OCR is not entirely accurate.  When the user reviews the imported document, if the classification is wrong, they have the opportunity to correct it.  The corrected classification is then fed back into the Weka classifier so that when another document is received it is more likely to be correctly classified.</p>
+</li>
+<li>
+<p>Machine learning techniques are also used to identify significant fields of the imported document.  For example, in Australia, companies issue dividend statements twice yearly when they pay dividends.  The significant fields are of dividend statement are:
+** Declared date.
+** Payment date.
+** Dividend amount.
+** Franking credit.  Called imputation credit in other countries.</p>
+
+<p>The Hidden Markof Model (HMM) is used to identify these fields.  If the identification of the fields is wrong, the user can correct it.  The corrected identification is fed back into the HMM so that when another dividend statement is looked at, it is more likely that the fields will be correctly identified.</p>
+
+<p>This step works well for documents where the text is cleanly read.  That is, for PDFs or when the OCR of scanned documents is accurate.  It is possible to enter the information required, but the philosophy of this project is to minimise such data entry.</p>
+</li>
+<li>
+<p>The significant fields are fed into a simple accounting system.  A document generates one or more accounting transactions, which flows onto different accounting sub-systems, such as debtors and creditors ledgers, and the final general ledger.  </p>
+
+<p>Across the world there are different rules for accounting systems.  For example, value added tax (VAT) in the UK is called a goods and service tax (GST) in Australia and New Zealand, and the rules are different in all countries.  This diversity is handled by using OSGi and having different code bundles, as necessary, to accommodate different accounting rules.  A single set of code bundles can be used when all the source documents originate from a single country, or they can be combined to support multi-country accounting.</p>
+
+<p>While Java and OSGi supports internationalisation, PennyLedger have been developed using examples from UK, Australia and New Zealand.</p>
+</li>
+</ol>
+
+<h3>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h3>
+
+<p>PennyLedger is being developed by Kevin Holloway (<a href="https://github.com/kevinau" class="user-mention">@kevinau</a>).  He has spent 7½ years in England, and 18 months in New Zealand.  He now lives in his home town of Adelaide, Australia.</p>
+
+<p>Kevin is now working on PennyLedger full time.  He previously worked as a Solutions Architect and Senior Developer on various customer facing, web based applications, that used the full suite of Java technologies.</p>
+
+<h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/kevinau">kevinau</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
