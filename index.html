@@ -51,11 +51,7 @@
 <p>This works well, even when there OCR is not entirely accurate.  When the user reviews the imported document, if the classification is wrong, they have the opportunity to correct it.  The corrected classification is then fed back into the Weka classifier so that when another document is received it is more likely to be correctly classified.</p>
 </li>
 <li>
-<p>Machine learning techniques are also used to identify significant fields of the imported document.  For example, in Australia, companies issue dividend statements twice yearly when they pay dividends.  The significant fields are of dividend statement are:
-** Declared date.
-** Payment date.
-** Dividend amount.
-** Franking credit.  Called imputation credit in other countries.</p>
+<p>Machine learning techniques are also used to identify significant fields of the imported document.  For example, in Australia, companies issue dividend statements twice yearly when they pay dividends.  The significant fields are of dividend statement are: declared date, payment date, dividend amount and franking credit (aka imputation credit in other countries).</p>
 
 <p>The Hidden Markof Model (HMM) is used to identify these fields.  If the identification of the fields is wrong, the user can correct it.  The corrected identification is fed back into the HMM so that when another dividend statement is looked at, it is more likely that the fields will be correctly identified.</p>
 
