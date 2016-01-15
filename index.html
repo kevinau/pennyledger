@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Pennyledger by kevinau</title>
+    <title>PennyLedger by kevinau</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -15,8 +15,8 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Pennyledger</h1>
-        <p>PennyLedger open-source, document based, accounting system</p>
+        <h1>PennyLedger</h1>
+        <p>An open-source, document based, accounting system</p>
 
         <p class="view"><a href="https://github.com/kevinau/pennyledger">View the Project on GitHub <small>kevinau/pennyledger</small></a></p>
 
@@ -51,7 +51,7 @@
 <p>This works well, even when there OCR is not entirely accurate.  When the user reviews the imported document, if the classification is wrong, they have the opportunity to correct it.  The corrected classification is then fed back into the Weka classifier so that when another document is received it is more likely to be correctly classified.</p>
 </li>
 <li>
-<p>Machine learning techniques are also used to identify significant fields of the imported document.  For example, in Australia, companies issue dividend statements twice yearly when they pay dividends.  The significant fields are of dividend statement are: declared date, payment date, dividend amount and franking credit (aka imputation credit in other countries).</p>
+<p>Machine learning techniques are also used to identify significant fields of the imported document.  For example, in Australia, companies issue dividend statements twice yearly when they pay dividends.  The significant fields of a invoice are: invoice date, invoice amount, reference number, and a short description of what the invoice is for.</p>
 
 <p>The Hidden Markof Model (HMM) is used to identify these fields.  If the identification of the fields is wrong, the user can correct it.  The corrected identification is fed back into the HMM so that when another dividend statement is looked at, it is more likely that the fields will be correctly identified.</p>
 
