@@ -4,3 +4,8 @@ Bundle-Name: Mime4j
 Bundle-SymbolicName: org.apache.james.mime4j
 Bundle-Version: 0.7.2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.apache.james.mime4j,
+ org.apache.james.mime4j.dom,
+ org.apache.james.mime4j.dom.field,
+ org.apache.james.mime4j.message,
+ org.apache.james.mime4j.stream
