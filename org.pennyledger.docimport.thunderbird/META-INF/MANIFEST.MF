@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Document collecter for Thunderbird email
+Bundle-SymbolicName: org.pennyledger.docimport.thunderbird
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Require-Bundle: org.apache.james.mime4j;bundle-version="0.7.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.apache.tika;version="1.0.0",
+ org.apache.tika.mime;version="1.2.0",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.component;version="1.2.2",
+ org.osgi.service.component.annotations;version="1.2.0",
+ org.pennyledger.docstore,
+ org.pennyledger.nio,
+ org.pennyledger.osgi,
+ org.slf4j;version="1.7.2"
+Service-Component: OSGI-INF/org.pennyledger.docimport.thunderbird.AccountsMboxFinder.xml
