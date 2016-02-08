@@ -193,6 +193,7 @@ public class BufferedLineReaderInputStream extends LineReaderInputStream {
 
         int total = 0;
         boolean found = false;
+        boolean skipNextNL = false;
         int bytesRead = 0;
         while (!found) {
             if (!hasBufferedData()) {
@@ -201,13 +202,21 @@ public class BufferedLineReaderInputStream extends LineReaderInputStream {
                     break;
                 }
             }
-            int i = indexOf((byte)'\n');
+
             int chunk;
+            int i = indexOf((byte)'\r');
             if (i != -1) {
                 found = true;
                 chunk = i + 1 - pos();
+                skipNextNL = true;
             } else {
-                chunk = length();
+                i = indexOf((byte)'\n');
+                if (i != -1) {
+                    found = true;
+                    chunk = i + 1 - pos();
+                } else {
+                    chunk = length();
+                }
             }
             if (chunk > 0) {
                 dst.append(buf(), pos(), chunk);
@@ -217,6 +226,32 @@ public class BufferedLineReaderInputStream extends LineReaderInputStream {
             if (this.maxLineLen > 0 && dst.length() >= this.maxLineLen) {
                 throw new MaxLineLimitException("Maximum line length limit exceeded");
             }
+            if (skipNextNL) {
+                skipNextNL = false;
+                
+                // The following NL may be on the next block
+                if (!hasBufferedData()) {
+                    bytesRead = fillBuffer();
+                    if (bytesRead == -1) {
+                        break;
+                    }
+                }
+
+                chunk = 0;
+                i = indexOf((byte)'\n');
+                if (i == bufpos) {
+                  // The NL is the immediately following byte
+                  chunk = 1;
+                }
+                if (chunk > 0) {
+                    dst.append(buf(), pos(), chunk);
+                    skip(chunk);
+                    total += chunk;
+                }
+                if (this.maxLineLen > 0 && dst.length() >= this.maxLineLen) {
+                    throw new MaxLineLimitException("Maximum line length limit exceeded");
+                } 
+            }
         }
         if (total == 0 && bytesRead == -1) {
             return -1;
@@ -224,7 +259,7 @@ public class BufferedLineReaderInputStream extends LineReaderInputStream {
             return total;
         }
     }
-
+    
     /**
      * Implements quick search algorithm as published by
      * <p>
