@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core functionality
+Bundle-SymbolicName: org.pennyledger.core
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.pennyledger.math,
+ org.pennyledger.nio,
+ org.pennyledger.text,
+ org.pennyledger.time,
+ org.pennyledger.util,
+ org.pennyledger.value
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: Kevin Holloway
