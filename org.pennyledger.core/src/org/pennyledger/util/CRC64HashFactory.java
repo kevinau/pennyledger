@@ -69,7 +69,6 @@ public class CRC64HashFactory implements HashFactory {
   
   @Override
   public Hash getFileDigest (Path path) {
-    long checksum = 0L;
     try (FileInputStream fis = new FileInputStream(path.toFile())) {
       return getInputStreamDigest(fis);
     } catch (FileNotFoundException ex) {
