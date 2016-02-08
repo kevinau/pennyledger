@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Document collecter for 'hot' folder
+Bundle-SymbolicName: org.pennyledger.docimport.folder
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/org.pennyledger.docimport.folder.FolderWatchService.xml
+Import-Package: org.osgi.framework;version="1.8.0",
+ org.osgi.service.component;version="1.2.2",
+ org.osgi.service.component.annotations,
+ org.pennyledger.nio,
+ org.pennyledger.osgi,
+ org.pennyledger.value,
+ org.slf4j;version="1.7.2"
