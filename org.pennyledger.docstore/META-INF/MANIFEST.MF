@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Document store
+Bundle-SymbolicName: org.pennyledger.docstore
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.apache.tika.mime;version="1.2.0",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.component.annotations
+Service-Component: OSGI-INF/org.pennyledger.docstore.impl.FileSystemDocumentStore.xml
+Export-Package: org.pennyledger.docstore
+Require-Bundle: org.pennyledger.core;bundle-version="1.0.0"
