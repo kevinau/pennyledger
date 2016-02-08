@@ -109,9 +109,9 @@ public class MboxProcessor implements IProcessor {
   public static void main(String[] args) throws Exception {
     final File mbox = new File(
 //      "C:/Users/Kevin/AppData/Roaming/Thunderbird/Profiles/3mfc3db7.default/Mail/Local Folders/Inbox");
-//      "C:/Users/Kevin/AppData/Roaming/Thunderbird/Profiles/zqs1fach.default/Mail/mail.internode.on.net/Inbox");
+//    "C:/Users/Kevin/AppData/Roaming/Thunderbird/Profiles/zqs1fach.default/Mail/mail.internode.on.net/Inbox");
 //      "C:/Users/Kevin/AppData/Roaming/Thunderbird/Profiles/zqs1fach.default/Mail/Local Folders/Accounts"); // new
-        "C:/Users/Kevin/AppData/Roaming/Thunderbird/Profiles/3mfc3db7.default/Mail/Local Folders/Accounts");
+      "C:/Users/Kevin/AppData/Roaming/Thunderbird/Profiles/3mfc3db7.default/Mail/Local Folders/Accounts");
     Path mboxPath = mbox.toPath();
     
     MboxProcessor mboxIterator = new MboxProcessor(null);
@@ -134,6 +134,7 @@ public class MboxProcessor implements IProcessor {
       for (CharBufferWrapper rawMessage : mboxIterator) {
         int[] pdfCount = new int[1];
         // saveMessageToFile(count, buf);
+        System.out.println("Message-" + (count + 1));
         messageSummary("message-" + (count + 1), rawMessage.asInputStream(ENCODER.charset()), pdfCount);
         count++;
       }
