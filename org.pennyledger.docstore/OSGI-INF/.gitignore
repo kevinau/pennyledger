@@ -1,1 +1,5 @@
 /org.pennyledger.docstore.impl.FileSystemDocumentStore.xml
+/org.pennyledger.docimport.impl.TesseractImageOCR.xml
+/org.pennyledger.docimport.impl.PDFBoxPDFParser.xml
+/org.pennyledger.docstore.parser.impl.PDFBoxPDFParser.xml
+/org.pennyledger.docstore.parser.impl.TesseractImageOCR.xml

@@ -14,38 +14,41 @@ import org.osgi.service.component.ComponentContext;
 
 public class ComponentConfiguration {
 
-  public static void load (Object target, ComponentContext context) {
-    Dictionary<String, Object> dict = context.getProperties();
-    
-    try {
-      Class<?> klass = target.getClass();
-      Field[] fields = klass.getDeclaredFields();
-      for (Field field : fields) {
-        Configurable configAnn = field.getAnnotation(Configurable.class);
-        if (configAnn != null) {
-          String propertyName = configAnn.value();
-          if (propertyName.length() == 0) {
-            propertyName = field.getName();
-          }
-          String propertyValue = (String)dict.get(propertyName);
-          if (propertyValue != null) {
-            if (configAnn.required()) {
-              throw new RuntimeException("No configuration value for '" + propertyName + "'");
-            } else {
-              Object fieldValue = getFieldValue(field.getType(), propertyValue);
-              field.setAccessible(true);
-              field.set(target, fieldValue);
+  public static void load(Object target, ComponentContext context) {
+    if (context != null) {
+      Dictionary<String, Object> dict = context.getProperties();
+
+      try {
+        Class<?> klass = target.getClass();
+        Field[] fields = klass.getDeclaredFields();
+        for (Field field : fields) {
+          Configurable configAnn = field.getAnnotation(Configurable.class);
+          if (configAnn != null) {
+            String propertyName = configAnn.value();
+            if (propertyName.length() == 0) {
+              propertyName = field.getName();
+            }
+            String propertyValue = (String)dict.get(propertyName);
+            if (propertyValue != null) {
+              if (configAnn.required()) {
+                throw new RuntimeException("No configuration value for '" + propertyName + "'");
+              } else {
+                Object fieldValue = getFieldValue(field.getType(), propertyValue);
+                field.setAccessible(true);
+                field.set(target, fieldValue);
+              }
             }
           }
         }
+      } catch (InstantiationException | IllegalAccessException | SecurityException | IllegalArgumentException
+          | InvocationTargetException | UnsupportedDataTypeException ex) {
+        throw new RuntimeException(ex);
       }
-    } catch (InstantiationException | IllegalAccessException | SecurityException | IllegalArgumentException | InvocationTargetException | UnsupportedDataTypeException ex) {
-      throw new RuntimeException(ex);
     }
   }
-  
-  
-  private static Object getFieldValue (Class<?> type, String propertyValue) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UnsupportedDataTypeException {
+
+  private static Object getFieldValue(Class<?> type, String propertyValue) throws InstantiationException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException, UnsupportedDataTypeException {
     Object value;
     if (type.isEnum()) {
       value = getPropertyAsEnum(propertyValue, type);
@@ -68,9 +71,8 @@ public class ComponentConfiguration {
     }
     return value;
   }
-  
-  
-  private static <E> E getPropertyAsEnum (String property, Class<E> enumClass) {
+
+  private static <E> E getPropertyAsEnum(String property, Class<E> enumClass) {
     E[] values = enumClass.getEnumConstants();
     for (E value : values) {
       if (value.toString().equals(property)) {
@@ -79,7 +81,7 @@ public class ComponentConfiguration {
     }
     try {
       int i = Integer.parseInt(property);
-      if (i >= 0 && i < values.length){
+      if (i >= 0 && i < values.length) {
         return values[i];
       } else {
         throw new IllegalArgumentException(property);

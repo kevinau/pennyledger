@@ -3,105 +3,13 @@
 	<classpathentry kind="src" output="bin" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="/org.pennyledger.core"/>
-	<classpathentry kind="lib" path="C:/Users/Kevin/.bnd/cache/https%3A%2F%2Fraw.githubusercontent.com%2Fbndtools%2Fbundle-hub%2Fmaster%2Fosgi.cmpn/osgi.cmpn-6.0.0.jar" sourcepath="C:/Users/Kevin/.bnd/cache/https%3A%2F%2Fraw.githubusercontent.com%2Fbndtools%2Fbundle-hub%2Fmaster%2Fosgi.cmpn/osgi.cmpn-6.0.0.jar">
-		<attributes>
-			<attribute name="bsn" value="osgi.cmpn"/>
-			<attribute name="type" value="REPO"/>
-			<attribute name="project" value="org.pennyledger.docstore.test"/>
-			<attribute name="version" value="6.0"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/osgi/application/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/namespace/contract/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/namespace/extender/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/namespace/implementation/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/namespace/service/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/async/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/async/delegate/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/application/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/blueprint/container/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/blueprint/reflect/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/cm/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/component/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/component/annotations/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/component/runtime/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/component/runtime/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/coordinator/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/deploymentadmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/deploymentadmin/spi/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/device/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/dmt/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/dmt/notification/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/dmt/notification/spi/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/dmt/security/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/dmt/spi/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/event/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/http/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/http/context/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/http/runtime/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/http/runtime/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/http/whiteboard/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/io/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/jdbc/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/jndi/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/jpa/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/log/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/metatype/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/metatype/annotations/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/monitor/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/prefs/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/provisioning/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/remoteserviceadmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/remoteserviceadmin/namespace/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/repository/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/resolver/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/rest/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/rest/client/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/serviceloader/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/subsystem/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/upnp/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/useradmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/wireadmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/util/function/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/util/measurement/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/util/position/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/util/promise/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/util/xml/*"/>
-			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Kevin/.bnd/cache/https%3A%2F%2Fraw.githubusercontent.com%2Fbndtools%2Fbundle-hub%2Fmaster%2Fosgi.core/osgi.core-6.0.0.jar" sourcepath="C:/Users/Kevin/.bnd/cache/https%3A%2F%2Fraw.githubusercontent.com%2Fbndtools%2Fbundle-hub%2Fmaster%2Fosgi.core/osgi.core-6.0.0.jar">
-		<attributes>
-			<attribute name="bsn" value="osgi.core"/>
-			<attribute name="type" value="REPO"/>
-			<attribute name="project" value="org.pennyledger.docstore.test"/>
-			<attribute name="version" value="6.0"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/osgi/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/resource/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/resource/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/hooks/bundle/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/hooks/resolver/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/hooks/service/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/hooks/weaving/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/launch/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/namespace/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/startlevel/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/startlevel/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/wiring/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/framework/wiring/dto/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/condpermadmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/packageadmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/permissionadmin/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/startlevel/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/service/url/*"/>
-			<accessrule kind="accessible" pattern="org/osgi/util/tracker/*"/>
-			<accessrule ignoreifbetter="true" kind="discouraged" pattern="**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="lib/com.objectplanet.image.PngEncoder.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-2.0.0-RC2.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox-2.0.0-RC2.jar"/>
+	<classpathentry kind="lib" path="lib/stax2-api-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.7.13.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/woodstox-core-5.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

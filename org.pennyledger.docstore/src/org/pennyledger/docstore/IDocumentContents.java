@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface IDocumentContents {
     try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file.toFile()))) {
       oos.writeObject(this);
     } catch (IOException ex) {
-      throw new RuntimeException();
+      throw new UncheckedIOException(ex);
     }
   }
 

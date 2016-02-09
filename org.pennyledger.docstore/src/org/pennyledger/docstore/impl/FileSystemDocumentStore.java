@@ -1,40 +1,50 @@
 package org.pennyledger.docstore.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.tika.mime.MimeType;
-import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.pennyledger.docstore.IDocumentContents;
 import org.pennyledger.docstore.IDocumentStore;
 import org.pennyledger.nio.SafeOutputStream;
+import org.pennyledger.osgi.ComponentConfiguration;
+import org.pennyledger.osgi.Configurable;
 import org.pennyledger.util.MD5HashFactory;
+
+import com.objectplanet.image.PngEncoder;
 
 @Component(configurationPolicy = ConfigurationPolicy.OPTIONAL)
 public class FileSystemDocumentStore implements IDocumentStore {
 
-  private Path sourceDir;
+  @Configurable
+  private Path baseDir = Paths.get(System.getProperty("user.home"), "PennyLedger");
 
+  private Path sourceDir;
+  private Path imagesDir;
+  private Path contentsDir;
+  
   @Activate
-  public void activate(BundleContext context) {
-    Path basePath;
-    
-    String baseName = context.getProperty("BaseDir");
-    if (baseName == null) {
-      baseName = System.getProperty("user.home");
-      basePath = Paths.get(baseName, "PennyLedger");
-    } else {
-      basePath = Paths.get(baseName);
-    }
+  public void activate(ComponentContext context) {
+    ComponentConfiguration.load(this, context);
+
     try {
-      sourceDir = basePath.resolve("source");
+      sourceDir = baseDir.resolve("source");
       Files.createDirectories(sourceDir);
+      imagesDir = baseDir.resolve("images");
+      Files.createDirectories(imagesDir);
+      contentsDir = baseDir.resolve("contents");
+      Files.createDirectories(contentsDir);
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
@@ -54,7 +64,7 @@ public class FileSystemDocumentStore implements IDocumentStore {
       if (n == 0) {
         throw new IllegalArgumentException("No source file with id: " + id);
       } else if (n > 1) {
-        throw new IllegalArgumentException("Duplicate source files with id: " + id);
+        throw new IllegalArgumentException("Duplicate source files with id: " + id + " in " + sourceDir);
       }
       return sourcePath;
     } catch (IOException ex) {
@@ -118,5 +128,48 @@ public class FileSystemDocumentStore implements IDocumentStore {
     }
     return id;
   }
+
+
+  @Override 
+  public Path getContentsPath (String id) {
+    return contentsDir.resolve(id + ".contents");
+  }
   
+
+  @Override 
+  public Path getViewImagePath (String id) {
+    return imagesDir.resolve(id + ".png");
+  }
+  
+
+  @Override
+  public void saveViewImage (String id, BufferedImage image) {
+    Path imageFile = getViewImagePath(id);
+    PngEncoder pngEncoder = new PngEncoder(PngEncoder.COLOR_TRUECOLOR);
+    try (FileOutputStream imageOut = new FileOutputStream(imageFile.toFile())) {
+      pngEncoder.encode(image, imageOut);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+
+  @Override
+  public IDocumentContents getContents(String id) {
+    Path contentsPath = getContentsPath(id);
+    return IDocumentContents.load(contentsPath);
+  }
+
+
+  @Override
+  public Path getViewHTMLPath(String id) {
+    Path htmlDir = baseDir.resolve("html");
+    try {
+      Files.createDirectories(htmlDir);
+    } catch (IOException ex) {
+      throw new UncheckedIOException(ex);
+    }
+    return htmlDir.resolve(id + ".html");
+  }  
+
 }
