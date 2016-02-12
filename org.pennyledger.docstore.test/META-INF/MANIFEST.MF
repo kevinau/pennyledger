@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Document store test
+Bundle-SymbolicName: org.pennyledger.docstore.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.service.component.annotations,
+ org.pennyledger.docstore
+Service-Component: OSGI-INF/org.pennyledger.docstore.test.DocumentStoreTest.xml
