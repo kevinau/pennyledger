@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Interface to the Thymeleaf template engine
+Bundle-SymbolicName: org.pennyledger.template.thymeleaf
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/org.pennyledger.template.thymeleaf.ThymeleafTemplateService.xml
+Import-Package: org.osgi.framework;version="1.8.0",
+ org.osgi.service.component;version="1.2.2",
+ org.osgi.service.component.annotations;version="1.2.0",
+ org.pennyledger.template
+Bundle-ClassPath: lib/attoparser-2.0.0.BETA04.jar,
+ lib/ognl-3.1.jar,
+ lib/thymeleaf-3.0.0.BETA01.jar,
+ lib/unbescape-1.1.1.RELEASE.jar,
+ .,
+ lib/slf4j-api-1.6.6.jar,
+ lib/javassist-3.11.0.GA.jar

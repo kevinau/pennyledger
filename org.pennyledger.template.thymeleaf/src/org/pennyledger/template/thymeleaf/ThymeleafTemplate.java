@@ -1,0 +1,36 @@
+package org.pennyledger.template.thymeleaf;
+
+import java.io.Writer;
+import java.net.URL;
+
+import org.pennyledger.template.ITemplate;
+import org.thymeleaf.context.Context;
+
+public class ThymeleafTemplate implements ITemplate {
+
+  private ThymeleafTemplateService templateService;
+  private URL templateURL;
+  private Context model;
+
+  public ThymeleafTemplate(ThymeleafTemplateService templateService, URL templateURL) {
+    this.templateService = templateService;
+    this.templateURL = templateURL;
+    this.model = new Context();
+  }
+
+  @Override
+  public void setParameter(String name, Object value) {
+    model.setVariable(name, value);
+  }
+
+  @Override
+  public void merge(Writer writer) {
+    templateService.process(templateURL, model, writer);
+  }
+
+  @Override
+  public String merge() {
+    return templateService.process(templateURL, model);
+  }
+
+}
