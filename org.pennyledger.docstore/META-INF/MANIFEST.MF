@@ -17,4 +17,4 @@ Import-Package: org.apache.tika.mime;version="1.2.0",
  org.osgi.service.component;version="1.2.2",
  org.osgi.service.component.annotations,
  org.pennyledger.osgi,
- org.slf4j;version="1.7.14"
+ org.slf4j;version="1.7.2"

@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.regex.Pattern;
 
 import javax.activation.UnsupportedDataTypeException;
@@ -18,6 +19,11 @@ public class ComponentConfiguration {
     if (context != null) {
       Dictionary<String, Object> dict = context.getProperties();
 
+      for (Enumeration<String> e = dict.keys(); e.hasMoreElements(); ) {
+        String n = e.nextElement();
+        Object v = dict.get(n);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>> "+ n + "=" + v);
+      }
       try {
         Class<?> klass = target.getClass();
         Field[] fields = klass.getDeclaredFields();
@@ -31,7 +37,7 @@ public class ComponentConfiguration {
             String propertyValue = (String)dict.get(propertyName);
             if (propertyValue != null) {
               if (configAnn.required()) {
-                throw new RuntimeException("No configuration value for '" + propertyName + "'");
+                throw new RuntimeException("Configuration value '" + propertyName + "' required for " + klass.getSimpleName());
               } else {
                 Object fieldValue = getFieldValue(field.getType(), propertyValue);
                 field.setAccessible(true);
