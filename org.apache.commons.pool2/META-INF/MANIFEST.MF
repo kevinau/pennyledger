@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Apache commons pool
+Bundle-SymbolicName: org.apache.commons.pool2
+Bundle-Version: 2.3.0
+Bundle-Vendor: Apache Foundation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

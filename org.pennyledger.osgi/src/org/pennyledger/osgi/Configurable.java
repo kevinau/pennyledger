@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Configurable {
   
-  public String value() default "";
+  public String name() default "";
   
   public boolean required() default false;
 

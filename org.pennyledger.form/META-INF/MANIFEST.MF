@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.pennyledger.form
+Bundle-Version: 1.0.0
+Bundle-Name: Form annotations
+Bundle-Description: Annotations used to specifiy additional form capability for POJO classes.
+Bundle-Vendor: Kevin Holloway
+Bundle-Copyright: Kevin Holloway (c) 2012
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.pennyledger.math,
+ org.pennyledger.time,
+ org.pennyledger.value,
+ org.pennyledger.util
+Export-Package: org.pennyledger.form,
+ org.pennyledger.form.type
+Require-Bundle: org.junit,
+ org.pennyledger.core

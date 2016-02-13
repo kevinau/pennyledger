@@ -1,0 +1,3 @@
+/org.pennyledger.sql.conn.ConnectionFactoryRegistry.xml
+/org.pennyledger.sql.conn.DefaultConnectionFactory.xml
+/org.pennyledger.sql.conn.NamedConnectionFactory.xml

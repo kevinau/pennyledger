@@ -30,19 +30,18 @@ public class ComponentConfiguration {
         for (Field field : fields) {
           Configurable configAnn = field.getAnnotation(Configurable.class);
           if (configAnn != null) {
-            String propertyName = configAnn.value();
+            String propertyName = configAnn.name();
             if (propertyName.length() == 0) {
               propertyName = field.getName();
             }
             String propertyValue = (String)dict.get(propertyName);
             if (propertyValue != null) {
-              if (configAnn.required()) {
-                throw new RuntimeException("Configuration value '" + propertyName + "' required for " + klass.getSimpleName());
-              } else {
-                Object fieldValue = getFieldValue(field.getType(), propertyValue);
-                field.setAccessible(true);
-                field.set(target, fieldValue);
-              }
+              System.out.println(">>>> " + field + " = " + propertyValue);
+              Object fieldValue = getFieldValue(field.getType(), propertyValue);
+              field.setAccessible(true);
+              field.set(target, fieldValue);
+            } else if (configAnn.required()) {
+              throw new RuntimeException("Configuration value '" + propertyName + "' required for " + klass.getSimpleName()); 
             }
           }
         }

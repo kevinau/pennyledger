@@ -1,0 +1,103 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Kevin Holloway (kholloway@geckosoftware.co.uk).
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Kevin Holloway - initial API and implementation
+ *******************************************************************************/
+package org.pennyledger.form.type;
+
+
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+import org.pennyledger.form.TextCase;
+import org.pennyledger.util.UserEntryException;
+
+
+public class RegexTextType extends StringBasedType<String> {
+  
+  private String pattern;
+  private RE re;
+  private String message;
+
+  
+  public RegexTextType (int maxSize, String pattern, String message) {
+    super (maxSize);
+    setPattern(pattern);
+    this.message = message;
+  }
+
+
+  public void setPattern (String pattern) {
+    this.pattern = pattern;
+    try {
+      this.re = new RE(pattern);
+    } catch (RESyntaxException ex) {
+      throw new RuntimeException(ex);
+    }
+    int x = 0;
+    for (int i = 0; i < pattern.length(); i++) {
+      char c = pattern.charAt(i);
+      if (Character.isLowerCase(c)) {
+        x |= 1;
+      } else if (Character.isUpperCase(c)) {
+        x |= 2;
+      }
+    }
+    TextCase allowedCase;
+    if (x == 1) {
+      allowedCase = TextCase.LOWER;
+    } else if (x == 2) {
+      allowedCase = TextCase.UPPER;
+    } else {
+      allowedCase = TextCase.MIXED;
+    }
+    setAllowedCase(allowedCase);
+  }
+  
+  
+  public void setMessage (String message) {
+    this.message = message;
+  }
+  
+	public Object create (String source) {
+		return source;
+	}
+
+
+  @Override
+  protected void validate (String vs) throws UserEntryException {
+    //System.out.println("vvvv validate: " + re + " " + vs);
+    if (!re.match(vs)) {
+      String m = message;
+      if (m == null) {
+        int n0 = 0;
+        if (pattern.startsWith("^")) {
+          n0++;
+        } 
+        int n1 = pattern.length();
+        if (pattern.endsWith("$")) {
+          n1--;
+        }
+        m = "must match " + pattern.substring(n0, n1);
+      }
+      //System.out.println("vvvv " + m);
+      throw new UserEntryException(m, re.getMatchExtent() == vs.length());
+    }
+  }
+
+
+  @Override
+  public String newInstance(String source) {
+    return source;
+  }
+  
+  
+  @Override
+  public String primalValue () {
+    return "";
+  }
+}
