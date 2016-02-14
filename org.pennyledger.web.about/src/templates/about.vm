@@ -1,0 +1,44 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>About PennyLedger</title>
+    <style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+}
+table {
+    border: 1px solid #999999;
+    border-collapse:collapse;
+}
+table td,
+table th {
+    border: 1px solid #999999;
+    padding: 0.25em 0.5em;
+}
+table th {
+	text-align: left;
+}
+    </style>
+  </head>
+  <body>
+    <h1>About PennyLedger</h1>
+    <p>PennyLedger was written by Kevin Holloway (kholloway@geckosoftware.com.au)</p>
+    <h2>Config</h2>
+#foreach ($name in $config)
+      $name = ${config.get($name)}<br>
+#end
+
+    <h2>Attributes</h2>
+#foreach ($name in $request.getAttributeNames())
+##      $name = $request.getAttribute($name)<br>
+#end
+    
+    <h2>Parameters</h2>
+#foreach ($name in $request.getParameterNames())
+##      $name = $request.getParameter($name)<br>
+#end
+    
+  </body>
+</html>

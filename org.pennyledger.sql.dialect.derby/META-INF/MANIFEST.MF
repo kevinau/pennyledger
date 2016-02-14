@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Derby database drivers
+Bundle-SymbolicName: org.pennyledger.sql.dialect.derby
+Bundle-Version: 1.0.0
+Bundle-ClassPath: lib/derby-10.5.3.0_1.jar,
+ .
+Bundle-Vendor: Gecko Software (UK and AU)
+Export-Package: org.pennyledger.sql.dialect.derby
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/org.pennyledger.sql.dialect.derby.DerbyDialect.xml,
+ OSGI-INF/org.pennyledger.sql.dialect.derby.LocalDerbyDialect.xml
+Import-Package: org.apache.commons.dbcp,
+ org.osgi.service.component.annotations;version="1.2.0",
+ org.pennyledger.fs,
+ org.pennyledger.osgi,
+ org.pennyledger.sql.dialect

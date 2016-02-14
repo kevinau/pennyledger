@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SQL dialect
+Bundle-SymbolicName: org.pennyledger.sql.dialect
+Bundle-Version: 1.0.0
+Bundle-Vendor: Gecko Software (UK and AU)
+Export-Package: org.pennyledger.sql.dialect
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.apache.commons.dbcp,
+ org.osgi.framework,
+ org.osgi.service.component,
+ org.osgi.service.component.annotations;version="1.2.0",
+ org.osgi.service.log
+Service-Component: OSGI-INF/org.pennyledger.sql.dialect.DialectRegistry.xml
