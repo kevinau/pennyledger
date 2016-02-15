@@ -2,6 +2,7 @@ package org.pennyledger.sql;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
@@ -57,6 +58,10 @@ public interface IResultSet {
   public LocalDate getLocalDate(int i);
 
   public LocalDate getLocalDate();
+
+  public URL getURL(int i);
+
+  public URL getURL();
 
   public Object getObject(int i);
 

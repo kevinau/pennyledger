@@ -13,6 +13,7 @@ package org.pennyledger.sql;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -295,6 +296,22 @@ public class PreparedStatement implements IPreparedStatement {
 
 
   @Override
+  public void setURL (int i, URL v) {
+    try {
+      stmt.setString(i, v.toString());
+    } catch (SQLException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+
+  @Override
+  public void setURL (URL v) {
+    setURL(++index, v);
+  }
+
+
+  @Override
   public void setObject (int i, Object obj) {
     try {
       if (obj instanceof Decimal) {
@@ -490,6 +507,33 @@ public class PreparedStatement implements IPreparedStatement {
 //      throw new RuntimeException(ex);
 //    }
 //  }
+  
+  
+  @Override
+  public long getGeneratedKey () {
+    try {
+      java.sql.ResultSet rs = stmt.getGeneratedKeys();
+      long key = 0;
+      if (rs != null) {
+        if (rs.next()) {
+          key = rs.getLong(1);
+        }
+      }
+      return key;
+    } catch (SQLException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+  
+  
+  @Override
+  public int executeUpdate () {
+    try {
+      return stmt.executeUpdate();
+    } catch (SQLException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
   
   
   @Override

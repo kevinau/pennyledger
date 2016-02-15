@@ -2,6 +2,7 @@ package org.pennyledger.sql;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
@@ -70,6 +71,10 @@ public interface IPreparedStatement {
 
   public void setEnum(Enum<?> v);
 
+  public void setURL(int i, URL obj);
+
+  public void setURL(URL obj);
+  
   public void setObject(int i, Object obj);
 
   public void setObject(Object obj);
@@ -77,6 +82,8 @@ public interface IPreparedStatement {
   public void setFetchSize(int n);
 
   public IResultSet executeQuery(Object... parameters);
+
+  public int executeUpdate();
 
   public int executeUpdate(Object... values);
 
@@ -86,4 +93,6 @@ public interface IPreparedStatement {
 
   public String executeQueryForString(Object... values);
 
+  public long getGeneratedKey();
+  
 }

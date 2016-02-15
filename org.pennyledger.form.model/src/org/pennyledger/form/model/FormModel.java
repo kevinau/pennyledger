@@ -10,7 +10,6 @@ import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.plan.IFormPlan;
 import org.pennyledger.form.plan.IGroupPlan;
 import org.pennyledger.form.plan.impl.FormPlan;
-import org.pennyledger.form.plan.impl.ObjectPlanFactory;
 
 public class FormModel<T> implements IFormModel<T> {
 
@@ -23,27 +22,24 @@ public class FormModel<T> implements IFormModel<T> {
   //private final T instance;
   
   @SuppressWarnings("unchecked")
-  public FormModel (T arg) {
-    T instance;
-    if (arg instanceof Class) {
-      formClass = (Class<T>)arg;
-      instance = newInstance(formClass);
-    } else {
-      formClass = (Class<T>)arg.getClass();
-      instance = arg;
+  public FormModel (T instance) {
+    if (instance instanceof Class) {
+      throw new IllegalArgumentException("This should not happen");
     }
+    formClass = (Class<T>)instance.getClass();
     formPlan = new FormPlan(formClass);
-    rootPlan = ObjectPlanFactory.buildGroupPlan(formClass);
+    
+    rootPlan = formPlan.getRootPlan();
     rootModel = new GroupModel(this, null, null, rootPlan, formClass, instance);
     rootModel.setEventsActive(true);
   }
 
 
-  public FormModel (Class<T> arg) {
-    formClass = (Class<T>)arg;
+  public FormModel (Class<T> formClass) {
+    this.formClass = formClass;
     T instance = newInstance(formClass);
-
     formPlan = new FormPlan(formClass);
+
     rootPlan = formPlan.getRootPlan();
     rootModel = new GroupModel(this, null, null, rootPlan, formClass, instance);
     rootModel.setEventsActive(true);
@@ -55,6 +51,7 @@ public class FormModel<T> implements IFormModel<T> {
     this.formPlan = formPlan;
     this.formClass = (Class<T>)formPlan.getFormClass();
     T instance = newInstance(formClass);
+    
     rootPlan = formPlan.getRootPlan();
     rootModel = new GroupModel(this, null, null, rootPlan, formClass, instance);
     rootModel.setEventsActive(true);

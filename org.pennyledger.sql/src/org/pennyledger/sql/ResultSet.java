@@ -2,6 +2,8 @@ package org.pennyledger.sql;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -252,6 +254,25 @@ public class ResultSet implements IResultSet {
   @Override
   public Date getDate () {
     return getDate(++index);
+  }
+  
+  
+  @Override
+  public URL getURL (int i) {
+    try {
+      String s = rs.getString(i);
+      return new URL(s);
+    } catch (SQLException ex) {
+      throw new RuntimeException(ex);
+    } catch (MalformedURLException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+  
+  
+  @Override
+  public URL getURL () {
+    return getURL(++index);
   }
   
   
