@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+
 @Component(service=AboutServlet.class, configurationPolicy=ConfigurationPolicy.REQUIRE, immediate=true)
 public class AboutServlet extends OSGiServlet {
 

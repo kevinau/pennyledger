@@ -1,2 +1,4 @@
 /org.pennyledger.sql.dialect.derby.DerbyDialect.xml
 /org.pennyledger.sql.dialect.derby.LocalDerbyDialect.xml
+/org.pennyledger.sql.dialect.derby.DerbyEmbeddedDialect.xml
+/org.pennyledger.sql.dialect.derby.DerbyServerDialect.xml
