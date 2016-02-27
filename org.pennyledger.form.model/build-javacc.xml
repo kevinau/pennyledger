@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project default="javacc" name="Create expression parser">
+
+  <property name="package.dir" value="org/pennyledger/form/path/parser" />
+  
+  <target name="javacc">
+    <mkdir dir="src/${package.dir}" />
+    <javacc
+      target="simplepath.jj"
+      outputdirectory="src/${package.dir}"
+      javacchome="${user.home}/code/3rd-party/build/javacc-5.0"
+    />
+  </target>
+</project>

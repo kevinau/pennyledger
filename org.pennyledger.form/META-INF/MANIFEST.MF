@@ -1,4 +1,4 @@
-Manifest-Version: 1.0
+sManifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.pennyledger.form
 Bundle-Version: 1.0.0
@@ -12,7 +12,7 @@ Import-Package: javax.persistence;version="2.1.0",
  org.pennyledger.time,
  org.pennyledger.util,
  org.pennyledger.value
-Export-Package: org.j2form,
- org.j2form.type,
- org.j2form.type.builtin
+Export-Package: org.pennyledger.form,
+ org.pennyledger.form.type.builtin,
+ orgpennyledger.form.type
 Require-Bundle: org.pennyledger.core

@@ -1,12 +1,13 @@
 package org.pennyledger.form.type.test;
 
-import org.j2form.NumberSign;
-import org.j2form.type.IType;
-import org.j2form.type.builtin.DecimalType;
 import org.junit.Assert;
 import org.junit.Test;
+import org.pennyledger.form.NumberSign;
+import org.pennyledger.form.type.builtin.DecimalType;
 import org.pennyledger.math.Decimal;
 import org.pennyledger.util.UserEntryException;
+
+import orgpennyledger.form.type.IType;
 
 public class DecimalTypeTest {
 
