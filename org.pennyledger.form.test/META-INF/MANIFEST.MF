@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test form related classes
+Bundle-SymbolicName: org.pennyledger.form.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.junit,
+ org.pennyledger.form;bundle-version="1.0.0",
+ org.pennyledger.form.model;bundle-version="1.0.0"
+Import-Package: org.pennyledger.math,
+ org.pennyledger.util
