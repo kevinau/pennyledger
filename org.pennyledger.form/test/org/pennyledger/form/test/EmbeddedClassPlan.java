@@ -12,10 +12,12 @@ import org.pennyledger.form.plan.impl.ClassPlan;
 public class EmbeddedClassPlan {
 
   public static class Inner {
+    @SuppressWarnings("unused")
     private String field21;
   }
   
   public static class Outer {
+    @SuppressWarnings("unused")
     private String field1;
     @Embedded
     private Inner field2;

@@ -22,6 +22,7 @@ public interface IRuntimeFactoryProvider extends IRuntimeProvider {
    * 
    * @return list of XPath expressions
    */
+  @Override
   public String[] getAppliesTo();
 
   /**
@@ -32,6 +33,7 @@ public interface IRuntimeFactoryProvider extends IRuntimeProvider {
    * 
    * @return list of field names
    */
+  @Override
   public String[] getDependsOn();
 
   /**
@@ -49,6 +51,7 @@ public interface IRuntimeFactoryProvider extends IRuntimeProvider {
    * 
    * @return
    */
+  @Override
   public boolean isRuntime();
 
 }

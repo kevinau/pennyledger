@@ -44,7 +44,8 @@ public class RuntimeDefaultProvider extends RuntimeProvider implements IRuntimeD
    * 
    * @return the default value for the designated fields.
    */
-   public Object getDefaultValue(Object instance) {
+   @Override
+  public Object getDefaultValue(Object instance) {
     if (isRuntime()) {
       if (instance == null) {
         throw new IllegalArgumentException();

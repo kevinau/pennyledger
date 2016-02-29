@@ -34,9 +34,7 @@ public class RuntimeProvider implements IRuntimeProvider {
   /**
    * Get a list of XPaths expressions that identify the fields that this plan
    * applies to. All matching fields will use the same getDefaultValue method.
-   * The list should never be empty, but there is no problem if it is. The
-   * XPaths here are relative to the control which contains the
-   * IDefaultProviderMethod.
+   * The list should never be empty, but there is no problem if it is. 
    * 
    * @return list of XPath expressions
    */

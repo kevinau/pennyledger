@@ -1,0 +1,150 @@
+options {
+  JDK_VERSION = "1.5";
+  STATIC = false;
+  LOOKAHEAD = 3;
+  FORCE_LA_CHECK = true;
+}
+
+PARSER_BEGIN(SimplePathParser)
+package org.pennyledger.form.path.parser;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import org.pennyledger.form.path.DescendentPath;
+import org.pennyledger.form.path.IndexedElementPath;
+import org.pennyledger.form.path.LastElementPath;
+import org.pennyledger.form.path.NamedMemberPath;
+import org.pennyledger.form.path.StepPath;
+import org.pennyledger.form.path.WildcardPath;
+
+public class SimplePathParser {
+
+  private static class NullInputStream extends InputStream {
+    @Override
+    public int read() {
+      return 0;
+    }
+  }
+    
+  public static void main(String args[]) throws ParseException 
+  {
+    SimplePathParser parser = new SimplePathParser(System.in);
+    while (true) {
+      parser.parse();
+    }
+  }
+    
+  public SimplePathParser () {
+    this(new NullInputStream());
+  } 
+    
+  public StepPath parse(String s) throws ParseException {
+    ReInit(new ByteArrayInputStream(s.getBytes()));
+    return parse();
+  }      
+}
+
+PARSER_END(SimplePathParser)
+
+SKIP :
+{
+    " "
+  | "\t"
+}
+
+TOKEN:
+{
+	< LAST: "last" >
+  | < SLASHSLASH: "//" >
+  | < NUMBER: (<DIGIT>)+ >
+  | < #DIGIT: ["0"-"9"] >
+  | < #LETTER: ["a"-"z", "A"-"Z"] >
+  | < NAME: <LETTER> ("_" | <LETTER> | <DIGIT>)* >
+}
+
+StepPath parse() :
+{
+    StepPath top = new StepPath();
+    StepPath ex = top;
+}
+{
+    (
+      ex = relativePath(ex)
+    )?
+    (
+        <SLASHSLASH> ex = relativePath(new DescendentPath(ex))
+    )*
+    (   <SLASHSLASH> 
+        {
+           ex = new DescendentPath(ex);
+        }
+    )?
+    <EOF>
+    {
+        return top;
+    }
+}
+
+
+StepPath relativePath(StepPath parent) :
+{
+  StepPath ex = null;
+}
+{
+  (
+      ex = namedStep(parent)
+  |
+      ex = indexedStep(parent)
+  )
+  (
+      "/" ex=namedStep(ex)
+  |
+      ex=indexedStep(ex)
+  )*
+  {
+    return ex;
+  } 
+}
+
+
+StepPath namedStep (StepPath parent) :
+{
+  StepPath ex = null;
+  Token n = null;
+}
+{
+  (
+      "*" 
+      {
+          ex = new WildcardPath(parent);
+      }      
+  | 
+      n=<NAME>
+      {
+          ex = new NamedMemberPath(parent, n.toString());
+      }      
+  )
+  {
+    return ex;
+  }
+}
+
+
+StepPath indexedStep(StepPath parent) :
+{
+  StepPath ex;
+  Token n = null;
+}
+{
+  "["
+  (
+     "last" 
+     { ex = new LastElementPath(parent); }
+  |
+     n=<NUMBER>
+     { ex = new IndexedElementPath(parent, n.toString()); }
+  )
+  "]"
+  { return ex; }
+}

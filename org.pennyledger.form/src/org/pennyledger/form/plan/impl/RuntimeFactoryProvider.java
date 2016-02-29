@@ -63,6 +63,7 @@ public class RuntimeFactoryProvider extends RuntimeProvider implements IRuntimeF
    * 
    * @return list of field names
    */
+  @Override
   public String[] getDependsOn() {
     return dependsOn;
   }
@@ -74,6 +75,7 @@ public class RuntimeFactoryProvider extends RuntimeProvider implements IRuntimeF
    * 
    * @return a new value for the designated fields.
    */
+  @Override
   public Object createNewValue(Object instance) {
     if (method == null) {
       return independentNewValue;

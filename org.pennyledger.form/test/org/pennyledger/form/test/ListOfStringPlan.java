@@ -16,6 +16,7 @@ import org.pennyledger.form.type.builtin.StringType;
 public class ListOfStringPlan {
 
   public static class Outer {
+    @SuppressWarnings("unused")
     private List<String> field1;
   }
   
@@ -33,7 +34,7 @@ public class ListOfStringPlan {
     Assert.assertEquals(PlanKind.FIELD , plan3.kind());
     Assert.assertTrue(plan3 instanceof IFieldPlan);
     
-    IType type = ((IFieldPlan)plan3).getType();
+    IType<?> type = ((IFieldPlan)plan3).getType();
     Assert.assertTrue(type instanceof StringType);
   }
   
