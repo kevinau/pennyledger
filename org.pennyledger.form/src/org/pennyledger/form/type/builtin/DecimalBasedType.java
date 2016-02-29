@@ -11,11 +11,10 @@
 package org.pennyledger.form.type.builtin;
 
 import org.pennyledger.form.NumberSign;
+import org.pennyledger.form.type.IScaleSettable;
+import org.pennyledger.form.type.ISignAndPrecisionSettable;
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.IScaleSettable;
-import orgpennyledger.form.type.ISignAndPrecisionSettable;
-import orgpennyledger.form.type.IType;
 
 
 public abstract class DecimalBasedType<T> extends Type<T> implements IType<T>, ISignAndPrecisionSettable, IScaleSettable {

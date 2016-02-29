@@ -15,10 +15,9 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.pennyledger.form.type.ILengthSettable;
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.ILengthSettable;
-import orgpennyledger.form.type.IType;
 
 
 public class DirectoryType extends StringBasedType<File> implements IType<File>, ILengthSettable {

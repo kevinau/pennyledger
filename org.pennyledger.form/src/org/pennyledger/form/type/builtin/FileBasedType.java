@@ -12,9 +12,8 @@ package org.pennyledger.form.type.builtin;
 
 import java.io.File;
 
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.IType;
 
 
 public abstract class FileBasedType<T extends File> extends Type<T> implements IType<T> {

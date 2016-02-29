@@ -3,10 +3,9 @@ package org.pennyledger.form.type.builtin;
 import java.text.MessageFormat;
 
 import org.pennyledger.form.TextCase;
+import org.pennyledger.form.type.ICaseSettable;
+import org.pennyledger.form.type.ILengthSettable;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.ICaseSettable;
-import orgpennyledger.form.type.ILengthSettable;
 
 
 public abstract class StringBasedType<T> extends Type<T> implements ILengthSettable, ICaseSettable {

@@ -2,10 +2,9 @@ package org.pennyledger.form.type.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pennyledger.form.type.IType;
 import org.pennyledger.form.type.builtin.IntegerType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.IType;
 
 
 public class IntegerTypeTest {

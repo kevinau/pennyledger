@@ -8,7 +8,7 @@
  * Contributors:
  *     Kevin Holloway - initial API and implementation
  *******************************************************************************/
-package orgpennyledger.form.type;
+package org.pennyledger.form.type;
 
 import org.pennyledger.util.UserEntryException;
 

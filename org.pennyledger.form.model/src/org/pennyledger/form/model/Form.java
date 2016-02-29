@@ -8,7 +8,7 @@ import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IFieldWrapper;
 import org.pennyledger.form.value.IObjectVisitable;
 import org.pennyledger.form.value.IObjectWrapper;
-import org.pennyledger.form.value.impl.ObjectWrapper;
+import org.pennyledger.form.value.impl.DualAccessMap;
 
 public class Form<T> implements IForm<T> {
 
@@ -34,6 +34,15 @@ public class Form<T> implements IForm<T> {
   @Override
   public void setValue(Object value) {
     if (rootWrapper == null) {
+      if (value == null) {
+        // Do nothing
+        // TODO is this right?
+      } else {
+        Class<?> klass = value.getClass();
+        if (klass.isArray()) {
+          rootWrapper = new ArrayWrapper();
+        } else if ()
+      }
       rootWrapper = ObjectWrapper.wrapValue(container, "form", rootClass, value);
     } else {
       rootWrapper.setValue(value);
@@ -91,4 +100,14 @@ public class Form<T> implements IForm<T> {
     rootWrapper.walkFieldWrappers(path, x);
   }
 
+  private DualAccessMap<Class<?>, IClassPlan> classPlans = new DualAccessMap<>();
+  
+  private void buildClassPlan (Class<?> klass) {
+    IClassPlan plan = classPlans.get(klass);
+    if (plan == null) {
+      plan = new ClassPlan(klass);
+      classPlans.put(klass, plan);
+    }
+    return plan;
+  }
 }

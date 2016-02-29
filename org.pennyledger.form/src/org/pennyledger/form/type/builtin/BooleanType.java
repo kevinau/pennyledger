@@ -10,9 +10,8 @@ ow * Copyright (c) 2012 Kevin Holloway (kholloway@geckosoftware.co.uk).
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.IType;
 
 public class BooleanType extends Type<Boolean> implements IType<Boolean> {
   

@@ -1,5 +1,9 @@
 package org.pennyledger.form.value.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +63,26 @@ public abstract class ObjectWrapper implements IObjectWrapper {
   }
 
   
-  public static IObjectWrapper wrapValue(IContainerReference container, String name, Class<?> klass, Object value) {
+  public static IObjectWrapper wrapValue(IContainerReference container, String name, Field field, Class<?> klass, Object value) {
     IObjectWrapper wrapper;
+    if (klass.isArray()) {
+      Class<?> elemType = klass.getComponentType();
+      wrapper = new ArrayWrapper(container, name, elemType, value);
+    } else if (type instanceof ParameterizedType) {
+      ParameterizedType ptype = (ParameterizedType)type;
+      Type type1 = ptype.getRawType();
+      if (type1.equals(List.class)) {
+        Type[] typeArgs = ptype.getActualTypeArguments();
+        if (typeArgs.length != 1) {
+          throw new IllegalArgumentException("List must have one, and only one, type parameter");
+        }
+        Type type2 = typeArgs[0];
+        objPlan = listPlanDetail(parent, field, parentClass, name, type2, entryMode, arraySizes, lastEntryField);
+      } else {
+        throw new IllegalArgumentException("Parameterized type that is not a List");
+      }
+      
+    }
     if (String.class.isAssignableFrom(klass) || Integer.class.isAssignableFrom(klass)) {
       wrapper = new FieldWrapper(container, name, klass);
     } else {
@@ -196,5 +218,41 @@ public abstract class ObjectWrapper implements IObjectWrapper {
     getAllFieldWrappers(this, wrapperList);
     return wrapperList;
   }
+
+  
+  public static IObjectWrapper buildObjectPlan (IObjectPlan parent, Field field, Class<?> parentClass, String name, boolean withinCollection, Type type, EntryMode entryMode, ArraySizeList arraySizes, Field lastEntryField) {
+    IObjectPlan objPlan;
+    
+    if (type instanceof GenericArrayType) {
+      Type type1 = ((GenericArrayType)type).getGenericComponentType();
+      objPlan = arrayPlanDetail(parent, field, parentClass, name, type1, entryMode, arraySizes, lastEntryField);
+    } else if (type instanceof ParameterizedType) {
+      ParameterizedType ptype = (ParameterizedType)type;
+      Type type1 = ptype.getRawType();
+      if (type1.equals(List.class)) {
+        Type[] typeArgs = ptype.getActualTypeArguments();
+        if (typeArgs.length != 1) {
+          throw new IllegalArgumentException("List must have one, and only one, type parameter");
+        }
+        Type type2 = typeArgs[0];
+        objPlan = listPlanDetail(parent, field, parentClass, name, type2, entryMode, arraySizes, lastEntryField);
+      } else {
+        throw new IllegalArgumentException("Parameterized type that is not a List");
+      }
+    } else if (type instanceof Class) {
+      Class<?> klass = (Class<?>)type;
+      if (klass.isArray()) {
+        Type type1 = klass.getComponentType();
+        objPlan = arrayPlanDetail(parent, field, parentClass, name, type1, entryMode, arraySizes, lastEntryField);
+      } else {
+        objPlan = fieldPlanDetail(parent, field, parentClass, name, withinCollection, type, entryMode, arraySizes, lastEntryField);
+      }
+    } else {
+      throw new IllegalArgumentException("Unsupported type: " + type);
+    }
+    return objPlan;
+  }
+  
+  
 
 }

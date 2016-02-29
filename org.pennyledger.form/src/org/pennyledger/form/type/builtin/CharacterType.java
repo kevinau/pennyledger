@@ -1,9 +1,8 @@
 package org.pennyledger.form.type.builtin;
 
 import org.pennyledger.form.TextCase;
+import org.pennyledger.form.type.ICaseSettable;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.ICaseSettable;
 
 
 public class CharacterType extends Type<Character> implements ICaseSettable {

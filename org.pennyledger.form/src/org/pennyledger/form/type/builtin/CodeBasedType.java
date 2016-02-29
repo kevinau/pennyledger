@@ -13,10 +13,9 @@ package org.pennyledger.form.type.builtin;
 
 import java.util.List;
 
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 import org.pennyledger.value.ICodeValue;
-
-import orgpennyledger.form.type.IType;
 
 
 public abstract class CodeBasedType<T extends ICodeValue> implements IType<T> {

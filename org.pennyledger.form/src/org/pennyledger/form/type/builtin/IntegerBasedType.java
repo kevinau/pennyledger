@@ -11,11 +11,10 @@
 package org.pennyledger.form.type.builtin;
 
 import org.pennyledger.form.NumberSign;
+import org.pennyledger.form.type.IMinAndMaxSettable;
+import org.pennyledger.form.type.ISignAndPrecisionSettable;
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.IMinAndMaxSettable;
-import orgpennyledger.form.type.ISignAndPrecisionSettable;
-import orgpennyledger.form.type.IType;
 
 
 public abstract class IntegerBasedType<T extends Comparable<T>> extends Type<T> implements IType<T>, IMinAndMaxSettable, ISignAndPrecisionSettable {

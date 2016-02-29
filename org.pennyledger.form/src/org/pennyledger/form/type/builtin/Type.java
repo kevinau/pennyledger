@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
-
-import orgpennyledger.form.type.IType;
 
 public abstract class Type<T> implements IType<T> {
 

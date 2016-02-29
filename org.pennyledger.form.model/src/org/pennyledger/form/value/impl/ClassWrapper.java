@@ -30,8 +30,8 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
 
     if (instance == null) {
       // Remove all member wrappers, and fire appropriate events
-      memberMap.clear();
       // TODO fire events
+      memberMap.clear();
     } else {
       Class<?> klass = instance.getClass();
       Field[] fields = klass.getDeclaredFields();
@@ -54,7 +54,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
         IObjectWrapper memberWrapper = memberMap.get(name);
         if (memberWrapper == null) {
           IContainerReference container = new ClassContainerReference(instance, field);
-          memberWrapper = wrapValue(container, field.getName(), field.getType(), v1);
+          memberWrapper = wrapValue(container, name, field, field.getType(), v1);
           memberMap.put(name, memberWrapper);
           // TODO fire events
         } else {
@@ -66,7 +66,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
               // Create a new value, and fire value creation events
               Class<?> klass1 = v1.getClass();
               IContainerReference container = new ClassContainerReference(instance, field);
-              memberWrapper = wrapValue(container, field.getName(), klass1, v1);
+              memberWrapper = wrapValue(container, name, field, klass1, v1);
               memberMap.put(name, memberWrapper);
               // TODO fire events
             }
@@ -74,7 +74,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
             if (v1 == null) {
               // Remove this value, and fire value removal events
               IContainerReference container = new ClassContainerReference(instance, field);
-              memberWrapper = wrapValue(container, field.getName(), field.getType(), null);
+              memberWrapper = wrapValue(container, name, field, field.getType(), null);
               memberMap.put(name, memberWrapper);
               // TODO fire events
             } else {
@@ -91,7 +91,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
                   // object wrapper, and then set the values from what was saved.
                   collectPriorValues (name, memberWrapper);
                   IContainerReference container = new ClassContainerReference(instance, field);
-                  memberWrapper = wrapValue(container, field.getName(), klass1, v1);
+                  memberWrapper = wrapValue(container, name, field, klass1, v1);
                   memberMap.put(name, memberWrapper);
                   reapplyPriorValues (name, memberWrapper);
                 }

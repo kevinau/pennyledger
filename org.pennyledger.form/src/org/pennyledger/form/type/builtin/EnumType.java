@@ -11,10 +11,9 @@
 package org.pennyledger.form.type.builtin;
 
 
+import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 import org.pennyledger.value.ICodeValue;
-
-import orgpennyledger.form.type.IType;
 
 
 public class EnumType<E> extends Type<E> implements IType<E> {
