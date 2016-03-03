@@ -1,7 +1,6 @@
 package org.pennyledger.form.value.test;
 
 import org.junit.Test;
-import org.pennyledger.form.path.IPathExpression;
 import org.pennyledger.form.path.parser.ParseException;
 import org.pennyledger.form.path.parser.SimplePathParser;
 
@@ -21,14 +20,13 @@ public class SimplePathExpressionTest {
         "abc/*[234]//",
     };
     
-    SimplePathParser parser = new SimplePathParser();
-    
     for (String t : test) {
       //System.out.println(":" + t);
       //IPathExpression expr = parser.parse(t);
       //expr.dump();
       //System.out.println();
-      parser.parse(t);
+      SimplePathParser parser = new SimplePathParser(t);
+      parser.parse();
     }
     
   }

@@ -181,10 +181,8 @@ public class EnumType<E> extends Type<E> implements IType<E> {
   public E createFromString (String source) throws UserEntryException {
     E[] values = enumClass.getEnumConstants();
     if (ICodeValue.class.isAssignableFrom(enumClass)) {
-      System.out.println("EnumType createFromString: " + source + " " + values.length);
       for (int i = 0; i < values.length; i++) {
         ICodeValue cv = (ICodeValue)values[i];
-        System.out.println("  " + i + ": " + values[i] + " " + cv + " " + cv.getCode() + " " + cv.getCode().equals(source));
         if (cv.getCode().equals(source)) {
           validate (values[i]);
           return values[i];

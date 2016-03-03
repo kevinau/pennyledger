@@ -5,9 +5,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.pennyledger.form.model.Form;
-import org.pennyledger.form.model.IForm;
+import org.pennyledger.form.factory.Form;
 import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectWrapper;
 
 public class SimpleClassTest {

@@ -7,6 +7,8 @@ import org.pennyledger.form.Occurs;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IRepeatingPlan;
 import org.pennyledger.form.plan.PlanKind;
+import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IObjectWrapper;
 
 public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
 
@@ -28,7 +30,7 @@ public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
   
   public RepeatingPlan (IObjectPlan parent, Field field, String name, Class<?> elemClass, int dimension, EntryMode entryMode) {
     super (parent, name, entryMode);
-    elemPlan = ClassPlan.buildObjectPlan(this, field, name, elemClass, dimension, entryMode);
+    elemPlan = ClassPlan.buildObjectPlan(this, field, name, elemClass, dimension, entryMode, false);
     this.dimension = dimension;
     
     Occurs occursAnn = field.getAnnotation(Occurs.class);
@@ -86,6 +88,12 @@ public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
   @Override
   public int getDimension() {
     return dimension;
+  }
+
+
+  @Override
+  public IObjectWrapper buildModel(IObjectWrapper parent, IContainerReference container) {
+    return new RepeatingWrapper(parent, container, this);
   }
 
 }

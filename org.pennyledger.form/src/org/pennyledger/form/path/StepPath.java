@@ -40,13 +40,23 @@ public class StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, IFieldVisitable x) {
+  public boolean matches(IObjectWrapper model, IFieldVisitable x) {
     if (next != null) {
-      return next.matches(wrapper, x);
+      return next.matches(model, x);
     } else {
-      if (wrapper.isField()) {
-        x.visit((IFieldWrapper)wrapper);
+      if (model.isField()) {
+        x.visit((IFieldWrapper)model);
       }
+      return true;
+    }
+  }
+
+  @Override
+  public boolean matches(IObjectWrapper model, IObjectVisitable x) {
+    if (next != null) {
+      return next.matches(model, x);
+    } else {
+      x.visit((IFieldWrapper)model);
       return true;
     }
   }

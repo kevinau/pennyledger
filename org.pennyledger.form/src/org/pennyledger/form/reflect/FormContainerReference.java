@@ -2,21 +2,29 @@ package org.pennyledger.form.reflect;
 
 public class FormContainerReference implements IContainerReference {
 
+  private Object value;
+  
+  
+  public FormContainerReference () {
+  }
+  
+    
   @Override
   public String toString() {
-    return "FormContainerObject []";
+    return "FormContainerObject[]";
   }
 
-  
+
   @Override
   public <T> void setValue(T value) {
-    //throw new RuntimeException("IContainerObject.setValue should not be called on the form container");
+    this.value = value;
   }
 
-  
+
+  @SuppressWarnings("unchecked")
   @Override
   public <T> T getValue() {
-    throw new RuntimeException("IContainerObject.getValue should not be called on the form container");
+    return (T)value;
   }
 
 }

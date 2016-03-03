@@ -1,6 +1,8 @@
 package org.pennyledger.form.plan;
 
 import org.pennyledger.form.EntryMode;
+import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IObjectWrapper;
 
 /**
  * The detail of a class field. The plan contains sufficient detail about a
@@ -64,5 +66,7 @@ public interface IObjectPlan {
   public boolean isOptional();
 
   public PlanKind kind();
+  
+  public IObjectWrapper buildModel (IObjectWrapper parent, IContainerReference container);
   
 }

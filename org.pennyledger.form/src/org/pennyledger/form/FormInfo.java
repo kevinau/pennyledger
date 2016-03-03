@@ -25,9 +25,9 @@ import javax.persistence.UniqueConstraint;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Form {
-  public abstract String description() default "\u0000";
+public @interface FormInfo {
+  public String description() default "\u0000";
   
-  public abstract UniqueConstraint[] uniqueConstraints() default {};
+  public UniqueConstraint[] uniqueConstraints() default {};
 
 }

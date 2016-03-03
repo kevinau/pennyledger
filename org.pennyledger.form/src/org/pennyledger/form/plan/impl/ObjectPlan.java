@@ -85,4 +85,9 @@ public abstract class ObjectPlan implements IObjectPlan {
   @Override
   public abstract PlanKind kind();
   
+  @Override
+  public String toString () {
+    return "ObjectPlan(" + name + ",'" + staticLabel + "'," + staticMode + ")";
+  }
+
 }

@@ -1,102 +1,80 @@
 package org.pennyledger.form.value.impl;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.pennyledger.form.plan.IClassPlan;
+import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.reflect.ClassContainerReference;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.IClassWrapper;
 import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.util.DualAccessMap;
 
 public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
 
-  private final String name;
+  private final IContainerReference container;
+  private final IClassPlan<?> classPlan;
+  
   private final DualAccessMap<String, IObjectWrapper> memberMap = new DualAccessMap<>();
   
-  private Map<String, Object> priorValues = new HashMap<>();
-  
-  public ClassWrapper (IContainerReference container, String name) {
-    super(container);
-    this.name = name;
+  public ClassWrapper (IObjectWrapper parent, IContainerReference container, IClassPlan<?> classPlan) {
+    super (parent);
+    this.container = container;
+    this.classPlan = classPlan;
   }
   
   @Override
-  public void setValue (Object instance) {
-    super.setValue(instance);
+  public void setValue (Object newValue) {
+    Object oldValue = container.getValue();
+    if (oldValue == null ? newValue == null : oldValue.equals(newValue)) {
+      // No change of value.  Do nothing.
+      return;
+    }
+    container.setValue(newValue);
+    syncCurrentValue();
+  }
 
-    if (instance == null) {
-      // Remove all member wrappers, and fire appropriate events
-      // TODO fire events
-      memberMap.clear();
+  @Override
+  public void syncCurrentValue () {
+    Object currValue = container.getValue();
+    if (currValue == null) {
+      if (!classPlan.isOptional()) {
+        throw new IllegalArgumentException("A non-null value is required for not-optional model");
+      }
+      // The new value can be null.
+      // Get rid of the old value.
+      dispose();
     } else {
-      Class<?> klass = instance.getClass();
-      Field[] fields = klass.getDeclaredFields();
-      for (Field field : fields) {
-        if (field.isSynthetic()) {
-          continue;
-        }
-        if ((field.getModifiers() & (Modifier.STATIC | Modifier.TRANSIENT | Modifier.VOLATILE | Modifier.FINAL)) != 0) {
-          continue;
-        }
+      // New value is not null.    
+      for (IObjectPlan memberPlan : classPlan.getMemberPlans()) {
+        // Get the new value for this member
+        String name = memberPlan.getName();
+        Field memberField = classPlan.getMemberField(name);
+        memberField.setAccessible(true);
+        
         Object v1;
         try {
-          field.setAccessible(true);
-          v1 = field.get(instance);
+          v1 = memberField.get(currValue);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
           throw new RuntimeException(ex);
         }
-  
-        String name = field.getName();
-        IObjectWrapper memberWrapper = memberMap.get(name);
-        if (memberWrapper == null) {
-          IContainerReference container = new ClassContainerReference(instance, field);
-          memberWrapper = wrapValue(container, name, field, field.getType(), v1);
-          memberMap.put(name, memberWrapper);
-          // TODO fire events
+        
+        if (v1 == null && memberPlan.isOptional()) {
+          IObjectWrapper memberModel = memberMap.remove(name);
+          if (memberModel != null) {
+            memberModel.dispose();
+          }
         } else {
-          Object v0 = memberWrapper.getValue();
-          if (v0 == null) {
-            if (v1 == null) {
-              // Do nothing.
-            } else {
-              // Create a new value, and fire value creation events
-              Class<?> klass1 = v1.getClass();
-              IContainerReference container = new ClassContainerReference(instance, field);
-              memberWrapper = wrapValue(container, name, field, klass1, v1);
-              memberMap.put(name, memberWrapper);
-              // TODO fire events
-            }
+          IObjectWrapper memberModel = memberMap.get(name);
+          if (memberModel == null) {
+            IContainerReference childContainer = new ClassContainerReference(currValue, memberField);
+            memberModel = memberPlan.buildModel(this, childContainer);
+            memberMap.put(name, memberModel);
+            memberModel.syncCurrentValue();
           } else {
-            if (v1 == null) {
-              // Remove this value, and fire value removal events
-              IContainerReference container = new ClassContainerReference(instance, field);
-              memberWrapper = wrapValue(container, name, field, field.getType(), null);
-              memberMap.put(name, memberWrapper);
-              // TODO fire events
-            } else {
-              if (v0.equals(v1)) {
-                // Do nothing.
-              } else {
-                Class<?> klass0 = v0.getClass();
-                Class<?> klass1 = v1.getClass();
-                if (klass0.equals(klass1)) {
-                  // The classes are the same, so simply update v0 with v1 field values.
-                  memberWrapper.setValue(v1);
-                } else {
-                  // The classes are different, so: save all existing values, create a new
-                  // object wrapper, and then set the values from what was saved.
-                  collectPriorValues (name, memberWrapper);
-                  IContainerReference container = new ClassContainerReference(instance, field);
-                  memberWrapper = wrapValue(container, name, field, klass1, v1);
-                  memberMap.put(name, memberWrapper);
-                  reapplyPriorValues (name, memberWrapper);
-                }
-              }
-            }
+            memberModel.setValue(v1);
           }
         }
       }
@@ -118,41 +96,10 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
     return true;
   }
   
-  private void collectPriorValues (String path, IObjectWrapper wrapper) {
-    if (wrapper.isField()) {
-      priorValues.put(path, wrapper.getValue());
-    } else if (wrapper.isClass()) {
-      IClassWrapper classWrapper = (IClassWrapper)wrapper;
-      Map<String, IObjectWrapper> memberMap = classWrapper.getMemberMap();
-      for (Entry<String, IObjectWrapper> entry : memberMap.entrySet()) {
-        collectPriorValues(path + "." + entry.getKey(), entry.getValue());
-      }
-    } else {
-      throw new IllegalArgumentException(wrapper.getClass().toGenericString());
-    }
-  }
-  
-  private void reapplyPriorValues (String path, IObjectWrapper wrapper) {
-    if (wrapper.isField()) {
-      Object value = priorValues.get(path);
-      wrapper.setValue(value);
-    } else if (wrapper.isClass()) {
-      IClassWrapper classWrapper = (IClassWrapper)wrapper;
-      Map<String, IObjectWrapper> memberMap = classWrapper.getMemberMap();
-      for (Entry<String, IObjectWrapper> entry : memberMap.entrySet()) {
-        reapplyPriorValues(path + "." + entry.getKey(), entry.getValue());
-      }
-    } else {
-      throw new IllegalArgumentException(wrapper.getClass().toGenericString());
-    }
-  }
-
-  
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClassWrapper(");
-    sb.append(name);
     sb.append("{");
     boolean first = true;
     for (String key : memberMap.keySet()) {
@@ -170,4 +117,34 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
   public List<IObjectWrapper> getChildren() {
     return memberMap.values();
   }
+
+  @Override
+  public <T> T getValue() {
+    return container.getValue();
+  }
+
+  @Override
+  public IClassPlan<?> getPlan() {
+    return classPlan;
+  }
+
+  @Override
+  public void dispose() {
+    for (IObjectWrapper member : memberMap.values()) {
+      member.dispose();
+    }
+    memberMap.clear();
+  }
+
+  @Override
+  public void dump(int level) {
+    indent(level);
+    System.out.println("ClassModel[" + memberMap.size() + "]");
+    for (Map.Entry<String, IObjectWrapper> entry : memberMap.entrySet()) {
+      indent(level + 1);
+      System.out.println(entry.getKey() + ":");
+      entry.getValue().dump(level + 2);
+    }
+  }
+
 }

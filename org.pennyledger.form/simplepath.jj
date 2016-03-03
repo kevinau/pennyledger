@@ -15,11 +15,14 @@ import org.pennyledger.form.path.DescendentPath;
 import org.pennyledger.form.path.IndexedElementPath;
 import org.pennyledger.form.path.LastElementPath;
 import org.pennyledger.form.path.NamedMemberPath;
+import org.pennyledger.form.path.Path;
 import org.pennyledger.form.path.StepPath;
 import org.pennyledger.form.path.WildcardPath;
 
 public class SimplePathParser {
 
+  private String source;
+  
   private static class NullInputStream extends InputStream {
     @Override
     public int read() {
@@ -27,21 +30,21 @@ public class SimplePathParser {
     }
   }
     
-  public static void main(String args[]) throws ParseException 
-  {
-    SimplePathParser parser = new SimplePathParser(System.in);
-    while (true) {
-      parser.parse();
-    }
-  }
+//  public static void main(String args[]) throws ParseException 
+//  {
+//    SimplePathParser parser = new SimplePathParser(System.in);
+//    while (true) {
+//      parser.parse();
+//   }
+//  }
     
-  public SimplePathParser () {
-    this(new NullInputStream());
+  public SimplePathParser (String source) {
+    this(new ByteArrayInputStream(source.getBytes()));
+    this.source = source;
   } 
     
-  public StepPath parse(String s) throws ParseException {
-    ReInit(new ByteArrayInputStream(s.getBytes()));
-    return parse();
+  public Path parse() throws ParseException {
+    return topPath();
   }      
 }
 
@@ -63,9 +66,9 @@ TOKEN:
   | < NAME: <LETTER> ("_" | <LETTER> | <DIGIT>)* >
 }
 
-StepPath parse() :
+Path topPath() :
 {
-    StepPath top = new StepPath();
+    Path top = new Path(source);
     StepPath ex = top;
 }
 {

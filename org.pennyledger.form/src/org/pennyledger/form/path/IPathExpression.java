@@ -18,8 +18,10 @@ public interface IPathExpression {
     }
   }
 
-  public boolean matches(IObjectWrapper wrapper, Trail trail, IObjectVisitable x);
+  public boolean matches(IObjectWrapper model, Trail trail, IObjectVisitable x);
 
-  public boolean matches(IObjectWrapper wrapper, IFieldVisitable x);
+  public boolean matches(IObjectWrapper model, IFieldVisitable x);
+
+  public boolean matches(IObjectWrapper model, IObjectVisitable x);
 
 }

@@ -109,7 +109,6 @@ public class BuiltinRegistry {
         // The following test is required because the simpler typeClass.equals(Void.TYPE) does not work.
         // It always returns false.
         if (!typeClass.getName().equals("java.lang.Void")) {
-          System.out.println(typeClass);
           type = (IType<?>)typeClass.newInstance();
         }
       }

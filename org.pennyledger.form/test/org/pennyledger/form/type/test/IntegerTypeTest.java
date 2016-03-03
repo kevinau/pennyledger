@@ -23,7 +23,6 @@ public class IntegerTypeTest {
       type.createFromString("-");
       Assert.fail("Exception expected");
     } catch (UserEntryException ex) {
-      System.out.println(ex);
       Assert.assertEquals(false, ex.isRequired());
       Assert.assertEquals(true, ex.isIncomplete());
     }

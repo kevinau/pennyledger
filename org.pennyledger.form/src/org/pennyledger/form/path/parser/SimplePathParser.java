@@ -8,10 +8,13 @@ import org.pennyledger.form.path.DescendentPath;
 import org.pennyledger.form.path.IndexedElementPath;
 import org.pennyledger.form.path.LastElementPath;
 import org.pennyledger.form.path.NamedMemberPath;
+import org.pennyledger.form.path.Path;
 import org.pennyledger.form.path.StepPath;
 import org.pennyledger.form.path.WildcardPath;
 
 public class SimplePathParser implements SimplePathParserConstants {
+
+  private String source;
 
   private static class NullInputStream extends InputStream {
     @Override
@@ -20,25 +23,25 @@ public class SimplePathParser implements SimplePathParserConstants {
     }
   }
 
-  public static void main(String args[]) throws ParseException
-  {
-    SimplePathParser parser = new SimplePathParser(System.in);
-    while (true) {
-      parser.parse();
-    }
+//  public static void main(String args[]) throws ParseException 
+//  {
+//    SimplePathParser parser = new SimplePathParser(System.in);
+//    while (true) {
+//      parser.parse();
+//   }
+//  }
+
+  public SimplePathParser (String source) {
+    this(new ByteArrayInputStream(source.getBytes()));
+    this.source = source;
   }
 
-  public SimplePathParser () {
-    this(new NullInputStream());
+  public Path parse() throws ParseException {
+    return topPath();
   }
 
-  public StepPath parse(String s) throws ParseException {
-    ReInit(new ByteArrayInputStream(s.getBytes()));
-    return parse();
-  }
-
-  final public StepPath parse() throws ParseException {
-    StepPath top = new StepPath();
+  final public Path topPath() throws ParseException {
+    Path top = new Path(source);
     StepPath ex = top;
     if (jj_2_1(3)) {
       ex = relativePath(ex);
@@ -62,7 +65,8 @@ public class SimplePathParser implements SimplePathParserConstants {
       ;
     }
     jj_consume_token(0);
-    return top;
+        {if (true) return top;}
+    throw new Error("Missing return statement in function");
   }
 
   final public StepPath relativePath(StepPath parent) throws ParseException {
@@ -92,7 +96,8 @@ public class SimplePathParser implements SimplePathParserConstants {
         throw new ParseException();
       }
     }
-    return ex;
+    {if (true) return ex;}
+    throw new Error("Missing return statement in function");
   }
 
   final public StepPath namedStep(StepPath parent) throws ParseException {
@@ -108,7 +113,8 @@ public class SimplePathParser implements SimplePathParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    return ex;
+    {if (true) return ex;}
+    throw new Error("Missing return statement in function");
   }
 
   final public StepPath indexedStep(StepPath parent) throws ParseException {
@@ -126,7 +132,8 @@ public class SimplePathParser implements SimplePathParserConstants {
       throw new ParseException();
     }
     jj_consume_token(12);
-    return ex;
+    {if (true) return ex;}
+    throw new Error("Missing return statement in function");
   }
 
   private boolean jj_2_1(int xla) {
@@ -213,13 +220,13 @@ public class SimplePathParser implements SimplePathParserConstants {
     finally { jj_save(11, xla); }
   }
 
-  private boolean jj_3_8() {
-    if (jj_3R_5()) return true;
+  private boolean jj_3_3() {
+    if (jj_scan_token(SLASHSLASH)) return true;
     return false;
   }
 
-  private boolean jj_3_3() {
-    if (jj_scan_token(SLASHSLASH)) return true;
+  private boolean jj_3_8() {
+    if (jj_3R_5()) return true;
     return false;
   }
 
@@ -323,7 +330,6 @@ public class SimplePathParser implements SimplePathParserConstants {
   public Token token;
   /** Next token. */
   public Token jj_nt;
-  @SuppressWarnings("unused")
   private int jj_ntk;
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
@@ -436,9 +442,7 @@ public class SimplePathParser implements SimplePathParserConstants {
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends java.lang.Error {
-    private static final long serialVersionUID = 1L;
-  }
+  static private final class LookaheadSuccess extends java.lang.Error { }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
@@ -479,6 +483,13 @@ public class SimplePathParser implements SimplePathParserConstants {
       else t = t.next = token_source.getNextToken();
     }
     return t;
+  }
+
+  private int jj_ntk() {
+    if ((jj_nt=token.next) == null)
+      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+    else
+      return (jj_ntk = jj_nt.kind);
   }
 
   private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();

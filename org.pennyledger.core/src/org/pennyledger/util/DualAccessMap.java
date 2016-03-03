@@ -2,7 +2,6 @@ package org.pennyledger.util;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +99,7 @@ public class DualAccessMap<K, V> implements Map<K, V> {
   }
 
   @Override
-  public Collection<V> values() {
+  public List<V> values() {
     return values;
   }
   

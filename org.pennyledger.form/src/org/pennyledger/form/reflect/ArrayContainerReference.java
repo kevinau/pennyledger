@@ -32,5 +32,4 @@ public class ArrayContainerReference implements IContainerReference {
     return (T)Array.get(container, index);
   }
 
-  
 }

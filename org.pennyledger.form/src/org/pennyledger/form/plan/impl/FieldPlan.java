@@ -4,7 +4,10 @@ import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.PlanKind;
+import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
+import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.impl.FieldWrapper;
 
 public class FieldPlan extends ObjectPlan implements IFieldPlan {
 
@@ -51,10 +54,8 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
 
   @Override
   public void dump (int level) {
-    for (int i = 0; i < level; i++) {
-      System.out.print("  ");
-    }
-    System.out.println("Field: "  + type + "," + optional + ")");
+    indent(level);
+    System.out.println("FieldPlan("  + type + ",optional=" + optional + "," + super.toString() + ")");
   }
   
   
@@ -74,5 +75,11 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
   public PlanKind kind() {
     return PlanKind.FIELD;
   }
-  
+
+
+  @Override
+  public IObjectWrapper buildModel(IObjectWrapper parent, IContainerReference container) {
+    return new FieldWrapper(parent, container, this);
+  }
+
 }

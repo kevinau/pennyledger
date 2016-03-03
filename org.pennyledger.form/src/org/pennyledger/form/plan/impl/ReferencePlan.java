@@ -34,9 +34,7 @@ public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
   
   @Override
   public void dump (int level) {
-    for (int i = 0; i < level; i++) {
-      System.out.print("  ");
-    }
+    indent(level);
     System.out.println("Reference: " + referencedPlan.getName());
   }
 

@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,10 @@ import org.pennyledger.form.plan.IRuntimeOccursProvider;
 import org.pennyledger.form.plan.IRuntimeTypeProvider;
 import org.pennyledger.form.plan.IValidationMethod;
 import org.pennyledger.form.plan.PlanKind;
+import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
+import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.impl.ClassWrapper;
 import org.pennyledger.util.UserEntryException;
 
 
@@ -48,7 +52,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   private final Class<T> klass;
 
-  private final Map<String, IObjectPlan> members = new LinkedHashMap<String, IObjectPlan>();
+  private final Map<String, IObjectPlan> memberPlans = new LinkedHashMap<>();
+  private final Map<String, Field> memberFields = new HashMap<>();
 
   private List<IRuntimeTypeProvider> runtimeTypeProviders = new ArrayList<>(0);
   private List<IRuntimeLabelProvider> runtimeLabelProviders = new ArrayList<>(0);
@@ -173,10 +178,27 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
           }
         }
         
+        boolean optional;
+        if (field.getDeclaringClass().isPrimitive()) {
+          // Primitives cannot be optional
+          optional = false;
+        } else {
+          // If an Optional annotation exists set the optional value.
+          Optional optionalAnn = field.getAnnotation(Optional.class);
+          if (optionalAnn != null) {
+            optional = optionalAnn.value();
+          } else {
+            // nullable should equal type.isOptional(), but this has not been implemented on IType
+            optional = false;
+          }
+        }
+
 //        Field lastEntryField = lastEntryFields.get(field.getName());
 
-        IObjectPlan objectPlan = buildObjectPlan(this, field, field.getName(), field.getGenericType(), -1, entryMode);
-        members.put(field.getName(), objectPlan);
+        String name = field.getName();
+        IObjectPlan objectPlan = buildObjectPlan(this, field, name, field.getGenericType(), -1, entryMode, optional);
+        memberPlans.put(name, objectPlan);
+        memberFields.put(name, field);
       }
     }
     
@@ -191,7 +213,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   }
     
   
-  static IObjectPlan buildObjectPlan (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode) {
+  static IObjectPlan buildObjectPlan (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
     IObjectPlan objPlan;
     
     if (fieldType instanceof GenericArrayType) {
@@ -216,7 +238,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
         Type type1 = klass.getComponentType();
         objPlan = new RepeatingPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
       } else {
-        objPlan = fieldPlanDetail(parent, field, name, fieldType, -1, entryMode);
+        objPlan = fieldPlanDetail(parent, field, name, fieldType, -1, entryMode, optional);
       }
     } else {
       throw new IllegalArgumentException("Unsupported type: " + fieldType);
@@ -226,24 +248,9 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  static IObjectPlan fieldPlanDetail (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode) {
+  static IObjectPlan fieldPlanDetail (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
     IObjectPlan objectPlan;
     
-    boolean optional;
-    if (field.getDeclaringClass().isPrimitive()) {
-      // Primitives cannot be optional
-      optional = false;
-    } else {
-      // If an Optional annotation exists set the optional value.
-      Optional optionalAnn = field.getAnnotation(Optional.class);
-      if (optionalAnn != null) {
-        optional = optionalAnn.value();
-      } else {
-        // nullable should equal type.isOptional(), but this has not been implemented on IType
-        optional = false;
-      }
-    }
-
     // Is there a type declaration within the class
     Class<?> fieldClass = (Class<?>)fieldType;
     FormField formFieldAnn = field.getAnnotation(FormField.class);
@@ -257,7 +264,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
     } else {
       //If within a collection (array or list) any object that is not a field, is an embedded class type.
       if (dimension >= 0) {
-        objectPlan = buildObjectPlan(parent, field, field.getName(), fieldType, dimension, entryMode);
+        objectPlan = buildObjectPlan(parent, field, field.getName(), fieldType, dimension, entryMode, false);
       } else {
         // Is it a reference type (identified by the ManyToOne annotation).
         ManyToOne fkAnn = field.getAnnotation(ManyToOne.class);
@@ -753,15 +760,15 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   @SuppressWarnings("unchecked")
   @Override
   public <X extends IObjectPlan> X getMemberPlan(String name) {
-    return (X)members.get(name);
+    return (X)memberPlans.get(name);
   }
 
 
   @Override
   public IObjectPlan[] getMemberPlans() {
-    IObjectPlan[] mx = new IObjectPlan[members.size()];
+    IObjectPlan[] mx = new IObjectPlan[memberPlans.size()];
     int i = 0;
-    for (IObjectPlan m : members.values()) {
+    for (IObjectPlan m : memberPlans.values()) {
       mx[i++] = m;
     }
     return mx;
@@ -770,25 +777,19 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   
   @Override
   public Field getMemberField (String memberName) {
-    Field field;
-    try {
-      field = klass.getDeclaredField(memberName);
-    } catch (NoSuchFieldException | SecurityException ex) {
-      throw new RuntimeException(ex);
-    }
-    return field;
+    return memberFields.get(memberName);
   }
   
   
   @Override
   public void dump (int level) {
     indent(level);
-    System.out.println("Class: " + getDeclaredLabel() + " " + getDeclaredMode() + " (" + klass.getSimpleName() + ")");
+    System.out.println("ClassPlan(" + klass.getName() + "[" + memberPlans.size() + "]," + super.toString() + ")");
     for (IRuntimeFactoryProvider factoryProvider : runtimeFactoryProviders) {
       indent(level + 1);
       System.out.println(factoryProvider);
     }
-    for (Map.Entry<String, IObjectPlan> entry : members.entrySet()) {
+    for (Map.Entry<String, IObjectPlan> entry : memberPlans.entrySet()) {
       indent(level+ 1);
       System.out.println(entry.getKey() + ":");
       IObjectPlan member = entry.getValue();
@@ -800,6 +801,12 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   @Override
   public PlanKind kind() {
     return PlanKind.CLASS;
+  }
+
+
+  @Override
+  public IObjectWrapper buildModel(IObjectWrapper parent, IContainerReference container) {
+    return new ClassWrapper(parent, container, this);
   }
 
 }
