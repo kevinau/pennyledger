@@ -1,9 +1,9 @@
 package org.pennyledger.form.path;
 
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class TerminalPath extends StepPath implements IPathExpression {
 
@@ -18,16 +18,16 @@ public class TerminalPath extends StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, Trail trail, IObjectVisitable x) {
-    x.visit(wrapper);
+  public boolean matches(IObjectModel model, Trail trail, IObjectVisitable x) {
+    x.visit(model);
     trail.visit(x);
     return true;
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, IFieldVisitable x) {
-    if (wrapper.isField()) {
-      x.visit((IFieldWrapper)wrapper);
+  public boolean matches(IObjectModel model, IFieldVisitable x) {
+    if (model.isField()) {
+      x.visit((IFieldModel)model);
       return true;
     } else {
       return false;

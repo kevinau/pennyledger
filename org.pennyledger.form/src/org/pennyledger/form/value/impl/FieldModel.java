@@ -7,18 +7,18 @@ import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
-public class FieldWrapper extends ObjectWrapper implements IFieldWrapper {
+public class FieldModel extends ObjectModel implements IFieldModel {
 
-  private static final List<IObjectWrapper> noChildren = Collections.emptyList();
+  private static final List<IObjectModel> noChildren = Collections.emptyList();
 
   private final IContainerReference container;
   private final IFieldPlan plan;
   
-  public FieldWrapper(IObjectWrapper parent, IContainerReference container, IFieldPlan plan) {
+  public FieldModel(IObjectModel parent, IContainerReference container, IFieldPlan plan) {
     super(parent);
     this.container = container;
     this.plan = plan;
@@ -40,7 +40,7 @@ public class FieldWrapper extends ObjectWrapper implements IFieldWrapper {
   }
   
   @Override
-  public List<IObjectWrapper> getChildren() {
+  public List<IObjectModel> getChildren() {
     return noChildren;
   }
 

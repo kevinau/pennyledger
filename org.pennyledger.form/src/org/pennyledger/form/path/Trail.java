@@ -1,28 +1,28 @@
 package org.pennyledger.form.path;
 
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class Trail {
 
   private final Trail parent;
-  private final IObjectWrapper wrapper;
+  private final IObjectModel model;
 
-  public Trail (IObjectWrapper wrapper) {
+  public Trail (IObjectModel model) {
     this.parent = null;
-    this.wrapper = wrapper;
+    this.model = model;
   }
   
-  Trail (Trail parent, IObjectWrapper wrapper) {
+  Trail (Trail parent, IObjectModel model) {
     this.parent = parent;
-    this.wrapper = wrapper;
+    this.model = model;
   }
   
   void visit(IObjectVisitable x) {
     if (parent != null) {
       parent.visit(x);
     }
-    x.visit(wrapper);
+    x.visit(model);
   }
 }
 

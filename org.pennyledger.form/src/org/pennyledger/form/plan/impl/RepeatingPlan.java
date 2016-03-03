@@ -8,7 +8,7 @@ import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IRepeatingPlan;
 import org.pennyledger.form.plan.PlanKind;
 import org.pennyledger.form.reflect.IContainerReference;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
 
@@ -92,7 +92,7 @@ public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
 
 
   @Override
-  public IObjectWrapper buildModel(IObjectWrapper parent, IContainerReference container) {
+  public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
     return new RepeatingWrapper(parent, container, this);
   }
 

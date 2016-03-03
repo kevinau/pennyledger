@@ -22,7 +22,7 @@ public interface FieldEventListener extends EventListener {
    * the equality of the field and default value).
    * 
    */
-  public void valueEqualityChange(IFieldWrapper model);
+  public void valueEqualityChange(IFieldModel model);
 
   /**
    * The field or default <b>source</b> values have changed so they are now equal, or no
@@ -33,7 +33,7 @@ public interface FieldEventListener extends EventListener {
    * than the value itself.
    * 
    */
-  public void sourceEqualityChange(IFieldWrapper model, boolean isDataTrigger);
+  public void sourceEqualityChange(IFieldModel model, boolean isDataTrigger);
 
   /**
    * The field value has changed, either by user data entry or by the
@@ -45,7 +45,7 @@ public interface FieldEventListener extends EventListener {
    * @param model
    * @param value
    */
-  public void valueChange(IFieldWrapper model);
+  public void valueChange(IFieldModel model);
 
   /**
    * An attempt was made to change the field value by the user, but no change
@@ -53,11 +53,11 @@ public interface FieldEventListener extends EventListener {
    * will be fired regardless of error status of the control.
    * 
    */
-  public void sourceChange(IFieldWrapper model);
+  public void sourceChange(IFieldModel model);
 
   /**
    * The reference applicability of the object model has changed.
    */
-  public void equalityBasisChange (IFieldWrapper model);
+  public void equalityBasisChange (IFieldModel model);
   
 }

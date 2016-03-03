@@ -9,9 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.pennyledger.form.factory.Form;
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class CompoundClassTest {
 
@@ -41,12 +41,12 @@ public class CompoundClassTest {
   public void simpleClassTest() {
     form.walkFieldWrappers(new IFieldVisitable() {
       @Override
-      public void visit(IFieldWrapper model) {
+      public void visit(IFieldModel model) {
         //System.out.println(model.getPlan().getName() + "  " + model.getClass().getSimpleName());
       }
     });
-    IObjectWrapper wrapper1 = form.getFieldWrapper("field1/field11");
-    IObjectWrapper wrapper2 = form.getFieldWrapper("field2");
+    IObjectModel wrapper1 = form.getFieldWrapper("field1/field11");
+    IObjectModel wrapper2 = form.getFieldWrapper("field2");
 
     Assert.assertEquals("abc", wrapper1.getValue());
     Assert.assertEquals("def", wrapper2.getValue());
@@ -93,25 +93,25 @@ public class CompoundClassTest {
 
   @Test
   public void selectAll () {
-    List<IFieldWrapper> found = form.getFieldWrappers();
+    List<IFieldModel> found = form.getFieldWrappers();
     Assert.assertEquals(2, found.size());
   }
   
   @Test
   public void wildcardSelect () {
-    List<IFieldWrapper> found = form.getFieldWrappers("*");
+    List<IFieldModel> found = form.getFieldWrappers("*");
     Assert.assertEquals(1, found.size());
   }
   
   @Test
   public void wildcard2Select () {
-    List<IFieldWrapper> found = form.getFieldWrappers("*/*");
+    List<IFieldModel> found = form.getFieldWrappers("*/*");
     Assert.assertEquals(1, found.size());
   }
   
   @Test
   public void descendentSelect () {
-    List<IFieldWrapper> found = form.getFieldWrappers("//");
+    List<IFieldModel> found = form.getFieldWrappers("//");
     Assert.assertEquals(2, found.size());
   }
   

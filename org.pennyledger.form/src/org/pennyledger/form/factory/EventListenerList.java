@@ -8,9 +8,9 @@ import org.pennyledger.form.path.Path;
 import org.pennyledger.form.path.parser.ParseException;
 import org.pennyledger.form.path.parser.SimplePathParser;
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class EventListenerList<T extends EventListener> {
 
@@ -37,8 +37,8 @@ public class EventListenerList<T extends EventListener> {
   }
   
   
-  public void fireObjectEvents (IObjectWrapper soruce, IObjectEvent<T> event) {
-    IObjectWrapper p = soruce;
+  public void fireObjectEvents (IObjectModel soruce, IObjectEvent<T> event) {
+    IObjectModel p = soruce;
     while (p.getParent() != null) {
       p = p.getParent();
     }
@@ -47,15 +47,15 @@ public class EventListenerList<T extends EventListener> {
       T x = listeners.get(i);
       path.matches(p, new IObjectVisitable() {
         @Override
-        public void visit(IObjectWrapper model) {
+        public void visit(IObjectModel model) {
           event.eventFired(model, x);
         }
       });
     }
   }
   
-  public void fireFieldEvents (IFieldWrapper model, IFieldEvent<T> event) {
-    IObjectWrapper p = model;
+  public void fireFieldEvents (IFieldModel model, IFieldEvent<T> event) {
+    IObjectModel p = model;
     while (p.getParent() != null) {
       p = p.getParent();
     }
@@ -64,7 +64,7 @@ public class EventListenerList<T extends EventListener> {
       T x = listeners.get(i);
       path.matches(p, new IFieldVisitable() {
         @Override
-        public void visit(IFieldWrapper model) {
+        public void visit(IFieldModel model) {
           event.eventFired(model, x);
         }
       });

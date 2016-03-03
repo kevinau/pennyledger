@@ -3,7 +3,7 @@ package org.pennyledger.form.value.test;
 import org.junit.Assert;
 import org.junit.Test;
 import org.pennyledger.form.factory.Form;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IForm;
 
 public class SimpleClassTest2 {
@@ -24,7 +24,7 @@ public class SimpleClassTest2 {
     instance1.field1 = "abc";
     form.setValue(instance1);
     
-    IFieldWrapper field1Model = form.getFieldWrapper("field1");
+    IFieldModel field1Model = form.getFieldWrapper("field1");
     Assert.assertNotNull(field1Model);
     Object v1 = field1Model.getValue();
     Assert.assertEquals("abc", v1);

@@ -1,9 +1,9 @@
 package org.pennyledger.form.path;
 
-import org.pennyledger.form.value.IClassWrapper;
+import org.pennyledger.form.value.IClassModel;
 import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class NamedMemberPath extends StepPath implements IPathExpression {
 
@@ -22,10 +22,10 @@ public class NamedMemberPath extends StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, Trail trail, IObjectVisitable x) {
-    if (wrapper.isClass()) {
-      IClassWrapper classWrapper = (IClassWrapper)wrapper;
-      IObjectWrapper member = classWrapper.getMember(name);
+  public boolean matches(IObjectModel model, Trail trail, IObjectVisitable x) {
+    if (model.isClass()) {
+      IClassModel classWrapper = (IClassModel)model;
+      IObjectModel member = classWrapper.getMember(name);
       if (member == null) {
         return false;
       } else {
@@ -37,10 +37,10 @@ public class NamedMemberPath extends StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, IFieldVisitable x) {
-    if (wrapper.isClass()) {
-      IClassWrapper classWrapper = (IClassWrapper)wrapper;
-      IObjectWrapper member = classWrapper.getMember(name);
+  public boolean matches(IObjectModel model, IFieldVisitable x) {
+    if (model.isClass()) {
+      IClassModel classWrapper = (IClassModel)model;
+      IObjectModel member = classWrapper.getMember(name);
       if (member == null) {
         return false;
       } else {

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class LastElementPath extends StepPath implements IPathExpression {
 
@@ -20,11 +20,11 @@ public class LastElementPath extends StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, Trail trail, IObjectVisitable x) {
-    List<IObjectWrapper> children = wrapper.getChildren();
+  public boolean matches(IObjectModel model, Trail trail, IObjectVisitable x) {
+    List<IObjectModel> children = model.getChildren();
     int n = children.size();
     if (n > 0) {
-      IObjectWrapper last = children.get(n - 1);
+      IObjectModel last = children.get(n - 1);
       return super.matches(last, new Trail(trail, last), x);
     } else {
       return false;
@@ -32,11 +32,11 @@ public class LastElementPath extends StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, IFieldVisitable x) {
-    List<IObjectWrapper> children = wrapper.getChildren();
+  public boolean matches(IObjectModel model, IFieldVisitable x) {
+    List<IObjectModel> children = model.getChildren();
     int n = children.size();
     if (n > 0) {
-      IObjectWrapper last = children.get(n - 1);
+      IObjectModel last = children.get(n - 1);
       return super.matches(last, x);
     } else {
       return false;

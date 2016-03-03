@@ -2,7 +2,7 @@ package org.pennyledger.form.path;
 
 import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public interface IPathExpression {
 
@@ -18,10 +18,10 @@ public interface IPathExpression {
     }
   }
 
-  public boolean matches(IObjectWrapper model, Trail trail, IObjectVisitable x);
+  public boolean matches(IObjectModel model, Trail trail, IObjectVisitable x);
 
-  public boolean matches(IObjectWrapper model, IFieldVisitable x);
+  public boolean matches(IObjectModel model, IFieldVisitable x);
 
-  public boolean matches(IObjectWrapper model, IObjectVisitable x);
+  public boolean matches(IObjectModel model, IObjectVisitable x);
 
 }

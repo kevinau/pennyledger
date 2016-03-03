@@ -26,7 +26,7 @@ public interface ErrorListener extends EventListener {
    * 
    * @param ev
    */
-  public void errorCleared(IObjectWrapper model);
+  public void errorCleared(IObjectModel model);
 
   /**
    * The control has gone into an error state. This is either because the user
@@ -37,6 +37,6 @@ public interface ErrorListener extends EventListener {
    * Subsequent error notifications will not cause this event to fire again.
    * 
    */
-  public void errorNoted(IObjectWrapper model, UserEntryException ex);
+  public void errorNoted(IObjectModel model, UserEntryException ex);
 
 }

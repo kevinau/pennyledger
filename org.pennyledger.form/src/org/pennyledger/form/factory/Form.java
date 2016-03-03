@@ -10,13 +10,13 @@ import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.EffectiveModeListener;
 import org.pennyledger.form.value.ErrorListener;
 import org.pennyledger.form.value.FieldEventListener;
-import org.pennyledger.form.value.IClassWrapper;
+import org.pennyledger.form.value.IClassModel;
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
-import org.pennyledger.form.value.impl.ClassWrapper;
+import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.impl.ClassModel;
 import org.pennyledger.util.UserEntryException;
 
 public class Form<T> implements IForm<T> {
@@ -28,7 +28,7 @@ public class Form<T> implements IForm<T> {
   private EntryMode entryMode;
   
   private IClassPlan<?> formPlan;
-  private IClassWrapper formModel;
+  private IClassModel formModel;
   private IContainerReference container = new FormContainerReference();
   
   public Form () {
@@ -79,112 +79,112 @@ public class Form<T> implements IForm<T> {
 //  }
 
   @Override
-  public void fireValueEqualityChange(IFieldWrapper model) {
+  public void fireValueEqualityChange(IFieldModel model) {
     fieldEventListeners.fireFieldEvents(model, new IFieldEvent<FieldEventListener>() {
       @Override
-      public void eventFired(IFieldWrapper model, FieldEventListener listener) {
+      public void eventFired(IFieldModel model, FieldEventListener listener) {
         listener.valueEqualityChange(model);
       }
     });
   }
 
   @Override
-  public void fireSourceEqualityChange(IFieldWrapper model, boolean isDataTrigger) {
+  public void fireSourceEqualityChange(IFieldModel model, boolean isDataTrigger) {
     fieldEventListeners.fireFieldEvents(model, new IFieldEvent<FieldEventListener>() {
       @Override
-      public void eventFired(IFieldWrapper model, FieldEventListener listener) {
+      public void eventFired(IFieldModel model, FieldEventListener listener) {
         listener.sourceEqualityChange(model, isDataTrigger);
       }
     });
   }
 
   @Override
-  public void fireComparisonBasisChange(IFieldWrapper model) {
+  public void fireComparisonBasisChange(IFieldModel model) {
     fieldEventListeners.fireFieldEvents(model, new IFieldEvent<FieldEventListener>() {
       @Override
-      public void eventFired(IFieldWrapper model, FieldEventListener listener) {
+      public void eventFired(IFieldModel model, FieldEventListener listener) {
         listener.equalityBasisChange(model);
       }
     });
   }
 
   @Override
-  public void fireEffectiveModeChange(IObjectWrapper model) {
+  public void fireEffectiveModeChange(IObjectModel model) {
     effectiveModeListeners.fireObjectEvents(model, new IObjectEvent<EffectiveModeListener>() {
       @Override
-      public void eventFired(IObjectWrapper model, EffectiveModeListener listener) {
+      public void eventFired(IObjectModel model, EffectiveModeListener listener) {
         listener.modeChange(model);
       }
     });
   }
 
   @Override
-  public void fireErrorCleared(IObjectWrapper model) {
+  public void fireErrorCleared(IObjectModel model) {
     errorListeners.fireObjectEvents(model, new IObjectEvent<ErrorListener>() {
       @Override
-      public void eventFired(IObjectWrapper model, ErrorListener listener) {
+      public void eventFired(IObjectModel model, ErrorListener listener) {
         listener.errorCleared(model);
       }
     });
   }
 
   @Override
-  public void fireErrorNoted(IObjectWrapper model, UserEntryException ex) {
+  public void fireErrorNoted(IObjectModel model, UserEntryException ex) {
     errorListeners.fireObjectEvents(model, new IObjectEvent<ErrorListener>() {
       @Override
-      public void eventFired(IObjectWrapper model, ErrorListener listener) {
+      public void eventFired(IObjectModel model, ErrorListener listener) {
         listener.errorNoted(model, ex);
       }
     });
   }
 
   @Override
-  public void fireSourceChange(IFieldWrapper model) {
+  public void fireSourceChange(IFieldModel model) {
     fieldEventListeners.fireFieldEvents(model, new IFieldEvent<FieldEventListener>() {
       @Override
-      public void eventFired(IFieldWrapper model, FieldEventListener listener) {
+      public void eventFired(IFieldModel model, FieldEventListener listener) {
         listener.sourceChange(model);
       }
     });
   }
   
   @Override
-  public void fireValueChange(IFieldWrapper model) {
+  public void fireValueChange(IFieldModel model) {
     fieldEventListeners.fireFieldEvents(model, new IFieldEvent<FieldEventListener>() {
       @Override
-      public void eventFired(IFieldWrapper model, FieldEventListener listener) {
+      public void eventFired(IFieldModel model, FieldEventListener listener) {
         listener.valueChange(model);
       }
     });
   }
 
   @Override
-  public IFieldWrapper getFieldWrapper(String pathExpr) {
+  public IFieldModel getFieldWrapper(String pathExpr) {
     return formModel.getFieldWrapper(pathExpr);
   }
 
   @Override
-  public List<IFieldWrapper> getFieldWrappers() {
+  public List<IFieldModel> getFieldWrappers() {
     return formModel.getFieldWrappers();
   }
 
   @Override
-  public List<IFieldWrapper> getFieldWrappers(String pathExpr) {
+  public List<IFieldModel> getFieldWrappers(String pathExpr) {
     return formModel.getFieldWrappers(pathExpr);
   }
 
   @Override
-  public IObjectWrapper getObjectWrapper(String pathExpr) {
+  public IObjectModel getObjectWrapper(String pathExpr) {
     return formModel.getObjectWrapper(pathExpr);
   }
 
   @Override
-  public List<IObjectWrapper> getObjectWrappers() {
+  public List<IObjectModel> getObjectWrappers() {
     return formModel.getObjectWrappers();
   }
 
   @Override
-  public List<IObjectWrapper> getObjectWrappers(String pathExpr) {
+  public List<IObjectModel> getObjectWrappers(String pathExpr) {
     return formModel.getObjectWrappers(pathExpr);
   }
 
@@ -220,7 +220,7 @@ public class Form<T> implements IForm<T> {
       formPlan = new ClassPlan(null, entityName(valueClass), valueClass, entryMode);;
     }
     if (formModel == null) {
-      formModel = new ClassWrapper(null, container, formPlan);
+      formModel = new ClassModel(null, container, formPlan);
     }
     formModel.setValue(value);
   }

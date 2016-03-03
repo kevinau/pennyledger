@@ -5,6 +5,6 @@ public interface IObjectVisitable {
   /**
    * Visit the wrapper node.
    */
-  public void visit(IObjectWrapper wrapper);
+  public void visit(IObjectModel wrapper);
 
 }

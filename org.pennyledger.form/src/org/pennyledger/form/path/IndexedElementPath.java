@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class IndexedElementPath extends StepPath implements IPathExpression {
 
@@ -30,11 +30,11 @@ public class IndexedElementPath extends StepPath implements IPathExpression {
   }
 
   @Override
-  public boolean matches(IObjectWrapper wrapper, Trail trail, IObjectVisitable x) {
-    List<IObjectWrapper> children = wrapper.getChildren();
+  public boolean matches(IObjectModel model, Trail trail, IObjectVisitable x) {
+    List<IObjectModel> children = model.getChildren();
     int n = children.size();
     if (n > 0 && (index - 1) < n) {
-      IObjectWrapper elem = children.get(index - 1);
+      IObjectModel elem = children.get(index - 1);
       return super.matches(elem, new Trail(trail, elem), x);
     } else {
       return false;
@@ -42,11 +42,11 @@ public class IndexedElementPath extends StepPath implements IPathExpression {
   }
   
   @Override
-  public boolean matches(IObjectWrapper wrapper, IFieldVisitable x) {
-    List<IObjectWrapper> children = wrapper.getChildren();
+  public boolean matches(IObjectModel model, IFieldVisitable x) {
+    List<IObjectModel> children = model.getChildren();
     int n = children.size();
     if (n > 0 && (index - 1) < n) {
-      IObjectWrapper elem = children.get(index - 1);
+      IObjectModel elem = children.get(index - 1);
       return super.matches(elem, x);
     } else {
       return false;

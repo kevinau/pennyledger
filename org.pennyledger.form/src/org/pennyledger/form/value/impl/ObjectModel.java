@@ -8,27 +8,27 @@ import org.pennyledger.form.path.Trail;
 import org.pennyledger.form.path.parser.ParseException;
 import org.pennyledger.form.path.parser.SimplePathParser;
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
-public abstract class ObjectWrapper implements IObjectWrapper {
+public abstract class ObjectModel implements IObjectModel {
 
   
-  private static void getAllObjectWrappers(IObjectWrapper parent, List<IObjectWrapper> objList) {
+  private static void getAllObjectWrappers(IObjectModel parent, List<IObjectModel> objList) {
     parent.walkObjectWrappers(new IObjectVisitable() {
       @Override
-      public void visit(IObjectWrapper wrapper) {
+      public void visit(IObjectModel wrapper) {
         objList.add(wrapper);
       }
     });
   }
 
   
-  private static void getAllFieldWrappers(IObjectWrapper parent, List<IFieldWrapper> fieldList) {
+  private static void getAllFieldWrappers(IObjectModel parent, List<IFieldModel> fieldList) {
     parent.walkFieldWrappers(new IFieldVisitable() {
       @Override
-      public void visit(IFieldWrapper wrapper) {
+      public void visit(IFieldModel wrapper) {
         fieldList.add(wrapper);
       }
     });
@@ -88,9 +88,9 @@ public abstract class ObjectWrapper implements IObjectWrapper {
 //    return wrapper;
 //  }
 
-  private final IObjectWrapper parent;
+  private final IObjectModel parent;
 
-  protected ObjectWrapper(IObjectWrapper parent) {
+  protected ObjectModel(IObjectModel parent) {
     this.parent = parent;
   }
   
@@ -100,8 +100,8 @@ public abstract class ObjectWrapper implements IObjectWrapper {
 //  }
 
   @Override
-  public List<IObjectWrapper> getObjectWrappers() {
-    List<IObjectWrapper> wrapperList = new ArrayList<>();
+  public List<IObjectModel> getObjectWrappers() {
+    List<IObjectModel> wrapperList = new ArrayList<>();
     getAllObjectWrappers(this, wrapperList);
     return wrapperList;
   }
@@ -112,7 +112,7 @@ public abstract class ObjectWrapper implements IObjectWrapper {
   }
 
   @Override
-  public IObjectWrapper getParent() {
+  public IObjectModel getParent() {
     return parent;
   }
   
@@ -127,8 +127,8 @@ public abstract class ObjectWrapper implements IObjectWrapper {
   }
 
   @Override
-  public IObjectWrapper getObjectWrapper(String pathExpr) {
-    List<IObjectWrapper> found = getObjectWrappers(pathExpr);
+  public IObjectModel getObjectWrapper(String pathExpr) {
+    List<IObjectModel> found = getObjectWrappers(pathExpr);
     switch (found.size()) {
     case 0 :
       throw new IllegalArgumentException("'" + pathExpr + "' does not match any IObjectWrapper");
@@ -140,18 +140,18 @@ public abstract class ObjectWrapper implements IObjectWrapper {
   }
 
   @Override
-  public List<IObjectWrapper> getObjectWrappers(String pathExpr) {
+  public List<IObjectModel> getObjectWrappers(String pathExpr) {
     StepPath path;
     try {
       path = new SimplePathParser(pathExpr).parse();
     } catch (ParseException ex) {
       throw new RuntimeException(ex);
     }
-    final List<IObjectWrapper> found = new ArrayList<>();
+    final List<IObjectModel> found = new ArrayList<>();
     Trail trail = new Trail(this);
     path.matches(this, trail, new IObjectVisitable() {
       @Override
-      public void visit(IObjectWrapper wrapper) {
+      public void visit(IObjectModel wrapper) {
         if (!found.contains(wrapper)) {
           found.add(wrapper);
         }
@@ -163,21 +163,21 @@ public abstract class ObjectWrapper implements IObjectWrapper {
   @Override
   public void walkObjectWrappers(IObjectVisitable x) {
     x.visit(this);
-    for (IObjectWrapper wrapper : getChildren()) {
+    for (IObjectModel wrapper : getChildren()) {
       wrapper.walkObjectWrappers(x);
     }
   }
 
   @Override
-  public IFieldWrapper getFieldWrapper(String pathExpr) {
-    List<IFieldWrapper> found = getFieldWrappers(pathExpr);
+  public IFieldModel getFieldWrapper(String pathExpr) {
+    List<IFieldModel> found = getFieldWrappers(pathExpr);
     switch (found.size()) {
     case 0 :
       throw new IllegalArgumentException("'" + pathExpr + "' does not match any IFieldWrapper");
     case 1 :
       return found.get(0);
     default :
-      for (IFieldWrapper f : found) {
+      for (IFieldModel f : found) {
         System.out.println(">>> " + f);
       }
       throw new IllegalArgumentException("'" + pathExpr + "' matches more than one IFieldWrapper");
@@ -185,17 +185,17 @@ public abstract class ObjectWrapper implements IObjectWrapper {
   }
 
   @Override
-  public List<IFieldWrapper> getFieldWrappers(String pathExpr) {
+  public List<IFieldModel> getFieldWrappers(String pathExpr) {
     StepPath path;
     try {
       path = new SimplePathParser(pathExpr).parse();
     } catch (ParseException ex) {
       throw new RuntimeException(ex);
     }
-    final List<IFieldWrapper> found = new ArrayList<>();
+    final List<IFieldModel> found = new ArrayList<>();
     path.matches(this, new IFieldVisitable() {
       @Override
-      public void visit(IFieldWrapper wrapper) {
+      public void visit(IFieldModel wrapper) {
         found.add(wrapper);
       }
     });
@@ -204,14 +204,14 @@ public abstract class ObjectWrapper implements IObjectWrapper {
 
   @Override
   public void walkFieldWrappers(IFieldVisitable x) {
-    for (IObjectWrapper wrapper : getChildren()) {
+    for (IObjectModel wrapper : getChildren()) {
       wrapper.walkFieldWrappers(x);
     }
   }
 
   @Override
-  public List<IFieldWrapper> getFieldWrappers() {
-    List<IFieldWrapper> wrapperList = new ArrayList<>();
+  public List<IFieldModel> getFieldWrappers() {
+    List<IFieldModel> wrapperList = new ArrayList<>();
     getAllFieldWrappers(this, wrapperList);
     return wrapperList;
   }

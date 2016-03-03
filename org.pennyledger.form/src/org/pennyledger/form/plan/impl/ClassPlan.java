@@ -43,8 +43,8 @@ import org.pennyledger.form.plan.IValidationMethod;
 import org.pennyledger.form.plan.PlanKind;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
-import org.pennyledger.form.value.IObjectWrapper;
-import org.pennyledger.form.value.impl.ClassWrapper;
+import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.impl.ClassModel;
 import org.pennyledger.util.UserEntryException;
 
 
@@ -805,8 +805,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
 
   @Override
-  public IObjectWrapper buildModel(IObjectWrapper parent, IContainerReference container) {
-    return new ClassWrapper(parent, container, this);
+  public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
+    return new ClassModel(parent, container, this);
   }
 
 }

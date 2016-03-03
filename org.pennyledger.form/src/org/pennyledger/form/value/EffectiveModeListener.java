@@ -12,6 +12,6 @@ public interface EffectiveModeListener extends EventListener {
   /**
    * The effective entry mode of the object model has changed.
    */
-  public void modeChange (IObjectWrapper model);
+  public void modeChange (IObjectModel model);
 
 }

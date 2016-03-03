@@ -9,20 +9,20 @@ import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.impl.ClassPlan;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.IInterfaceModel;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
-public class InterfaceModel extends ObjectWrapper implements IInterfaceModel{
+public class InterfaceModel extends ObjectModel implements IInterfaceModel{
 
   private final IContainerReference container;
   private final IInterfacePlan plan;
   
   private IObjectPlan implPlan;
   private Class<?> implClass;
-  private IObjectWrapper implModel;
+  private IObjectModel implModel;
   
 //  private Map<String, Object> priorValues = new HashMap<>();
   
-  public InterfaceModel (IObjectWrapper parent, IContainerReference container, IInterfacePlan plan) {
+  public InterfaceModel (IObjectModel parent, IContainerReference container, IInterfacePlan plan) {
     super (parent);
     this.container = container;
     this.plan = plan;
@@ -90,7 +90,7 @@ public class InterfaceModel extends ObjectWrapper implements IInterfaceModel{
   }
   
   @Override
-  public IObjectWrapper getImplementationModel() {
+  public IObjectModel getImplementationModel() {
     return implModel;
   }
   
@@ -136,10 +136,10 @@ public class InterfaceModel extends ObjectWrapper implements IInterfaceModel{
     return sb.toString();
   }
 
-  private static final List<IObjectWrapper> noChildren = Collections.emptyList();
+  private static final List<IObjectModel> noChildren = Collections.emptyList();
 
   @Override
-  public List<IObjectWrapper> getChildren() {
+  public List<IObjectModel> getChildren() {
     if (implModel == null) {
       return noChildren;
     } else {

@@ -1,7 +1,7 @@
 package org.pennyledger.form.value;
 
-public interface IOptionalModel extends IObjectWrapper {
+public interface IOptionalModel extends IObjectModel {
 
-  public IObjectWrapper getMemberModel();
+  public IObjectModel getMemberModel();
   
 }

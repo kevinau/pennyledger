@@ -1,9 +1,9 @@
 package org.pennyledger.form.path;
 
 import org.pennyledger.form.value.IFieldVisitable;
-import org.pennyledger.form.value.IFieldWrapper;
+import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IObjectModel;
 
 public class StepPath implements IPathExpression {
 
@@ -29,34 +29,34 @@ public class StepPath implements IPathExpression {
   }
   
   @Override
-  public boolean matches(IObjectWrapper wrapper, Trail trail, IObjectVisitable x) {
+  public boolean matches(IObjectModel model, Trail trail, IObjectVisitable x) {
     if (next != null) {
-      return next.matches(wrapper, trail, x);
+      return next.matches(model, trail, x);
     } else {
       //trail.visit(x);
-      x.visit(wrapper);
+      x.visit(model);
       return true;
     }
   }
 
   @Override
-  public boolean matches(IObjectWrapper model, IFieldVisitable x) {
+  public boolean matches(IObjectModel model, IFieldVisitable x) {
     if (next != null) {
       return next.matches(model, x);
     } else {
       if (model.isField()) {
-        x.visit((IFieldWrapper)model);
+        x.visit((IFieldModel)model);
       }
       return true;
     }
   }
 
   @Override
-  public boolean matches(IObjectWrapper model, IObjectVisitable x) {
+  public boolean matches(IObjectModel model, IObjectVisitable x) {
     if (next != null) {
       return next.matches(model, x);
     } else {
-      x.visit((IFieldWrapper)model);
+      x.visit((IFieldModel)model);
       return true;
     }
   }

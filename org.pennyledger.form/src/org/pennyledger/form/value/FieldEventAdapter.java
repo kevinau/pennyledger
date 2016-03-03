@@ -3,23 +3,23 @@ package org.pennyledger.form.value;
 public class FieldEventAdapter implements FieldEventListener {
 
   @Override
-  public void valueEqualityChange(IFieldWrapper model) {
+  public void valueEqualityChange(IFieldModel model) {
   }
 
   @Override
-  public void sourceEqualityChange(IFieldWrapper model, boolean isSourceTrigger) {
+  public void sourceEqualityChange(IFieldModel model, boolean isSourceTrigger) {
   }
 
   @Override
-  public void valueChange(IFieldWrapper model) {
+  public void valueChange(IFieldModel model) {
   }
 
   @Override
-  public void sourceChange(IFieldWrapper model) {
+  public void sourceChange(IFieldModel model) {
   }
 
   @Override
-  public void equalityBasisChange(IFieldWrapper model) {
+  public void equalityBasisChange(IFieldModel model) {
   }
 
   @Override

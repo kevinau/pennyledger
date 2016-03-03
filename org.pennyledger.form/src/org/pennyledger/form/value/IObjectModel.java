@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.pennyledger.form.plan.IObjectPlan;
 
-public interface IObjectWrapper {
+public interface IObjectModel {
 
   public void dispose();
 
@@ -14,21 +14,21 @@ public interface IObjectWrapper {
 
   public void dump(int level);
 
-  public List<IObjectWrapper> getChildren();
+  public List<IObjectModel> getChildren();
 
-  public IFieldWrapper getFieldWrapper(String pathExpr);
+  public IFieldModel getFieldWrapper(String pathExpr);
 
-  public List<IFieldWrapper> getFieldWrappers();
+  public List<IFieldModel> getFieldWrappers();
   
-  public List<IFieldWrapper> getFieldWrappers(String pathExpr);
+  public List<IFieldModel> getFieldWrappers(String pathExpr);
 
-  public IObjectWrapper getObjectWrapper(String pathExpr);
+  public IObjectModel getObjectWrapper(String pathExpr);
   
-  public List<IObjectWrapper> getObjectWrappers();
+  public List<IObjectModel> getObjectWrappers();
 
-  public List<IObjectWrapper> getObjectWrappers(String pathExpr);
+  public List<IObjectModel> getObjectWrappers(String pathExpr);
 
-  public IObjectWrapper getParent();
+  public IObjectModel getParent();
 
   public IObjectPlan getPlan();
 

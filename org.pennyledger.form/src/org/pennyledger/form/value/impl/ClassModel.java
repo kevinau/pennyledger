@@ -8,18 +8,18 @@ import org.pennyledger.form.plan.IClassPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.reflect.ClassContainerReference;
 import org.pennyledger.form.reflect.IContainerReference;
-import org.pennyledger.form.value.IClassWrapper;
-import org.pennyledger.form.value.IObjectWrapper;
+import org.pennyledger.form.value.IClassModel;
+import org.pennyledger.form.value.IObjectModel;
 import org.pennyledger.util.DualAccessMap;
 
-public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
+public class ClassModel extends ObjectModel implements IClassModel {
 
   private final IContainerReference container;
   private final IClassPlan<?> classPlan;
   
-  private final DualAccessMap<String, IObjectWrapper> memberMap = new DualAccessMap<>();
+  private final DualAccessMap<String, IObjectModel> memberMap = new DualAccessMap<>();
   
-  public ClassWrapper (IObjectWrapper parent, IContainerReference container, IClassPlan<?> classPlan) {
+  public ClassModel (IObjectModel parent, IContainerReference container, IClassPlan<?> classPlan) {
     super (parent);
     this.container = container;
     this.classPlan = classPlan;
@@ -62,12 +62,12 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
         }
         
         if (v1 == null && memberPlan.isOptional()) {
-          IObjectWrapper memberModel = memberMap.remove(name);
+          IObjectModel memberModel = memberMap.remove(name);
           if (memberModel != null) {
             memberModel.dispose();
           }
         } else {
-          IObjectWrapper memberModel = memberMap.get(name);
+          IObjectModel memberModel = memberMap.get(name);
           if (memberModel == null) {
             IContainerReference childContainer = new ClassContainerReference(currValue, memberField);
             memberModel = memberPlan.buildModel(this, childContainer);
@@ -82,12 +82,12 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
   }
 
   @Override
-  public Map<String, IObjectWrapper> getMemberMap() {
+  public Map<String, IObjectModel> getMemberMap() {
     return memberMap;
   }
   
   @Override
-  public IObjectWrapper getMember(String name) {
+  public IObjectModel getMember(String name) {
     return memberMap.get(name);
   }
   
@@ -114,7 +114,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
   }
 
   @Override
-  public List<IObjectWrapper> getChildren() {
+  public List<IObjectModel> getChildren() {
     return memberMap.values();
   }
 
@@ -130,7 +130,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
 
   @Override
   public void dispose() {
-    for (IObjectWrapper member : memberMap.values()) {
+    for (IObjectModel member : memberMap.values()) {
       member.dispose();
     }
     memberMap.clear();
@@ -140,7 +140,7 @@ public class ClassWrapper extends ObjectWrapper implements IClassWrapper {
   public void dump(int level) {
     indent(level);
     System.out.println("ClassModel[" + memberMap.size() + "]");
-    for (Map.Entry<String, IObjectWrapper> entry : memberMap.entrySet()) {
+    for (Map.Entry<String, IObjectModel> entry : memberMap.entrySet()) {
       indent(level + 1);
       System.out.println(entry.getKey() + ":");
       entry.getValue().dump(level + 2);

@@ -6,8 +6,8 @@ import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.PlanKind;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
-import org.pennyledger.form.value.IObjectWrapper;
-import org.pennyledger.form.value.impl.FieldWrapper;
+import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.impl.FieldModel;
 
 public class FieldPlan extends ObjectPlan implements IFieldPlan {
 
@@ -78,8 +78,8 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
 
 
   @Override
-  public IObjectWrapper buildModel(IObjectWrapper parent, IContainerReference container) {
-    return new FieldWrapper(parent, container, this);
+  public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
+    return new FieldModel(parent, container, this);
   }
 
 }

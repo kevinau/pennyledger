@@ -11,43 +11,43 @@ public interface IForm<T> {
   
   public T getValue();
 
-  public List<IObjectWrapper> getObjectWrappers();
+  public List<IObjectModel> getObjectWrappers();
 
-  public IObjectWrapper getObjectWrapper(String pathExpr);
+  public IObjectModel getObjectWrapper(String pathExpr);
   
   public IClassPlan<?> getPlan();
 
-  public List<IObjectWrapper> getObjectWrappers(String pathExpr);
+  public List<IObjectModel> getObjectWrappers(String pathExpr);
 
   public void walkObjectWrappers(IObjectVisitable x);
 
   public void walkObjectWrappers(String path, IObjectVisitable x);
 
-  public List<IFieldWrapper> getFieldWrappers();
+  public List<IFieldModel> getFieldWrappers();
 
-  public IFieldWrapper getFieldWrapper(String pathExpr);
+  public IFieldModel getFieldWrapper(String pathExpr);
 
-  public List<IFieldWrapper> getFieldWrappers(String pathExpr);
+  public List<IFieldModel> getFieldWrappers(String pathExpr);
 
   public void walkFieldWrappers(IFieldVisitable x);
 
   public void walkFieldWrappers(String path, IFieldVisitable x);
 
-  public void fireValueEqualityChange(IFieldWrapper source);
+  public void fireValueEqualityChange(IFieldModel source);
   
-  public void fireSourceEqualityChange(IFieldWrapper source, boolean isDataTrigger);
+  public void fireSourceEqualityChange(IFieldModel source, boolean isDataTrigger);
 
-  public void fireComparisonBasisChange(IFieldWrapper source);
+  public void fireComparisonBasisChange(IFieldModel source);
   
-  public void fireEffectiveModeChange (IObjectWrapper source);
+  public void fireEffectiveModeChange (IObjectModel source);
 
-  public void fireErrorCleared(IObjectWrapper source);
+  public void fireErrorCleared(IObjectModel source);
   
-  public void fireErrorNoted(IObjectWrapper source, UserEntryException ex);
+  public void fireErrorNoted(IObjectModel source, UserEntryException ex);
   
-  public void fireSourceChange(IFieldWrapper source);
+  public void fireSourceChange(IFieldModel source);
 
-  public void fireValueChange(IFieldWrapper source);
+  public void fireValueChange(IFieldModel source);
 
   public void addEffectiveModeListener(String pathExpr, EffectiveModeListener x);
 
