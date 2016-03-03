@@ -39,14 +39,14 @@ public class CompoundClassTest {
   
   @Test
   public void simpleClassTest() {
-    form.walkFieldWrappers(new IFieldVisitable() {
+    form.walkFieldModels(new IFieldVisitable() {
       @Override
       public void visit(IFieldModel model) {
         //System.out.println(model.getPlan().getName() + "  " + model.getClass().getSimpleName());
       }
     });
-    IObjectModel wrapper1 = form.getFieldWrapper("field1/field11");
-    IObjectModel wrapper2 = form.getFieldWrapper("field2");
+    IObjectModel wrapper1 = form.getFieldModel("field1/field11");
+    IObjectModel wrapper2 = form.getFieldModel("field2");
 
     Assert.assertEquals("abc", wrapper1.getValue());
     Assert.assertEquals("def", wrapper2.getValue());
@@ -62,8 +62,8 @@ public class CompoundClassTest {
     value2.field2 = "ddd";
     form.setValue(value2);
     
-    wrapper1 = form.getFieldWrapper("field1/field11");
-    wrapper2 = form.getFieldWrapper("field2");
+    wrapper1 = form.getFieldModel("field1/field11");
+    wrapper2 = form.getFieldModel("field2");
 
     Assert.assertEquals("aaa", wrapper1.getValue());
     Assert.assertEquals("ddd", wrapper2.getValue());
@@ -73,8 +73,8 @@ public class CompoundClassTest {
 //    value3.field2 = "222";
 //    form.setValue(value3);
 //    
-//    wrapper1 = form.getObjectWrapper("field1");
-//    wrapper2 = form.getFieldWrapper("field2");
+//    wrapper1 = form.getObjectModel("field1");
+//    wrapper2 = form.getFieldModel("field2");
 //
 //    Assert.assertNull(wrapper1.getValue());
 //    Assert.assertEquals("222", wrapper2.getValue());
@@ -84,8 +84,8 @@ public class CompoundClassTest {
 //    value4.field2 = "333";
 //    form.setValue(value4);
 //    
-//    wrapper1 = form.getFieldWrapper("field1/field11");
-//    wrapper2 = form.getFieldWrapper("field2");
+//    wrapper1 = form.getFieldModel("field1/field11");
+//    wrapper2 = form.getFieldModel("field2");
 //
 //    Assert.assertNull(wrapper1.getValue());
 //    Assert.assertEquals("333", wrapper2.getValue());
@@ -93,25 +93,25 @@ public class CompoundClassTest {
 
   @Test
   public void selectAll () {
-    List<IFieldModel> found = form.getFieldWrappers();
+    List<IFieldModel> found = form.getFieldModels();
     Assert.assertEquals(2, found.size());
   }
   
   @Test
   public void wildcardSelect () {
-    List<IFieldModel> found = form.getFieldWrappers("*");
+    List<IFieldModel> found = form.getFieldModels("*");
     Assert.assertEquals(1, found.size());
   }
   
   @Test
   public void wildcard2Select () {
-    List<IFieldModel> found = form.getFieldWrappers("*/*");
+    List<IFieldModel> found = form.getFieldModels("*/*");
     Assert.assertEquals(1, found.size());
   }
   
   @Test
   public void descendentSelect () {
-    List<IFieldModel> found = form.getFieldWrappers("//");
+    List<IFieldModel> found = form.getFieldModels("//");
     Assert.assertEquals(2, found.size());
   }
   

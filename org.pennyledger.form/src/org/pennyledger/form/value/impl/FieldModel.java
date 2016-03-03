@@ -30,7 +30,7 @@ public class FieldModel extends ObjectModel implements IFieldModel {
   }
 
   @Override
-  public void walkObjectWrappers (IObjectVisitable x) {
+  public void walkObjectModels (IObjectVisitable x) {
     x.visit(this);
   }
 
@@ -45,7 +45,7 @@ public class FieldModel extends ObjectModel implements IFieldModel {
   }
 
   @Override
-  public void walkFieldWrappers(IFieldVisitable x) {
+  public void walkFieldModels(IFieldVisitable x) {
     x.visit(this);
   }
 

@@ -16,17 +16,17 @@ public interface IObjectModel {
 
   public List<IObjectModel> getChildren();
 
-  public IFieldModel getFieldWrapper(String pathExpr);
+  public IFieldModel getFieldModel(String pathExpr);
 
-  public List<IFieldModel> getFieldWrappers();
+  public List<IFieldModel> getFieldModels();
   
-  public List<IFieldModel> getFieldWrappers(String pathExpr);
+  public List<IFieldModel> getFieldModels(String pathExpr);
 
-  public IObjectModel getObjectWrapper(String pathExpr);
+  public IObjectModel getObjectModel(String pathExpr);
   
-  public List<IObjectModel> getObjectWrappers();
+  public List<IObjectModel> getObjectModels();
 
-  public List<IObjectModel> getObjectWrappers(String pathExpr);
+  public List<IObjectModel> getObjectModels(String pathExpr);
 
   public IObjectModel getParent();
 
@@ -50,12 +50,12 @@ public interface IObjectModel {
 
   public void syncCurrentValue();
 
-  public void walkFieldWrappers(IFieldVisitable x);
+  public void walkFieldModels(IFieldVisitable x);
   
-  public void walkFieldWrappers(String path, IFieldVisitable x);
+  public void walkFieldModels(String path, IFieldVisitable x);
   
-  public void walkObjectWrappers(IObjectVisitable x);
+  public void walkObjectModels(IObjectVisitable x);
 
-  public void walkObjectWrappers(String path, IObjectVisitable x);
+  public void walkObjectModels(String path, IObjectVisitable x);
 
 }

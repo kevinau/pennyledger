@@ -88,6 +88,12 @@ public class OptionalType<T> implements IType<T> {
   public int getFieldSize() {
     return nestedType.getFieldSize();
   }
+
+
+  @Override
+  public boolean isPrimitive() {
+    return false;
+  }
   
 }
 

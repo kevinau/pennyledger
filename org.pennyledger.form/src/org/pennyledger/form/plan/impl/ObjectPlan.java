@@ -32,12 +32,6 @@ public abstract class ObjectPlan implements IObjectPlan {
   }
   
   
-  @Override
-  public boolean isOptional () {
-    return false;
-  }
-  
-
   public ObjectPlan (IObjectPlan parent, String name, EntryMode entryMode) {
     if (name == null) {
       throw new IllegalArgumentException("Name cannot be null");

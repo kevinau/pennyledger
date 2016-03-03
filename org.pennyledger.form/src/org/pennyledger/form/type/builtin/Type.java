@@ -15,6 +15,17 @@ import org.pennyledger.util.UserEntryException;
 
 public abstract class Type<T> implements IType<T> {
 
+  private boolean primitive = false;
+  
+  public void setPrimitive (boolean primitive) {
+    this.primitive = primitive;
+  }
+  
+  @Override
+  public boolean isPrimitive () {
+    return primitive;
+  }
+  
   @Override
   public abstract T createFromString (String source) throws UserEntryException;
   

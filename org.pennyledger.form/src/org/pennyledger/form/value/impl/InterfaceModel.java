@@ -65,7 +65,7 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
           implModel.setValue(currValue);
         } else {
           // The classes are different, so: save all existing values, create a new
-          // object wrapper, and then set the values from what was saved.
+          // object model, and then set the values from what was saved.
           //collectPriorValues ("", implModel);
           //IContainerReference container = new ClassContainerReference(instance, field);
           dispose();
@@ -99,32 +99,32 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
     return true;
   }
   
-//  private void collectPriorValues (String path, IObjectWrapper wrapper) {
-//    if (wrapper.isField()) {
-//      priorValues.put(path, wrapper.getValue());
-//    } else if (wrapper.isClass()) {
-//      IClassWrapper classWrapper = (IClassWrapper)wrapper;
-//      Map<String, IObjectWrapper> memberMap = classWrapper.getMemberMap();
-//      for (Entry<String, IObjectWrapper> entry : memberMap.entrySet()) {
+//  private void collectPriorValues (String path, IObjectModel model) {
+//    if (model.isField()) {
+//      priorValues.put(path, model.getValue());
+//    } else if (model.isClass()) {
+//      IClassModel classModel = (IClassModel)model;
+//      Map<String, IObjectModel> memberMap = classModel.getMemberMap();
+//      for (Entry<String, IObjectModel> entry : memberMap.entrySet()) {
 //        collectPriorValues(path + "." + entry.getKey(), entry.getValue());
 //      }
 //    } else {
-//      throw new IllegalArgumentException(wrapper.getClass().toGenericString());
+//      throw new IllegalArgumentException(model.getClass().toGenericString());
 //    }
 //  }
 //  
-//  private void reapplyPriorValues (String path, IObjectWrapper wrapper) {
-//    if (wrapper.isField()) {
+//  private void reapplyPriorValues (String path, IObjectModel model) {
+//    if (model.isField()) {
 //      Object value = priorValues.get(path);
-//      wrapper.setValue(value);
-//    } else if (wrapper.isClass()) {
-//      IClassWrapper classWrapper = (IClassWrapper)wrapper;
-//      Map<String, IObjectWrapper> memberMap = classWrapper.getMemberMap();
-//      for (Entry<String, IObjectWrapper> entry : memberMap.entrySet()) {
+//      model.setValue(value);
+//    } else if (model.isClass()) {
+//      IClassModel classModel = (IClassModel)model;
+//      Map<String, IObjectModel> memberMap = classModel.getMemberMap();
+//      for (Entry<String, IObjectModel> entry : memberMap.entrySet()) {
 //        reapplyPriorValues(path + "." + entry.getKey(), entry.getValue());
 //      }
 //    } else {
-//      throw new IllegalArgumentException(wrapper.getClass().toGenericString());
+//      throw new IllegalArgumentException(model.getClass().toGenericString());
 //    }
 //  }
 

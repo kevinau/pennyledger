@@ -51,6 +51,7 @@ import org.pennyledger.util.UserEntryException;
 public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   private final Class<T> klass;
+  private final boolean optional;
 
   private final Map<String, IObjectPlan> memberPlans = new LinkedHashMap<>();
   private final Map<String, Field> memberFields = new HashMap<>();
@@ -67,13 +68,14 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   
   public ClassPlan (Class<T> klass) {
-    this (null, entityName(klass), klass, entityEntryMode(klass));
+    this (null, entityName(klass), klass, entityEntryMode(klass), false);
   }
   
 
-  public ClassPlan (IObjectPlan parent, String pathName, Class<T> klass, EntryMode entryMode) {
+  public ClassPlan (IObjectPlan parent, String pathName, Class<T> klass, EntryMode entryMode, boolean optional) {
     super (parent, pathName, entryMode);
     this.klass = klass;
+    this.optional = optional;
     
 //    Mode modeAnn = klass.getAnnotation(Mode.class);
 //    if (modeAnn != null) {
@@ -280,12 +282,12 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
             // members are considered as potential entry fields.
             boolean embdAnn = field.isAnnotationPresent(Embedded.class);
             if (embdAnn) {
-              objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
+              objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode, optional);
             } else {
-              // The Embeddable annotation on the field class also itentifies a class type.
+              // The Embeddable annotation on the field class also identifies a class type.
               boolean emblAnn = fieldClass.isAnnotationPresent(Embeddable.class);
               if (emblAnn) {
-                objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
+                objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode, optional);
               } else {
                 // Otherwise, throw an error.
                 throw new RuntimeException("Field type not recognised: " + name + " " + fieldType);
@@ -807,6 +809,12 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   @Override
   public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
     return new ClassModel(parent, container, this);
+  }
+
+
+  @Override
+  public boolean isOptional() {
+    return optional;
   }
 
 }

@@ -49,4 +49,9 @@ public class VoidType implements IType<Void> {
     return 0;
   }
 
+  @Override
+  public boolean isPrimitive() {
+    return true;
+  }
+
 }

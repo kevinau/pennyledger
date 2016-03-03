@@ -51,5 +51,13 @@ public interface IType<T> {
   public String getRequiredMessage();
   
   public int getFieldSize();
+
+  public default boolean isPrimitive() {
+    return false;
+  }
+  
+  //public boolean isNullable();
+
+  //public void setNullable(boolean b);
   
 }

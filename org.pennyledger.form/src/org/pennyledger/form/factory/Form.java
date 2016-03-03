@@ -11,11 +11,11 @@ import org.pennyledger.form.value.EffectiveModeListener;
 import org.pennyledger.form.value.ErrorListener;
 import org.pennyledger.form.value.FieldEventListener;
 import org.pennyledger.form.value.IClassModel;
-import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IFieldModel;
+import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectVisitable;
 import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.IObjectVisitable;
 import org.pennyledger.form.value.impl.ClassModel;
 import org.pennyledger.util.UserEntryException;
 
@@ -46,7 +46,7 @@ public class Form<T> implements IForm<T> {
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Form (Class<?> formClass, EntryMode entryMode) {
     this.entryMode = entryMode;
-    formPlan = new ClassPlan(null, entityName(formClass), formClass, entryMode);;
+    formPlan = new ClassPlan(null, entityName(formClass), formClass, entryMode, false);;
   }
 
   protected static String entityName (Class<?> entityClass) {
@@ -159,33 +159,33 @@ public class Form<T> implements IForm<T> {
   }
 
   @Override
-  public IFieldModel getFieldWrapper(String pathExpr) {
-    return formModel.getFieldWrapper(pathExpr);
+  public IFieldModel getFieldModel(String pathExpr) {
+    return formModel.getFieldModel(pathExpr);
   }
 
   @Override
-  public List<IFieldModel> getFieldWrappers() {
-    return formModel.getFieldWrappers();
+  public List<IFieldModel> getFieldModels() {
+    return formModel.getFieldModels();
   }
 
   @Override
-  public List<IFieldModel> getFieldWrappers(String pathExpr) {
-    return formModel.getFieldWrappers(pathExpr);
+  public List<IFieldModel> getFieldModels(String pathExpr) {
+    return formModel.getFieldModels(pathExpr);
   }
 
   @Override
-  public IObjectModel getObjectWrapper(String pathExpr) {
-    return formModel.getObjectWrapper(pathExpr);
+  public IObjectModel getObjectModel(String pathExpr) {
+    return formModel.getObjectModel(pathExpr);
   }
 
   @Override
-  public List<IObjectModel> getObjectWrappers() {
-    return formModel.getObjectWrappers();
+  public List<IObjectModel> getObjectModels() {
+    return formModel.getObjectModels();
   }
 
   @Override
-  public List<IObjectModel> getObjectWrappers(String pathExpr) {
-    return formModel.getObjectWrappers(pathExpr);
+  public List<IObjectModel> getObjectModels(String pathExpr) {
+    return formModel.getObjectModels(pathExpr);
   }
 
   @Override
@@ -217,7 +217,7 @@ public class Form<T> implements IForm<T> {
   public void setValue(Object value) {
     if (formPlan == null) {
       Class<?> valueClass = value.getClass();
-      formPlan = new ClassPlan(null, entityName(valueClass), valueClass, entryMode);;
+      formPlan = new ClassPlan(null, entityName(valueClass), valueClass, entryMode, false);;
     }
     if (formModel == null) {
       formModel = new ClassModel(null, container, formPlan);
@@ -226,24 +226,24 @@ public class Form<T> implements IForm<T> {
   }
 
   @Override
-  public void walkFieldWrappers(IFieldVisitable x) {
-    formModel.walkFieldWrappers(x);
+  public void walkFieldModels(IFieldVisitable x) {
+    formModel.walkFieldModels(x);
   }
 
   @Override
-  public void walkFieldWrappers(String path, IFieldVisitable x) {
-    formModel.walkFieldWrappers(path, x);
+  public void walkFieldModels(String path, IFieldVisitable x) {
+    formModel.walkFieldModels(path, x);
   }
 
   @Override
-  public void walkObjectWrappers(IObjectVisitable x) {
-    formModel.walkObjectWrappers(x);
+  public void walkObjectModels(IObjectVisitable x) {
+    formModel.walkObjectModels(x);
     
   }
 
   @Override
-  public void walkObjectWrappers(String path, IObjectVisitable x) {
-    formModel.walkObjectWrappers(path, x);
+  public void walkObjectModels(String path, IObjectVisitable x) {
+    formModel.walkObjectModels(path, x);
   }
 
   @Override

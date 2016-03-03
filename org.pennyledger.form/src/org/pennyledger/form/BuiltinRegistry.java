@@ -41,6 +41,7 @@ import org.pennyledger.form.type.builtin.ShortType;
 import org.pennyledger.form.type.builtin.SqlDateType;
 import org.pennyledger.form.type.builtin.StringType;
 import org.pennyledger.form.type.builtin.TimestampType;
+import org.pennyledger.form.type.builtin.Type;
 import org.pennyledger.form.type.builtin.URLType;
 import org.pennyledger.math.Decimal;
 import org.pennyledger.value.EntityLife;
@@ -117,8 +118,10 @@ public class BuiltinRegistry {
          type = new EnumType(fieldClass);
       } else {
         // TODO code value types are not supported
+        // For speed, try a direct map lookup (using equality of the fieldClass with the map key)
         Class<?> typeClass = typeMap.get(fieldClass);
         if (typeClass == null) {
+          // If we can't find a match by direct lookup, iterate through the map and try isAssignableFrom
           for (Map.Entry<Class<?>, Class<? extends IType<?>>> entry : typeMap.entrySet()) {
             Class<?> mapClass = entry.getKey();
             if (mapClass.isAssignableFrom(fieldClass)) {
@@ -131,6 +134,10 @@ public class BuiltinRegistry {
           }
         }
         type = (IType<?>)typeClass.newInstance();
+        if (fieldClass.isPrimitive()) {
+          // We assume the found type is an instance of Type
+          ((Type)type).setPrimitive(true);
+        }
       }
     } catch (InstantiationException | IllegalAccessException ex) {
       throw new RuntimeException(ex);
@@ -139,6 +146,19 @@ public class BuiltinRegistry {
     // and then set parameters from the FormField and Column annotations.
     // A form field annotation is tried first
     if (fieldAnn != null) {
+      switch (fieldAnn.nullable()) {
+      case TRUE :
+        // TODO fix
+        // type.setNullable(true);
+        break;
+      case FALSE :
+        // TODO fix 
+        // type.setNullable(false);
+        break;
+      case UNSPECIFIED:
+        break;
+      }
+      
       if (type instanceof ILengthSettable) {
         int n = fieldAnn.length();
         if (n != -1) {

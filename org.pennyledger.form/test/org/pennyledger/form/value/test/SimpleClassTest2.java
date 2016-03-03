@@ -24,7 +24,7 @@ public class SimpleClassTest2 {
     instance1.field1 = "abc";
     form.setValue(instance1);
     
-    IFieldModel field1Model = form.getFieldWrapper("field1");
+    IFieldModel field1Model = form.getFieldModel("field1");
     Assert.assertNotNull(field1Model);
     Object v1 = field1Model.getValue();
     Assert.assertEquals("abc", v1);

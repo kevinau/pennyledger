@@ -99,7 +99,7 @@ public class ClassModel extends ObjectModel implements IClassModel {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("ClassWrapper(");
+    sb.append("ClassModel(");
     sb.append("{");
     boolean first = true;
     for (String key : memberMap.keySet()) {

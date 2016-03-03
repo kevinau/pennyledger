@@ -118,4 +118,6 @@ public @interface FormField {
 
   boolean unique() default false;
   
+  Nullable nullable() default Nullable.UNSPECIFIED;
+  
 }

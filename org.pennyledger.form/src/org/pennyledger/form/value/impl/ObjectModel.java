@@ -15,28 +15,28 @@ import org.pennyledger.form.value.IObjectModel;
 public abstract class ObjectModel implements IObjectModel {
 
   
-  private static void getAllObjectWrappers(IObjectModel parent, List<IObjectModel> objList) {
-    parent.walkObjectWrappers(new IObjectVisitable() {
+  private static void getAllObjectModels(IObjectModel parent, List<IObjectModel> objList) {
+    parent.walkObjectModels(new IObjectVisitable() {
       @Override
-      public void visit(IObjectModel wrapper) {
-        objList.add(wrapper);
+      public void visit(IObjectModel model) {
+        objList.add(model);
       }
     });
   }
 
   
-  private static void getAllFieldWrappers(IObjectModel parent, List<IFieldModel> fieldList) {
-    parent.walkFieldWrappers(new IFieldVisitable() {
+  private static void getAllFieldModels(IObjectModel parent, List<IFieldModel> fieldList) {
+    parent.walkFieldModels(new IFieldVisitable() {
       @Override
-      public void visit(IFieldModel wrapper) {
-        fieldList.add(wrapper);
+      public void visit(IFieldModel model) {
+        fieldList.add(model);
       }
     });
   }
 
   
   @Override
-  public void walkObjectWrappers (String pathExpr, IObjectVisitable x) {
+  public void walkObjectModels (String pathExpr, IObjectVisitable x) {
     StepPath path;
     try {
       path = new SimplePathParser(pathExpr).parse();
@@ -48,7 +48,7 @@ public abstract class ObjectModel implements IObjectModel {
 
   
   @Override
-  public void walkFieldWrappers (String pathExpr, IFieldVisitable x) {
+  public void walkFieldModels (String pathExpr, IFieldVisitable x) {
     StepPath path;
     try {
       path = new SimplePathParser(pathExpr).parse();
@@ -59,11 +59,11 @@ public abstract class ObjectModel implements IObjectModel {
   }
 
   
-//  public static IObjectWrapper wrapValue(IContainerReference container, String name, Field field, Type type, Object value) {
-//    IObjectWrapper wrapper;
+//  public static IObjectModel wrapValue(IContainerReference container, String name, Field field, Type type, Object value) {
+//    IObjectModel model;
 //    if (klass.isArray()) {
 //      Class<?> elemType = klass.getComponentType();
-//      wrapper = new ArrayWrapper(container, name, elemType, value);
+//      model = new ArrayModel(container, name, elemType, value);
 //    } else if (type instanceof ParameterizedType) {
 //      ParameterizedType ptype = (ParameterizedType)type;
 //      Type type1 = ptype.getRawType();
@@ -80,12 +80,12 @@ public abstract class ObjectModel implements IObjectModel {
 //      
 //    }
 //    if (String.class.isAssignableFrom(klass) || Integer.class.isAssignableFrom(klass)) {
-//      wrapper = new FieldWrapper(container, name, klass);
+//      model = new FieldModel(container, name, klass);
 //    } else {
-//      wrapper = new ClassWrapper(container, name);
+//      model = new ClassModel(container, name);
 //    }
-//    wrapper.setValue(value);
-//    return wrapper;
+//    model.setValue(value);
+//    return model;
 //  }
 
   private final IObjectModel parent;
@@ -94,16 +94,16 @@ public abstract class ObjectModel implements IObjectModel {
     this.parent = parent;
   }
   
-//  protected ObjectWrapper(IObjectWrapper parent, IContainerReference container) {
+//  protected ObjectModel(IObjectModel parent, IContainerReference container) {
 //    this.parent = parent;
 //    this.container = container;
 //  }
 
   @Override
-  public List<IObjectModel> getObjectWrappers() {
-    List<IObjectModel> wrapperList = new ArrayList<>();
-    getAllObjectWrappers(this, wrapperList);
-    return wrapperList;
+  public List<IObjectModel> getObjectModels() {
+    List<IObjectModel> modelList = new ArrayList<>();
+    getAllObjectModels(this, modelList);
+    return modelList;
   }
 
   @Override
@@ -127,20 +127,20 @@ public abstract class ObjectModel implements IObjectModel {
   }
 
   @Override
-  public IObjectModel getObjectWrapper(String pathExpr) {
-    List<IObjectModel> found = getObjectWrappers(pathExpr);
+  public IObjectModel getObjectModel(String pathExpr) {
+    List<IObjectModel> found = getObjectModels(pathExpr);
     switch (found.size()) {
     case 0 :
-      throw new IllegalArgumentException("'" + pathExpr + "' does not match any IObjectWrapper");
+      throw new IllegalArgumentException("'" + pathExpr + "' does not match any IObjectModel");
     case 1 :
       return found.get(0);
     default :
-      throw new IllegalArgumentException("'" + pathExpr + "' matches more than one IObjectWrapper");
+      throw new IllegalArgumentException("'" + pathExpr + "' matches more than one IObjectModel");
     }
   }
 
   @Override
-  public List<IObjectModel> getObjectWrappers(String pathExpr) {
+  public List<IObjectModel> getObjectModels(String pathExpr) {
     StepPath path;
     try {
       path = new SimplePathParser(pathExpr).parse();
@@ -151,9 +151,9 @@ public abstract class ObjectModel implements IObjectModel {
     Trail trail = new Trail(this);
     path.matches(this, trail, new IObjectVisitable() {
       @Override
-      public void visit(IObjectModel wrapper) {
-        if (!found.contains(wrapper)) {
-          found.add(wrapper);
+      public void visit(IObjectModel model) {
+        if (!found.contains(model)) {
+          found.add(model);
         }
       }
     });
@@ -161,31 +161,31 @@ public abstract class ObjectModel implements IObjectModel {
   }
 
   @Override
-  public void walkObjectWrappers(IObjectVisitable x) {
+  public void walkObjectModels(IObjectVisitable x) {
     x.visit(this);
-    for (IObjectModel wrapper : getChildren()) {
-      wrapper.walkObjectWrappers(x);
+    for (IObjectModel model : getChildren()) {
+      model.walkObjectModels(x);
     }
   }
 
   @Override
-  public IFieldModel getFieldWrapper(String pathExpr) {
-    List<IFieldModel> found = getFieldWrappers(pathExpr);
+  public IFieldModel getFieldModel(String pathExpr) {
+    List<IFieldModel> found = getFieldModels(pathExpr);
     switch (found.size()) {
     case 0 :
-      throw new IllegalArgumentException("'" + pathExpr + "' does not match any IFieldWrapper");
+      throw new IllegalArgumentException("'" + pathExpr + "' does not match any IFieldModel");
     case 1 :
       return found.get(0);
     default :
       for (IFieldModel f : found) {
         System.out.println(">>> " + f);
       }
-      throw new IllegalArgumentException("'" + pathExpr + "' matches more than one IFieldWrapper");
+      throw new IllegalArgumentException("'" + pathExpr + "' matches more than one IFieldModel");
     }
   }
 
   @Override
-  public List<IFieldModel> getFieldWrappers(String pathExpr) {
+  public List<IFieldModel> getFieldModels(String pathExpr) {
     StepPath path;
     try {
       path = new SimplePathParser(pathExpr).parse();
@@ -195,29 +195,29 @@ public abstract class ObjectModel implements IObjectModel {
     final List<IFieldModel> found = new ArrayList<>();
     path.matches(this, new IFieldVisitable() {
       @Override
-      public void visit(IFieldModel wrapper) {
-        found.add(wrapper);
+      public void visit(IFieldModel model) {
+        found.add(model);
       }
     });
     return found;
   }
 
   @Override
-  public void walkFieldWrappers(IFieldVisitable x) {
-    for (IObjectModel wrapper : getChildren()) {
-      wrapper.walkFieldWrappers(x);
+  public void walkFieldModels(IFieldVisitable x) {
+    for (IObjectModel model : getChildren()) {
+      model.walkFieldModels(x);
     }
   }
 
   @Override
-  public List<IFieldModel> getFieldWrappers() {
-    List<IFieldModel> wrapperList = new ArrayList<>();
-    getAllFieldWrappers(this, wrapperList);
-    return wrapperList;
+  public List<IFieldModel> getFieldModels() {
+    List<IFieldModel> modelList = new ArrayList<>();
+    getAllFieldModels(this, modelList);
+    return modelList;
   }
 
   
-//  public static IObjectWrapper buildObjectPlan (IObjectPlan parent, Field field, Class<?> parentClass, String name, boolean withinCollection, Type type, EntryMode entryMode, ArraySizeList arraySizes, Field lastEntryField) {
+//  public static IObjectModel buildObjectPlan (IObjectPlan parent, Field field, Class<?> parentClass, String name, boolean withinCollection, Type type, EntryMode entryMode, ArraySizeList arraySizes, Field lastEntryField) {
 //    IObjectPlan objPlan;
 //    
 //    if (type instanceof GenericArrayType) {

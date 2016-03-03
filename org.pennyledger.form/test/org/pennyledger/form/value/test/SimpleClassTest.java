@@ -34,8 +34,8 @@ public class SimpleClassTest {
   
   @Test
   public void simpleClassTest() {
-    IFieldModel wrapper1 = form.getFieldWrapper("field1");
-    IObjectModel wrapper2 = form.getFieldWrapper("field2");
+    IFieldModel wrapper1 = form.getFieldModel("field1");
+    IObjectModel wrapper2 = form.getFieldModel("field2");
 
     Assert.assertEquals("abc", wrapper1.getValue());
     Assert.assertEquals("def", wrapper2.getValue());
@@ -51,8 +51,8 @@ public class SimpleClassTest {
     value2.field2 = "ddd";
     form.setValue(value2);
     
-    wrapper1 = form.getFieldWrapper("field1");
-    wrapper2 = form.getFieldWrapper("field2");
+    wrapper1 = form.getFieldModel("field1");
+    wrapper2 = form.getFieldModel("field2");
 
     Assert.assertEquals("aaa", wrapper1.getValue());
     Assert.assertEquals("ddd", wrapper2.getValue());
@@ -62,8 +62,8 @@ public class SimpleClassTest {
     value3.field2 = null;
     form.setValue(value3);
     
-    wrapper1 = form.getFieldWrapper("field1");
-    wrapper2 = form.getFieldWrapper("field2");
+    wrapper1 = form.getFieldModel("field1");
+    wrapper2 = form.getFieldModel("field2");
 
     Assert.assertEquals("111", wrapper1.getValue());
     Assert.assertNull(wrapper2.getValue());
@@ -71,19 +71,19 @@ public class SimpleClassTest {
 
   @Test
   public void selectAll () {
-    List<IFieldModel> found = form.getFieldWrappers();
+    List<IFieldModel> found = form.getFieldModels();
     Assert.assertEquals(2, found.size());
   }
   
   @Test
   public void wildcardSelect () {
-    List<IFieldModel> found = form.getFieldWrappers("*");
+    List<IFieldModel> found = form.getFieldModels("*");
     Assert.assertEquals(2, found.size());
   }
   
   @Test
   public void descendentSelect () {
-    List<IFieldModel> found = form.getFieldWrappers("//");
+    List<IFieldModel> found = form.getFieldModels("//");
     Assert.assertEquals(2, found.size());
   }
   
