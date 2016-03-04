@@ -93,9 +93,9 @@ public abstract class CodeBasedType<T extends ICodeValue> implements IType<T> {
   
   
   @Override
-  public T createFromString(T fillValue, boolean optional, boolean creating, String source) throws UserEntryException {
+  public T createFromString(T fillValue, boolean nullable, boolean creating, String source) throws UserEntryException {
     if (source.length() == 0) {
-      if (optional) {
+      if (nullable) {
         return null;
       } else {
         throw new UserEntryException(getRequiredMessage(), UserEntryException.Type.REQUIRED);
@@ -182,9 +182,9 @@ public abstract class CodeBasedType<T extends ICodeValue> implements IType<T> {
 
   
   @Override
-  public void validate(T value, boolean optional) throws UserEntryException {
+  public void validate(T value, boolean nullable) throws UserEntryException {
     if (value == null) {
-      if (optional) {
+      if (isNullable()) {
         return;
       } else {
         throw new UserEntryException("missing value");

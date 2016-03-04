@@ -1,5 +1,6 @@
 package org.pennyledger.form.plan.impl;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import org.pennyledger.form.EntryMode;
@@ -9,28 +10,34 @@ import org.pennyledger.form.plan.IRepeatingPlan;
 import org.pennyledger.form.plan.PlanKind;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.impl.ArrayModel;
 
-public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
+public class ArrayPlan extends ObjectPlan implements IRepeatingPlan {
 
+  private final static int DEFAULT_MAX_OCCURS = 10;
+  
   private final IObjectPlan elemPlan;
+  private final Class<?> elemClass;
 
   private final int dimension;
   private final int minOccurs;
   private final int maxOccurs;  
   
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  public RepeatingPlan (Class<?> elemClass) {
+  public ArrayPlan (Class<?> elemClass) {
     super (null, entityName(elemClass), entityEntryMode(elemClass));
     elemPlan = new ClassPlan(elemClass);
+    this.elemClass = elemClass;
     this.dimension = 0;
     this.minOccurs = 0;
-    this.maxOccurs = Integer.MAX_VALUE;
+    this.maxOccurs = DEFAULT_MAX_OCCURS;
   }
   
   
-  public RepeatingPlan (IObjectPlan parent, Field field, String name, Class<?> elemClass, int dimension, EntryMode entryMode) {
+  public ArrayPlan (IObjectPlan parent, Field field, String name, Class<?> elemClass, int dimension, EntryMode entryMode) {
     super (parent, name, entryMode);
     elemPlan = ClassPlan.buildObjectPlan(this, field, name, elemClass, dimension, entryMode, false);
+    this.elemClass = elemClass;
     this.dimension = dimension;
     
     Occurs occursAnn = field.getAnnotation(Occurs.class);
@@ -45,11 +52,11 @@ public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
       if (dimension < maxAnn.length) {
         this.maxOccurs = maxAnn[dimension];
       } else {
-        this.maxOccurs = Integer.MAX_VALUE;
+        this.maxOccurs = DEFAULT_MAX_OCCURS;
       }
     } else {
       this.minOccurs = 0;
-      this.maxOccurs = Integer.MAX_VALUE;
+      this.maxOccurs = DEFAULT_MAX_OCCURS;
     }
   }
   
@@ -93,7 +100,23 @@ public class RepeatingPlan extends ObjectPlan implements IRepeatingPlan {
 
   @Override
   public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
-    return new RepeatingWrapper(parent, container, this);
+    return new ArrayModel(parent, container, this);
+  }
+
+
+  @Override
+  public boolean isOptional() {
+    return false;
+  }
+
+
+  @Override
+  public Object[] newValue() {
+    Object[] newArray = (Object[])Array.newInstance(elemClass, minOccurs);
+    for (int i = 0; i < minOccurs; i++) {
+      newArray[i] = elemPlan.newValue();
+    }
+    return newArray;
   }
 
 }

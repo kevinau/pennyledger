@@ -279,9 +279,9 @@ public abstract class DecimalBasedType<T> extends Type<T> implements IType<T>, I
   }
   
   
-  //public void validate (T value, boolean optional, boolean creating) throws UserEntryException {
+  //public void validate (T value, boolean nullable, boolean creating) throws UserEntryException {
   //  if (value == null) {
-  //    if (optional) {
+  //    if (nullable) {
   //      return;
   //    } else {
   //      throw new UserEntryException(getRequiredMessage(), UserEntryException.Type.REQUIRED);

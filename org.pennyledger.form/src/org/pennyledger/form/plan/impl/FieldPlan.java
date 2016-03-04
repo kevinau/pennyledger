@@ -82,4 +82,9 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
     return new FieldModel(parent, container, this);
   }
 
+  @Override
+  public Object newValue () {
+    return type.newValue();
+  }
+
 }

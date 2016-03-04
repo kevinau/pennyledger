@@ -53,7 +53,7 @@ public class PasswordType extends StringBasedType<PasswordValue> {
 
 
   @Override
-  public void validate(PasswordValue value, boolean optional) throws UserEntryException {
+  public void validate(PasswordValue value, boolean nullable) throws UserEntryException {
   }
   
   

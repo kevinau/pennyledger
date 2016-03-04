@@ -79,7 +79,7 @@ public class FieldModel extends ObjectModel implements IFieldModel {
   }
 
   @Override
-  public void syncCurrentValue() {
+  public void syncToCurrentValue() {
     // Do nothing.
   }
 

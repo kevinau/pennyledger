@@ -18,9 +18,6 @@ import org.pennyledger.util.UserEntryException;
 
 public class BigDecimalType extends DecimalBasedType<BigDecimal> {
 
-  private static final BigDecimal ZERO = new BigDecimal(0);
-  
-  
   public BigDecimalType () {
     super (10, 0);
   }
@@ -61,7 +58,7 @@ public class BigDecimalType extends DecimalBasedType<BigDecimal> {
 
   @Override
   public BigDecimal primalValue() {
-    return ZERO;
+    return BigDecimal.ZERO;
   }
   
   
@@ -73,6 +70,12 @@ public class BigDecimalType extends DecimalBasedType<BigDecimal> {
     // The following may truncate very large numbers
     validatePrecision(value.longValue());
     validateDecimals(value.remainder(BigDecimal.ONE).stripTrailingZeros().scale());
+  }
+
+
+  @Override
+  public BigDecimal newValue() {
+    return BigDecimal.ZERO;
   }
   
 }

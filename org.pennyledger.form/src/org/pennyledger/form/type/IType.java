@@ -18,10 +18,10 @@ public interface IType<T> {
 
   /**
    * Validate the source string and optionally create a new field object.  The return value will be <code>null</code> 
-   * if the optional parameter is true and the source string is empty.  Otherwise, an instance of the field object
+   * if the nullable parameter is true and the source string is empty.  Otherwise, an instance of the field object
    * will be returned.  An error is thrown if <code>null</code> or a valid field object cannot be created.
    */
-  public T createFromString (T fillValue, boolean optional, boolean creating, String source) throws UserEntryException;
+  public T createFromString (T fillValue, boolean nullable, boolean creating, String source) throws UserEntryException;
 
   /** 
    * Create a new instance of the field object.  It is assumed that the source string is the string representation of
@@ -46,7 +46,7 @@ public interface IType<T> {
    */
   public T primalValue ();
 
-  public void validate (T value, boolean optional) throws UserEntryException;
+  public void validate (T value, boolean nullable) throws UserEntryException;
 
   public String getRequiredMessage();
   
@@ -55,9 +55,17 @@ public interface IType<T> {
   public default boolean isPrimitive() {
     return false;
   }
-  
-  //public boolean isNullable();
 
-  //public void setNullable(boolean b);
+  public default boolean isNullable() {
+    return false;
+  }
   
+  public default T newValue() {
+    if (isNullable()) {
+      return null;
+    } else {
+      return primalValue();
+    }
+  }
+
 }

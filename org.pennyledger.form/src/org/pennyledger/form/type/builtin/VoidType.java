@@ -11,7 +11,7 @@ public class VoidType implements IType<Void> {
   }
 
   @Override
-  public Void createFromString(Void fillValue, boolean optional, boolean creating, String source) throws UserEntryException {
+  public Void createFromString(Void fillValue, boolean nullable, boolean creating, String source) throws UserEntryException {
     throw new RuntimeException("There should be no user input for a VoidType field");
   }
 
@@ -36,7 +36,7 @@ public class VoidType implements IType<Void> {
   }
 
   @Override
-  public void validate(Void value, boolean optional) throws UserEntryException {
+  public void validate(Void value, boolean nullable) throws UserEntryException {
   }
 
   @Override

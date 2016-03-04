@@ -33,8 +33,6 @@ public class ExpressionMatchTest2 implements Iterator<String> {
       Matcher matcher1 = pathPattern1.matcher(path);
       found = matcher1.find(matcher.end());
       while (found) {
-        String sx = matcher.group(1);
- 
         for (int i = 1; i < matcher1.groupCount() + 1; i++) {
           System.out.println(i + ":      " + matcher1.group(i));
         }

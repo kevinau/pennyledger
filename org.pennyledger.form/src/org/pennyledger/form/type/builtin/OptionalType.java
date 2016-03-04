@@ -28,7 +28,7 @@ public class OptionalType<T> implements IType<T> {
   }
   
   @Override
-  public T createFromString (T fillType, boolean optional, boolean creating, String source) throws UserEntryException {
+  public T createFromString (T fillType, boolean nullable, boolean creating, String source) throws UserEntryException {
     if (source.length() == 0) {
       return null;
     }
@@ -37,7 +37,7 @@ public class OptionalType<T> implements IType<T> {
   
   
   @Override
-  public void validate(T value, boolean optional) throws UserEntryException {
+  public void validate(T value, boolean nullable) throws UserEntryException {
     if (value == null) {
       return;
     }

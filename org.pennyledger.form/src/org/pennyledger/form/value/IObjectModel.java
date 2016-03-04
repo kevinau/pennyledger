@@ -46,16 +46,18 @@ public interface IObjectModel {
 
   public boolean isInterface();
 
-  public void setValue(Object value);
+  public boolean isRepeating();
 
-  public void syncCurrentValue();
+  public void setValue(Object value);
 
   public void walkFieldModels(IFieldVisitable x);
   
   public void walkFieldModels(String path, IFieldVisitable x);
-  
+
   public void walkObjectModels(IObjectVisitable x);
 
   public void walkObjectModels(String path, IObjectVisitable x);
+
+  public void syncToCurrentValue();
 
 }

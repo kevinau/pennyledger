@@ -16,6 +16,7 @@ import org.pennyledger.util.UserEntryException;
 public abstract class Type<T> implements IType<T> {
 
   private boolean primitive = false;
+  private boolean nullable = false;
   
   public void setPrimitive (boolean primitive) {
     this.primitive = primitive;
@@ -26,15 +27,25 @@ public abstract class Type<T> implements IType<T> {
     return primitive;
   }
   
+  
+  public void setNullable(boolean nullable) {
+    this.nullable = nullable;
+  }
+  
+  @Override
+  public boolean isNullable () {
+    return nullable;
+  }
+
   @Override
   public abstract T createFromString (String source) throws UserEntryException;
   
   
   @Override
-  public T createFromString (T fillValue, boolean optional, boolean creating, String source) throws UserEntryException {
+  public T createFromString (T fillValue, boolean nullable, boolean creating, String source) throws UserEntryException {
     source = source.trim();
     if (source.length() == 0) {
-      if (optional) {
+      if (nullable) {
         return null;
       } else {
         throw new UserEntryException(getRequiredMessage(), UserEntryException.Type.REQUIRED);
@@ -80,9 +91,9 @@ public abstract class Type<T> implements IType<T> {
 
   
   @Override
-  public void validate(T value, boolean optional) throws UserEntryException {
+  public void validate(T value, boolean nullable) throws UserEntryException {
     if (value == null) {
-      if (optional) {
+      if (nullable) {
         return;
       } else {
         throw new UserEntryException(getRequiredMessage());

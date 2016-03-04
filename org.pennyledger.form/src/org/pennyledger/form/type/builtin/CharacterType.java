@@ -34,10 +34,10 @@ public class CharacterType extends Type<Character> implements ICaseSettable {
   
 
   @Override
-  public Character createFromString (Character fillValue, boolean optional, boolean creating, String source) throws UserEntryException {
+  public Character createFromString (Character fillValue, boolean nullable, boolean creating, String source) throws UserEntryException {
     source = source.trim();
     if (source.length() == 0) {
-      if (optional) {
+      if (nullable) {
         return null;
       } else {
         // A character can be blank

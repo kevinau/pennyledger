@@ -33,17 +33,13 @@ public class ClassModel extends ObjectModel implements IClassModel {
       return;
     }
     container.setValue(newValue);
-    syncCurrentValue();
+    syncToCurrentValue();
   }
 
   @Override
-  public void syncCurrentValue () {
+  public void syncToCurrentValue () {
     Object currValue = container.getValue();
     if (currValue == null) {
-      if (!classPlan.isOptional()) {
-        throw new IllegalArgumentException("A non-null value is required for not-optional model");
-      }
-      // The new value can be null.
       // Get rid of the old value.
       dispose();
     } else {
@@ -61,22 +57,22 @@ public class ClassModel extends ObjectModel implements IClassModel {
           throw new RuntimeException(ex);
         }
         
-        if (v1 == null && memberPlan.isOptional()) {
-          IObjectModel memberModel = memberMap.remove(name);
-          if (memberModel != null) {
-            memberModel.dispose();
-          }
-        } else {
+//        if (v1 == null) {
+//          IObjectModel memberModel = memberMap.remove(name);
+//          if (memberModel != null) {
+//            memberModel.dispose();
+//          }
+//        } else {
           IObjectModel memberModel = memberMap.get(name);
           if (memberModel == null) {
             IContainerReference childContainer = new ClassContainerReference(currValue, memberField);
             memberModel = memberPlan.buildModel(this, childContainer);
             memberMap.put(name, memberModel);
-            memberModel.syncCurrentValue();
+            memberModel.syncToCurrentValue();
           } else {
             memberModel.setValue(v1);
           }
-        }
+//        }
       }
     }
   }

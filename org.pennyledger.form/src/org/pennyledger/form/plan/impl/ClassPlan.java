@@ -220,7 +220,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
     
     if (fieldType instanceof GenericArrayType) {
       Type type1 = ((GenericArrayType)fieldType).getGenericComponentType();
-      objPlan = new RepeatingPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
+      objPlan = new ArrayPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
     } else if (fieldType instanceof ParameterizedType) {
       ParameterizedType ptype = (ParameterizedType)fieldType;
       Type type1 = ptype.getRawType();
@@ -230,7 +230,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
         throw new IllegalArgumentException("List must have one, and only one, type parameter");
       }
       Type type2 = typeArgs[0];
-      objPlan = new RepeatingPlan(parent, field, name, (Class<?>)type2, dimension + 1, entryMode);
+      objPlan = new ArrayPlan(parent, field, name, (Class<?>)type2, dimension + 1, entryMode);
     } else {
         throw new IllegalArgumentException("Parameterized type that is not a List");
       }
@@ -238,7 +238,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
       Class<?> klass = (Class<?>)fieldType;
       if (klass.isArray()) {
         Type type1 = klass.getComponentType();
-        objPlan = new RepeatingPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
+        objPlan = new ArrayPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
       } else {
         objPlan = fieldPlanDetail(parent, field, name, fieldType, -1, entryMode, optional);
       }
@@ -815,6 +815,22 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   @Override
   public boolean isOptional() {
     return optional;
+  }
+
+
+  @Override
+  public T newValue() {
+    T newValue;
+    try {
+      newValue = klass.newInstance();
+      for (IObjectPlan memberPlan : memberPlans.values()) {
+        Field field = memberFields.get(memberPlan.getName());
+        field.set(newValue, memberPlan.newValue());
+      }
+    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException ex) {
+      throw new RuntimeException(ex);
+    }
+    return newValue;
   }
 
 }

@@ -2,7 +2,6 @@ package org.pennyledger.form.value.impl;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.pennyledger.form.plan.IInterfacePlan;
 import org.pennyledger.form.plan.IObjectPlan;
@@ -36,16 +35,14 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
       return;
     }
     container.setValue(newValue);
-    syncCurrentValue();
+    syncToCurrentValue();
   }
   
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public void syncCurrentValue () {
+  public void syncToCurrentValue () {
     Object currValue = container.getValue();
     if (currValue == null) {
-      if (!plan.isOptional()) {
-        throw new IllegalArgumentException("A non-null value is required for not-optional model");
-      }
       // The new value can be null.
       // Get rid of the old value.
       dispose();
@@ -54,7 +51,7 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
       // New value is not null.
       if (implModel == null) {
         implClass = currValue.getClass();
-        implPlan = ClassPlan.buildObjectPlan(implClass);
+        implPlan = new ClassPlan(implClass);
         implModel = implPlan.buildModel(this, container);
         implModel.setValue(currValue);
       } else {
@@ -72,7 +69,7 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
 
           // Build a new plan and model, and then set the new value on that.
           implClass = newClass;
-          implPlan = ClassPlan.buildObjectPlan(newClass);
+          implPlan = new ClassPlan(newClass);
           implModel = implPlan.buildModel(this, container);
           //reapplyPriorValues ("", implModel);
           implModel.setValue(currValue);

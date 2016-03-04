@@ -228,9 +228,9 @@ public abstract class IntegerBasedType<T extends Comparable<T>> extends Type<T> 
   
 
   
-  //public void validate (T value, boolean optional, boolean creating) throws UserEntryException {
+  //public void validate (T value, boolean nullable, boolean creating) throws UserEntryException {
   //  if (value == null) {
-  //    if (optional) {
+  //    if (nullable) {
   //      return;
   //    } else {
   //      throw new UserEntryException(getRequiredMessage(), UserEntryException.Type.REQUIRED);

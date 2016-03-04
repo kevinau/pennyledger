@@ -127,6 +127,11 @@ public abstract class ObjectModel implements IObjectModel {
   }
 
   @Override
+  public boolean isRepeating() {
+    return false;
+  }
+
+  @Override
   public IObjectModel getObjectModel(String pathExpr) {
     List<IObjectModel> found = getObjectModels(pathExpr);
     switch (found.size()) {

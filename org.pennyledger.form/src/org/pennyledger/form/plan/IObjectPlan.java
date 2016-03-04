@@ -68,5 +68,7 @@ public interface IObjectPlan {
   public PlanKind kind();
   
   public IObjectModel buildModel (IObjectModel parent, IContainerReference container);
+
+  public Object newValue();
   
 }

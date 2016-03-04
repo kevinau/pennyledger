@@ -145,15 +145,13 @@ public class BuiltinRegistry {
     
     // and then set parameters from the FormField and Column annotations.
     // A form field annotation is tried first
-    if (fieldAnn != null) {
+    if (fieldAnn != null && type instanceof Type) {
       switch (fieldAnn.nullable()) {
       case TRUE :
-        // TODO fix
-        // type.setNullable(true);
+        ((Type)type).setNullable(true);
         break;
       case FALSE :
-        // TODO fix 
-        // type.setNullable(false);
+        ((Type)type).setNullable(false);
         break;
       case UNSPECIFIED:
         break;
