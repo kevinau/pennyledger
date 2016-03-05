@@ -6,24 +6,21 @@ import java.util.Map;
 
 import org.pennyledger.form.plan.IClassPlan;
 import org.pennyledger.form.plan.IObjectPlan;
+import org.pennyledger.form.plan.IReferencePlan;
 import org.pennyledger.form.reflect.ClassContainerReference;
 import org.pennyledger.form.reflect.IContainerReference;
-import org.pennyledger.form.value.IClassModel;
 import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
-import org.pennyledger.util.DualAccessMap;
 
-public class ClassModel extends ObjectModel implements IClassModel {
+public class ReferenceModel extends ObjectModel implements IReferenceModel {
 
   private final IContainerReference container;
-  private final IClassPlan<?> classPlan;
+  private final IReferencePlan referencePlan;
   
-  private final DualAccessMap<String, IObjectModel> memberMap = new DualAccessMap<>();
-  
-  public ClassModel (IForm<?> form, IObjectModel parent, IContainerReference container, IClassPlan<?> classPlan) {
+  public ReferenceModel (IForm<?> form, IObjectModel parent, IContainerReference container, IReferencePlan referencePlan) {
     super (form, parent);
     this.container = container;
-    this.classPlan = classPlan;
+    this.referencePlan = referencePlan;
   }
   
   @Override
@@ -49,10 +46,10 @@ public class ClassModel extends ObjectModel implements IClassModel {
         // Get the new value for this member
         String name = memberPlan.getName();
         Field memberField = classPlan.getMemberField(name);
+        memberField.setAccessible(true);
         
         Object v1;
         try {
-          memberField.setAccessible(true);
           v1 = memberField.get(currValue);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
           throw new RuntimeException(ex);
@@ -69,7 +66,6 @@ public class ClassModel extends ObjectModel implements IClassModel {
             IContainerReference childContainer = new ClassContainerReference(currValue, memberField);
             memberModel = memberPlan.buildModel(getForm(), this, childContainer);
             memberMap.put(name, memberModel);
-            getForm().fireModelAdded(this, memberModel);
             memberModel.syncToCurrentValue();
           } else {
             memberModel.setValue(v1);
@@ -130,7 +126,6 @@ public class ClassModel extends ObjectModel implements IClassModel {
   public void dispose() {
     for (IObjectModel member : memberMap.values()) {
       member.dispose();
-      getForm().fireModelRemoved(this, member);
     }
     memberMap.clear();
   }

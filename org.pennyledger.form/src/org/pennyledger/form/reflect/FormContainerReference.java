@@ -5,7 +5,8 @@ public class FormContainerReference implements IContainerReference {
   private Object value;
   
   
-  public FormContainerReference () {
+  public FormContainerReference (Object value) {
+    this.value = value;
   }
   
     

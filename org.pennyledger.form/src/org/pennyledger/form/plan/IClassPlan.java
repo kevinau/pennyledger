@@ -4,6 +4,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
+import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IForm;
+import org.pennyledger.form.value.IObjectModel;
+
 
 public interface IClassPlan<T> extends IObjectPlan {
 

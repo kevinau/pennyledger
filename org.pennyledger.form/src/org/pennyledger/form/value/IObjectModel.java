@@ -60,4 +60,6 @@ public interface IObjectModel {
 
   public void syncToCurrentValue();
 
+  public IForm<?> getForm();
+
 }

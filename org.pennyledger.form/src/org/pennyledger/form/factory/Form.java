@@ -1,22 +1,26 @@
 package org.pennyledger.form.factory;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.pennyledger.form.Entity;
 import org.pennyledger.form.EntryMode;
-import org.pennyledger.form.plan.IClassPlan;
+import org.pennyledger.form.plan.IObjectPlan;
+import org.pennyledger.form.plan.impl.ArrayPlan;
 import org.pennyledger.form.plan.impl.ClassPlan;
+import org.pennyledger.form.plan.impl.EntityPlan;
 import org.pennyledger.form.reflect.FormContainerReference;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.EffectiveModeListener;
 import org.pennyledger.form.value.ErrorListener;
 import org.pennyledger.form.value.FieldEventListener;
-import org.pennyledger.form.value.IClassModel;
+import org.pennyledger.form.value.IContainerModel;
 import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
 import org.pennyledger.form.value.IObjectVisitable;
-import org.pennyledger.form.value.impl.ClassModel;
+import org.pennyledger.form.value.ModelChangeListener;
 import org.pennyledger.util.UserEntryException;
 
 public class Form<T> implements IForm<T> {
@@ -24,12 +28,13 @@ public class Form<T> implements IForm<T> {
   private final EventListenerList<EffectiveModeListener> effectiveModeListeners = new EventListenerList<>();
   private final EventListenerList<ErrorListener> errorListeners = new EventListenerList<>();
   private final EventListenerList<FieldEventListener> fieldEventListeners = new EventListenerList<>();
+  private final List<ModelChangeListener> modelChangeListeners = new ArrayList<>();
 
   private EntryMode entryMode;
   
-  private IClassPlan<?> formPlan;
-  private IClassModel formModel;
-  private IContainerReference container = new FormContainerReference();
+  private IObjectPlan formPlan;
+  private IObjectModel formModel;
+  private IContainerReference container;
   
   public Form () {
     this (EntryMode.ENTRY);
@@ -46,7 +51,13 @@ public class Form<T> implements IForm<T> {
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Form (Class<?> formClass, EntryMode entryMode) {
     this.entryMode = entryMode;
-    formPlan = new ClassPlan(null, entityName(formClass), formClass, entryMode, false);;
+    if (formClass.isArray()) {
+      formPlan = new ArrayPlan(null, null, entityName(formClass), formClass, 0, entryMode);
+    } else if (formClass.isAnnotationPresent(Entity.class)) {
+      formPlan = new EntityPlan(formClass);
+    } else {
+      formPlan = new ClassPlan(null, entityName(formClass), formClass, entryMode, false);
+    }
   }
 
   protected static String entityName (Class<?> entityClass) {
@@ -220,9 +231,12 @@ public class Form<T> implements IForm<T> {
       formPlan = new ClassPlan(null, entityName(valueClass), valueClass, entryMode, false);;
     }
     if (formModel == null) {
-      formModel = new ClassModel(null, container, formPlan);
+      container = new FormContainerReference(value);
+      formModel = formPlan.buildModel(this, null, container);
+      formModel.syncToCurrentValue();
+    } else {
+      formModel.setValue(value);
     }
-    formModel.setValue(value);
   }
 
   @Override
@@ -247,7 +261,7 @@ public class Form<T> implements IForm<T> {
   }
 
   @Override
-  public IClassPlan<?> getPlan() {
+  public IObjectPlan getPlan() {
     return formPlan;
   }
   
@@ -259,6 +273,37 @@ public class Form<T> implements IForm<T> {
       if (formModel != null) {
         formModel.dump(1);
       }
+    }
+  }
+
+  @Override
+  public void fireModelAdded(IContainerModel parent, IObjectModel addedModel) {
+    for (ModelChangeListener x : modelChangeListeners) {
+      x.modelAdded(parent, addedModel);
+    }
+  }
+
+  @Override
+  public void fireModelRemoved(IContainerModel parent, IObjectModel removedModel) {
+    for (ModelChangeListener x : modelChangeListeners) {
+      x.modelRemoved(parent, removedModel);
+    }
+  }
+
+  @Override
+  public void addModelChangeListener(ModelChangeListener x) {
+    modelChangeListeners.add(x);
+  }
+
+  @Override
+  public void removeModelChangeListener(ModelChangeListener x) {
+    modelChangeListeners.remove(x);
+  }
+
+  @Override
+  public void fireModelReplaced(IContainerModel parent, IObjectModel removedModel, IObjectModel addedModel) {
+    for (ModelChangeListener x : modelChangeListeners) {
+      x.modelReplaced(parent, removedModel, addedModel);
     }
   }
 }

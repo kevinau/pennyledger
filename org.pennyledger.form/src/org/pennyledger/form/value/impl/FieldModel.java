@@ -6,10 +6,11 @@ import java.util.List;
 import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.reflect.IContainerReference;
-import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IFieldModel;
-import org.pennyledger.form.value.IObjectVisitable;
+import org.pennyledger.form.value.IFieldVisitable;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.IObjectVisitable;
 
 public class FieldModel extends ObjectModel implements IFieldModel {
 
@@ -18,8 +19,8 @@ public class FieldModel extends ObjectModel implements IFieldModel {
   private final IContainerReference container;
   private final IFieldPlan plan;
   
-  public FieldModel(IObjectModel parent, IContainerReference container, IFieldPlan plan) {
-    super(parent);
+  public FieldModel(IForm<?> form, IObjectModel parent, IContainerReference container, IFieldPlan plan) {
+    super(form, parent);
     this.container = container;
     this.plan = plan;
   }

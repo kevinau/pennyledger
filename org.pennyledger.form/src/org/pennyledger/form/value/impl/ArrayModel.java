@@ -9,6 +9,7 @@ import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IRepeatingPlan;
 import org.pennyledger.form.reflect.ArrayContainerReference;
 import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
 import org.pennyledger.form.value.IRepeatingModel;
 
@@ -23,8 +24,8 @@ public class ArrayModel extends ObjectModel implements IRepeatingModel{
   
   private List<IObjectModel> elemModels;
   
-  public ArrayModel (IObjectModel parent, IContainerReference container, IRepeatingPlan plan) {
-    super (parent);
+  public ArrayModel (IForm<?> form, IObjectModel parent, IContainerReference container, IRepeatingPlan plan) {
+    super (form, parent);
     this.container = container;
     this.plan = plan;
   }
@@ -67,7 +68,7 @@ public class ArrayModel extends ObjectModel implements IRepeatingModel{
       }
       while (j < newArray.length) {
         IContainerReference elemContainer = new ArrayContainerReference(newArray, j);
-        IObjectModel elemModel = plan.getElementPlan().buildModel(this, elemContainer);
+        IObjectModel elemModel = plan.getElementPlan().buildModel(getForm(), this, elemContainer);
         elemModels.add(elemModel);
         j++;
       }

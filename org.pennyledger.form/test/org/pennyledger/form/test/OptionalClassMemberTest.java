@@ -15,7 +15,6 @@ import org.pennyledger.form.value.IForm;
 public class OptionalClassMemberTest {
 
   private static class Inner {
-    @SuppressWarnings("unused")
     @Optional
     private String field11;
   }

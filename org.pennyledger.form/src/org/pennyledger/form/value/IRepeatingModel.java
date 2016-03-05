@@ -1,6 +1,6 @@
 package org.pennyledger.form.value;
 
-public interface IRepeatingModel extends IObjectModel {
+public interface IRepeatingModel extends IContainerModel {
   
   public int getSize();
 

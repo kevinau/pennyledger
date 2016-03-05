@@ -37,8 +37,8 @@ public class EventListenerList<T extends EventListener> {
   }
   
   
-  public void fireObjectEvents (IObjectModel soruce, IObjectEvent<T> event) {
-    IObjectModel p = soruce;
+  public void fireObjectEvents (IObjectModel source, IObjectEvent<T> event) {
+    IObjectModel p = source;
     while (p.getParent() != null) {
       p = p.getParent();
     }

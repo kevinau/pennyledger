@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:component name="org.gyfor.sql.dialect.component" xmlns:ns2="http://www.osgi.org/xmlns/scr/v1.1.0">
+<ns2:component name="org.pennyledger.sql.dialect.component" xmlns:ns2="http://www.osgi.org/xmlns/scr/v1.1.0">
 	<service>
-      <provide interface="org.gyfor.sql.dialect.DialectRegistry"/>
+      <provide interface="org.pennyledger.sql.dialect.DialectRegistry"/>
     </service>
     <reference name="LogService" interface="org.osgi.service.log.LogService" cardinality="0..1" policy="dynamic" bind="setLogService" unbind="unsetLogService"/>
-    <reference name="Dialect" interface="org.gyfor.sql.dialect.IDialect" cardinality="1..n" policy="dynamic" bind="addDialect" unbind="removeDialect"/>
-	<implementation class="org.gyfor.sql.dialect.DialectRegistry" />
+    <reference name="Dialect" interface="org.pennyledger.sql.dialect.IDialect" cardinality="1..n" policy="dynamic" bind="addDialect" unbind="removeDialect"/>
+	<implementation class="org.pennyledger.sql.dialect.DialectRegistry" />
 </ns2:component>

@@ -43,6 +43,7 @@ import org.pennyledger.form.plan.IValidationMethod;
 import org.pennyledger.form.plan.PlanKind;
 import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
 import org.pennyledger.form.value.impl.ClassModel;
 import org.pennyledger.util.UserEntryException;
@@ -215,7 +216,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   }
     
   
-  static IObjectPlan buildObjectPlan (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
+  public static IObjectPlan buildObjectPlan (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
     IObjectPlan objPlan;
     
     if (fieldType instanceof GenericArrayType) {
@@ -226,12 +227,12 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
       Type type1 = ptype.getRawType();
       if (type1.equals(List.class)) {
         Type[] typeArgs = ptype.getActualTypeArguments();
-      if (typeArgs.length != 1) {
-        throw new IllegalArgumentException("List must have one, and only one, type parameter");
-      }
-      Type type2 = typeArgs[0];
-      objPlan = new ArrayPlan(parent, field, name, (Class<?>)type2, dimension + 1, entryMode);
-    } else {
+        if (typeArgs.length != 1) {
+          throw new IllegalArgumentException("List must have one, and only one, type parameter");
+        }
+        Type type2 = typeArgs[0];
+        objPlan = new ArrayPlan(parent, field, name, (Class<?>)type2, dimension + 1, entryMode);
+      } else {
         throw new IllegalArgumentException("Parameterized type that is not a List");
       }
     } else if (fieldType instanceof Class) {
@@ -262,7 +263,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
     // or does the field type match one of the build in field types
     IType<?> type = BuiltinRegistry.lookupType(fieldClass, formFieldAnn, columnAnn);
     if (type != null) {
-      objectPlan = new FieldPlan(parent, name, type, entryMode, optional);
+      objectPlan = new FieldPlan(parent, name, type, field, entryMode, optional);
     } else {
       //If within a collection (array or list) any object that is not a field, is an embedded class type.
       if (dimension >= 0) {
@@ -807,8 +808,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
 
   @Override
-  public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
-    return new ClassModel(parent, container, this);
+  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
+    return new ClassModel(form, parent, container, this);
   }
 
 

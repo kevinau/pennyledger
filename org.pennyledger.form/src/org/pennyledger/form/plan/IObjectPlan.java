@@ -2,6 +2,7 @@ package org.pennyledger.form.plan;
 
 import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
 
 /**
@@ -67,8 +68,8 @@ public interface IObjectPlan {
 
   public PlanKind kind();
   
-  public IObjectModel buildModel (IObjectModel parent, IContainerReference container);
+  public IObjectModel buildModel (IForm<?> form, IObjectModel parent, IContainerReference container);
 
   public Object newValue();
-  
+
 }

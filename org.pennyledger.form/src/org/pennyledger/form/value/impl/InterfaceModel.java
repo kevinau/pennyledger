@@ -7,6 +7,7 @@ import org.pennyledger.form.plan.IInterfacePlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.impl.ClassPlan;
 import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IInterfaceModel;
 import org.pennyledger.form.value.IObjectModel;
 
@@ -21,8 +22,8 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
   
 //  private Map<String, Object> priorValues = new HashMap<>();
   
-  public InterfaceModel (IObjectModel parent, IContainerReference container, IInterfacePlan plan) {
-    super (parent);
+  public InterfaceModel (IForm<?> form, IObjectModel parent, IContainerReference container, IInterfacePlan plan) {
+    super (form, parent);
     this.container = container;
     this.plan = plan;
   }
@@ -52,7 +53,7 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
       if (implModel == null) {
         implClass = currValue.getClass();
         implPlan = new ClassPlan(implClass);
-        implModel = implPlan.buildModel(this, container);
+        implModel = implPlan.buildModel(getForm(), this, container);
         implModel.setValue(currValue);
       } else {
         // We have new and old values that are both not null.
@@ -70,7 +71,7 @@ public class InterfaceModel extends ObjectModel implements IInterfaceModel{
           // Build a new plan and model, and then set the new value on that.
           implClass = newClass;
           implPlan = new ClassPlan(newClass);
-          implModel = implPlan.buildModel(this, container);
+          implModel = implPlan.buildModel(getForm(), this, container);
           //reapplyPriorValues ("", implModel);
           implModel.setValue(currValue);
         }

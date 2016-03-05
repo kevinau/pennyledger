@@ -1,21 +1,29 @@
 package org.pennyledger.form.plan.impl;
 
+import org.pennyledger.form.Entity;
 import org.pennyledger.form.EntryMode;
-import org.pennyledger.form.plan.IClassPlan;
+import org.pennyledger.form.plan.IEntityPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IReferencePlan;
 import org.pennyledger.form.plan.PlanKind;
+import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IForm;
+import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.impl.ReferenceModel;
 
 
 public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
 
-  private final IClassPlan<T> referencedPlan;
+  private final IEntityPlan<T> referencedPlan;
   private final boolean optional;
   
   
   public ReferencePlan(IObjectPlan parent, String pathName, Class<T> referencedClass, EntryMode entryMode, boolean optional) {
     super(parent, pathName, entryMode);
-    this.referencedPlan = new ClassPlan<T>(referencedClass);
+    if (!referencedClass.isAnnotationPresent(Entity.class)) {
+      throw new IllegalArgumentException("Referenced class is not annotated with @Entity");
+    }
+    this.referencedPlan = new EntityPlan<T>(referencedClass);
     this.optional = optional;
   }
   
@@ -27,7 +35,7 @@ public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
 
   
   @Override
-  public IClassPlan<T> getReferencedPlan() {
+  public IEntityPlan<T> getReferencedPlan() {
     return referencedPlan;
   }
   
@@ -42,6 +50,18 @@ public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
   @Override
   public PlanKind kind() {
     return PlanKind.REFERENCE;
+  }
+
+
+  @Override
+  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
+    return new ReferenceModel(form, parent, container, this);
+  }
+
+
+  @Override
+  public Object newValue() {
+    return referencedPlan.getIdField().newValue();
   }
 
 }

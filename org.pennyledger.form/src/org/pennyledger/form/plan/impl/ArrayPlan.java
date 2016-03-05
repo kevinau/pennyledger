@@ -9,6 +9,7 @@ import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IRepeatingPlan;
 import org.pennyledger.form.plan.PlanKind;
 import org.pennyledger.form.reflect.IContainerReference;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
 import org.pennyledger.form.value.impl.ArrayModel;
 
@@ -99,8 +100,8 @@ public class ArrayPlan extends ObjectPlan implements IRepeatingPlan {
 
 
   @Override
-  public IObjectModel buildModel(IObjectModel parent, IContainerReference container) {
-    return new ArrayModel(parent, container, this);
+  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
+    return new ArrayModel(form, parent, container, this);
   }
 
 

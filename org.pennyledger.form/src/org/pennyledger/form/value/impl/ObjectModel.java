@@ -7,10 +7,11 @@ import org.pennyledger.form.path.StepPath;
 import org.pennyledger.form.path.Trail;
 import org.pennyledger.form.path.parser.ParseException;
 import org.pennyledger.form.path.parser.SimplePathParser;
-import org.pennyledger.form.value.IFieldVisitable;
 import org.pennyledger.form.value.IFieldModel;
-import org.pennyledger.form.value.IObjectVisitable;
+import org.pennyledger.form.value.IFieldVisitable;
+import org.pennyledger.form.value.IForm;
 import org.pennyledger.form.value.IObjectModel;
+import org.pennyledger.form.value.IObjectVisitable;
 
 public abstract class ObjectModel implements IObjectModel {
 
@@ -88,9 +89,11 @@ public abstract class ObjectModel implements IObjectModel {
 //    return model;
 //  }
 
+  private final IForm<?> form;
   private final IObjectModel parent;
 
-  protected ObjectModel(IObjectModel parent) {
+  protected ObjectModel(IForm<?> form, IObjectModel parent) {
+    this.form = form;
     this.parent = parent;
   }
   
@@ -114,6 +117,11 @@ public abstract class ObjectModel implements IObjectModel {
   @Override
   public IObjectModel getParent() {
     return parent;
+  }
+  
+  @Override
+  public IForm<?> getForm() {
+    return form;
   }
   
   @Override

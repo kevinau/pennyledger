@@ -15,19 +15,16 @@
  *******************************************************************************/
 package org.pennyledger.form;
 
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.persistence.UniqueConstraint;
-
-
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface FormInfo {
-  public String description() default "\u0000";
+@Target({ElementType.TYPE})
+public @interface NaturalKey {
   
-  public UniqueConstraint[] uniqueConstraints() default {};
-
+  String[] value() default {};
+  
 }

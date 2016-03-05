@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.pennyledger.form.factory.Form;
 import org.pennyledger.form.value.IFieldModel;
 import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectModel;
 
 public class SimpleArray {
 
