@@ -2,8 +2,9 @@ package org.pennyledger.about;
 
 import org.osgi.service.component.annotations.Component;
 
-@Component(property = { "osgi.command.scope" + ":String=pl",
-    "osgi.command.function" + ":String=hello" }, 
+@Component(
+    property = { "osgi.command.scope" + ":String=pl",
+                 "osgi.command.function" + ":String=hello" }, 
     service = Object.class)
 public class AboutCommand {
 
