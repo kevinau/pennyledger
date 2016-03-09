@@ -13,25 +13,14 @@ public class AboutThisProgram {
 
   private static Logger logger = LoggerFactory.getLogger(AboutThisProgram.class);
   
-  private static final String version = "1.0.0";
-  
-  private static String[] text = {
-    "",
-    "PennyLedger, version " + version,
-    "Copyright (c) Kevin Holloway 2013-2016",
-    "",
-    "This Source Code Form is subject to the terms",
-    "of the Mozilla Public License, version 2.0.",
-    "If a copy of the MPL was not distributed with this",
-    "file, You can obtain one at http://mozilla.org/MPL/2.0/",
-  };
-
-
   @Activate
-  protected void s () {
-    for (String x : text) {
-      logger.info(x);
-    }
+  protected void activate () {
+    IAboutLineAction.getAboutFile(this.getClass(), new IAboutLineAction() {
+      @Override
+      public void doLine(String line) {
+        logger.info(line);
+      }
+    });
   }
 
   @Deactivate
