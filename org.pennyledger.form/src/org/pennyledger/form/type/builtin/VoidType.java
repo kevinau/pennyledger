@@ -1,5 +1,9 @@
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 
@@ -54,4 +58,19 @@ public class VoidType implements IType<Void> {
     return true;
   }
 
+  
+  @Override
+  public String getSQLType() {
+    throw new IllegalStateException("Void type is never stored in a database");
+  }
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Void value) throws SQLException {
+    throw new IllegalStateException("Void type value is never set in the database");
+  }
+
+  @Override
+  public Void getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    throw new IllegalStateException("Void type value is never retrieved from the database");
+  }
 }

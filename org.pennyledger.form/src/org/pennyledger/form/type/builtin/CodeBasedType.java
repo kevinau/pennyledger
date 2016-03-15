@@ -11,6 +11,9 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.pennyledger.form.type.IType;
@@ -230,6 +233,29 @@ public abstract class CodeBasedType<T extends ICodeValue> implements IType<T> {
       buffer.append(cv.getCode());
     }
     return buffer.toString();
+  }
+
+  
+  @Override
+  public String getSQLType() {
+    return "VARCHAR(" + getFieldSize() + ")";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, T value) throws SQLException {
+    stmt.setString(sqlIndex, value.getCode());
+  }
+
+
+  @Override
+  public T getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    String s = resultSet.getString(sqlIndex);
+    try {
+      return createFromString(s);
+    } catch (UserEntryException ex) {
+      throw new SQLException("Illegal value: " + s);
+    }
   }
 
 }

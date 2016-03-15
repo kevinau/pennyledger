@@ -6,10 +6,6 @@ import org.pennyledger.form.plan.IEntityPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IReferencePlan;
 import org.pennyledger.form.plan.PlanKind;
-import org.pennyledger.form.reflect.IContainerReference;
-import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectModel;
-import org.pennyledger.form.value.impl.ReferenceModel;
 
 
 public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
@@ -53,15 +49,15 @@ public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
   }
 
 
-  @Override
-  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
-    return new ReferenceModel(form, parent, container, this);
-  }
-
-
-  @Override
-  public Object newValue() {
-    return referencedPlan.getIdField().newValue();
-  }
+//  @Override
+//  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
+//    return new ReferenceModel(form, parent, container, this);
+//  }
+//
+//
+//  @Override
+//  public Object newValue() {
+//    return referencedPlan.getIdField().newValue();
+//  }
 
 }

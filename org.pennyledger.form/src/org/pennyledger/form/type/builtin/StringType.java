@@ -11,6 +11,10 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.TextCase;
 import org.pennyledger.util.UserEntryException;
 
@@ -55,6 +59,18 @@ public class StringType extends StringBasedType<String> {
   @Override
   public String primalValue () {
     return "";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, String value) throws SQLException {
+    stmt.setString(sqlIndex,  value);
+  }
+
+
+  @Override
+  public String getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getString(sqlIndex);
   }
 
 }

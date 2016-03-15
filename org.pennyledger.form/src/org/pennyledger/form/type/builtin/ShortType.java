@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.util.UserEntryException;
 
 public class ShortType extends IntegerBasedType<Short> {
@@ -52,6 +56,24 @@ public class ShortType extends IntegerBasedType<Short> {
   @Override
   protected void validate (Short value) throws UserEntryException {
     checkWithinRange(value);
+  }
+
+
+  @Override
+  public String getSQLType() {
+    return "SMALLINT";
+  }
+
+  
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Short value) throws SQLException {
+    stmt.setShort(sqlIndex, value);
+  }
+
+
+  @Override
+  public Short getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getShort(sqlIndex);
   }
 
 }

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.util.UserEntryException;
 
 public class ByteType extends IntegerBasedType<Byte> {
@@ -48,10 +52,28 @@ public class ByteType extends IntegerBasedType<Byte> {
     return 0;
   }
 
+  
+  @Override
+  public String getSQLType() {
+    return "SMALLINT";
+  }
 
+  
   @Override
   protected void validate (Byte value) throws UserEntryException {
     checkWithinRange(value);
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Byte value) throws SQLException {
+    stmt.setShort(sqlIndex, value.shortValue());
+  }
+
+
+  @Override
+  public Byte getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return (byte)resultSet.getShort(sqlIndex);
   }
 
 }

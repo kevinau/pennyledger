@@ -65,7 +65,6 @@ public class CodeValue extends TextValue implements ICodeValue {
     }
   }
 
-  
 
   @Override
   public boolean isObsolete() {

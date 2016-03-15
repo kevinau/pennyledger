@@ -11,18 +11,21 @@
 package org.pennyledger.form.type.builtin;
 
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.pennyledger.util.UserEntryException;
 
 
-public class FileType extends FileBasedType<File> {
+public class PathType extends PathBasedType<File> {
 
-  public FileType () {
+  public PathType () {
     super ();
   }
   
   
-  public FileType (int viewSize, String dialogName, String[] filterExtensions, String[] filterNames) {
+  public PathType (int viewSize, String dialogName, String[] filterExtensions, String[] filterNames) {
     super (viewSize, dialogName, filterExtensions, filterNames);
   }
 
@@ -52,6 +55,24 @@ public class FileType extends FileBasedType<File> {
   @Override
   public int getFieldSize() {
     return 255;
+  }
+
+  
+  @Override
+  public String getSQLType() {
+    return "VARCHAR(" + getFieldSize() + ")";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, File value) throws SQLException {
+    stmt.setString(sqlIndex, value.toString());
+  }
+
+
+  @Override
+  public File getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return new File(resultSet.getString(sqlIndex));
   }
 
 }

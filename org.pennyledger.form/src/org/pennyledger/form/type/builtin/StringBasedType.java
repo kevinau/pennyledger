@@ -1,5 +1,8 @@
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 
 import org.pennyledger.form.TextCase;
@@ -89,15 +92,36 @@ public abstract class StringBasedType<T> extends Type<T> implements ILengthSetta
 //  }
 
   
+
+  
+  @Override
+  public String getSQLType() {
+    return "VARCHAR(" + getFieldSize() + ")";
+  }
+
+  
   protected T createFromString2(String source) throws UserEntryException {
     T value = newInstance(source);
     validate (value);
     return value;
   }
 
-
   
   @Override
   public abstract T primalValue();
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, T value) throws SQLException {
+    stmt.setString(sqlIndex, value.toString());
+    
+  }
+
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public T getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return (T)resultSet.getString(sqlIndex);
+  }
 
 }  

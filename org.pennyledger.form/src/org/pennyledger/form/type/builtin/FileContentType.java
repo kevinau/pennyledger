@@ -10,11 +10,17 @@ s * Copyright (c) 2012 Kevin Holloway (kholloway@geckosoftware.co.uk).
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.util.UserEntryException;
 import org.pennyledger.value.FileContent;
 
 
-public class FileContentType extends FileBasedType<FileContent> {
+public class FileContentType extends PathBasedType<FileContent> {
   
   public FileContentType () {
     super ();
@@ -53,4 +59,50 @@ public class FileContentType extends FileBasedType<FileContent> {
   }
 
 
+  @Override
+  public String[] getSQLTypes() {
+    return new String[] {
+        "VARCHAR(" + getFieldSize() + ")",
+        "BLOB",
+    };
+  }
+
+
+  @Override
+  public String getSQLType() {
+    // Not used
+    return null;
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, FileContent value) throws SQLException {
+    // Not used
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int[] sqlIndex, FileContent value) throws SQLException {
+    stmt.setString(sqlIndex[0]++, value.getFileName());
+    Blob blob = stmt.getConnection().createBlob();
+    blob.setBytes(1, value.getContents());
+    stmt.setBlob(sqlIndex[0]++, blob);
+  }
+
+
+  @Override
+  public FileContent getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    // Not used
+    return null;
+  }
+
+
+  @Override
+  public FileContent getSQLValue(ResultSet resultSet, int[] sqlIndex) throws SQLException {
+    String fileName = resultSet.getString(sqlIndex[0]++);
+    Blob blob = resultSet.getBlob(sqlIndex[0]++);
+    byte[] bytes = blob.getBytes(1, (int)blob.length());
+    return new FileContent(fileName, bytes);
+  }
+  
 }

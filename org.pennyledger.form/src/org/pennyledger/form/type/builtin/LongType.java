@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.util.UserEntryException;
 
 public class LongType extends IntegerBasedType<Long> {
@@ -52,6 +56,23 @@ public class LongType extends IntegerBasedType<Long> {
   @Override
   protected void validate (Long value) throws UserEntryException {
     checkWithinRange(value);
+  }
+
+
+  @Override
+  public String getSQLType() {
+    return "BIGINT";
+  }
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Long value) throws SQLException {
+    stmt.setLong(sqlIndex, value);
+  }
+
+
+  @Override
+  public Long getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getLong(sqlIndex);
   }
 
 }

@@ -71,5 +71,16 @@ public class PostgresqlDialect implements IDialect {
 
     return new DriverManagerConnectionFactory(url, props);
   }
+
+  @Override
+  public String dropTableTemplate() {
+    return "DROP TABLE {} IF EXISTS";
+  }
+
+  @Override
+  public String idColumnTemplate() {
+    return "id integer SERIAL PRIMARY KEY";
+  }
   
+
 }

@@ -9,8 +9,6 @@ import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.impl.ArrayPlan;
 import org.pennyledger.form.plan.impl.ClassPlan;
 import org.pennyledger.form.plan.impl.EntityPlan;
-import org.pennyledger.form.reflect.FormContainerReference;
-import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.value.EffectiveModeListener;
 import org.pennyledger.form.value.ErrorListener;
 import org.pennyledger.form.value.FieldEventListener;
@@ -30,19 +28,19 @@ public class Form<T> implements IForm<T> {
   private final EventListenerList<FieldEventListener> fieldEventListeners = new EventListenerList<>();
   private final List<ModelChangeListener> modelChangeListeners = new ArrayList<>();
 
-  private EntryMode entryMode;
+//  private EntryMode entryMode;
   
   private IObjectPlan formPlan;
   private IObjectModel formModel;
-  private IContainerReference container;
+//  private IContainerReference container;
   
-  public Form () {
-    this (EntryMode.ENTRY);
-  }
-
-  public Form (EntryMode entryMode) {
-    this.entryMode = entryMode;
-  }
+//  public Form () {
+//    this (EntryMode.ENTRY);
+//  }
+//
+//  public Form (EntryMode entryMode) {
+//    this.entryMode = entryMode;
+//  }
 
   public Form (Class<?> formClass) {
     this (formClass, EntryMode.ENTRY);
@@ -50,13 +48,13 @@ public class Form<T> implements IForm<T> {
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Form (Class<?> formClass, EntryMode entryMode) {
-    this.entryMode = entryMode;
+//    this.entryMode = entryMode;
     if (formClass.isArray()) {
       formPlan = new ArrayPlan(null, null, entityName(formClass), formClass, 0, entryMode);
     } else if (formClass.isAnnotationPresent(Entity.class)) {
       formPlan = new EntityPlan(formClass);
     } else {
-      formPlan = new ClassPlan(null, entityName(formClass), formClass, entryMode, false);
+      formPlan = new ClassPlan(null, entityName(formClass), formClass, entryMode);
     }
   }
 
@@ -199,14 +197,14 @@ public class Form<T> implements IForm<T> {
     return formModel.getObjectModels(pathExpr);
   }
 
-  @Override
-  public T getValue() {
-    if (formModel == null) {
-      return null;
-    } else {
-      return formModel.getValue();
-    }
-  }
+//  @Override
+//  public T getValue() {
+//    if (formModel == null) {
+//      return null;
+//    } else {
+//      return formModel.getValue();
+//    }
+//  }
 
   @Override
   public void removeEffectiveModeListener(String pathExpr, EffectiveModeListener x) {
@@ -223,21 +221,21 @@ public class Form<T> implements IForm<T> {
     errorListeners.add(pathExpr, x);
   }
   
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  @Override
-  public void setValue(Object value) {
-    if (formPlan == null) {
-      Class<?> valueClass = value.getClass();
-      formPlan = new ClassPlan(null, entityName(valueClass), valueClass, entryMode, false);;
-    }
-    if (formModel == null) {
-      container = new FormContainerReference(value);
-      formModel = formPlan.buildModel(this, null, container);
-      formModel.syncToCurrentValue();
-    } else {
-      formModel.setValue(value);
-    }
-  }
+//  @SuppressWarnings({ "rawtypes", "unchecked" })
+//  @Override
+//  public void setValue(Object value) {
+//    if (formPlan == null) {
+//      Class<?> valueClass = value.getClass();
+//      formPlan = new ClassPlan(null, entityName(valueClass), valueClass, entryMode);;
+//    }
+//    if (formModel == null) {
+//      container = new FormContainerReference(value);
+//      formModel = formPlan.buildModel(this, null, container);
+//      formModel.syncToCurrentValue();
+//    } else {
+//      formModel.setValue(value);
+//    }
+//  }
 
   @Override
   public void walkFieldModels(IFieldVisitable x) {

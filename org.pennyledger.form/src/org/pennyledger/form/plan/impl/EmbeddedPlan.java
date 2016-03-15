@@ -6,8 +6,8 @@ import org.pennyledger.form.plan.PlanKind;
 
 public class EmbeddedPlan<T> extends ClassPlan<T> {
 
-  public EmbeddedPlan (IObjectPlan parent, String name, Class<T> klass, EntryMode entryMode, boolean optional) {
-    super (parent, name, klass, entryMode, optional);
+  public EmbeddedPlan (IObjectPlan parent, String name, Class<T> klass, EntryMode entryMode) {
+    super (parent, name, klass, entryMode);
   }
   
 

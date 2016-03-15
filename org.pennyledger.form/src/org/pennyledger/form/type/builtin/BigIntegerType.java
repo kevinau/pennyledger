@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.pennyledger.util.UserEntryException;
 
@@ -58,6 +62,24 @@ public class BigIntegerType extends IntegerBasedType<BigInteger> {
   @Override
   protected void validate (BigInteger value) throws UserEntryException {
     checkWithinRange(value.longValue());
+  }
+
+  
+  @Override
+  public String getSQLType() {
+    return "DECIMAL(" + getMaxDigits() + ")";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, BigInteger value) throws SQLException {
+    stmt.setBigDecimal(sqlIndex, new BigDecimal(value));
+  }
+
+
+  @Override
+  public BigInteger getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getBigDecimal(sqlIndex).toBigInteger();
   }
 
 }

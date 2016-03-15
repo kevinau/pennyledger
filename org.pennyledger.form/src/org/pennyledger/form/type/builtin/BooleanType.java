@@ -10,6 +10,10 @@ ow * Copyright (c) 2012 Kevin Holloway (kholloway@geckosoftware.co.uk).
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 
@@ -112,4 +116,22 @@ public class BooleanType extends Type<Boolean> implements IType<Boolean> {
     return 1;
   }
 
+
+  @Override
+  public String getSQLType() {
+    return "BOOLEAN";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Boolean value) throws SQLException {
+    stmt.setBoolean(sqlIndex, (Boolean)value);
+  }
+
+
+  @Override
+  public Boolean getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getBoolean(sqlIndex);
+  }
+  
 }

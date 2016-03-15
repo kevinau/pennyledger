@@ -11,6 +11,9 @@
 package org.pennyledger.form.type.builtin;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.pennyledger.form.NumberSign;
 import org.pennyledger.util.UserEntryException;
@@ -77,5 +80,17 @@ public class BigDecimalType extends DecimalBasedType<BigDecimal> {
   public BigDecimal newValue() {
     return BigDecimal.ZERO;
   }
-  
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, BigDecimal value) throws SQLException {
+    stmt.setBigDecimal(sqlIndex, value);
+  }
+
+
+  @Override
+  public BigDecimal getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getBigDecimal(sqlIndex);
+  }
+
 }

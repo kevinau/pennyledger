@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.util.UserEntryException;
 
 public class IntegerType extends IntegerBasedType<Integer> {
@@ -53,6 +57,24 @@ public class IntegerType extends IntegerBasedType<Integer> {
   @Override
   protected void validate (Integer value) throws UserEntryException {
     checkWithinRange(value);
+  }
+
+
+  @Override
+  public String getSQLType() {
+    return "INTEGER";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Integer value) throws SQLException {
+    stmt.setInt(sqlIndex, value);
+  }
+
+
+  @Override
+  public Integer getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getInt(sqlIndex);
   }
 
 }

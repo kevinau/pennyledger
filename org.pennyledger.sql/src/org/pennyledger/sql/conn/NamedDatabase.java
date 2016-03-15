@@ -18,7 +18,7 @@ import org.pennyledger.sql.dialect.IDialect;
 
 
 @Component(configurationPolicy=ConfigurationPolicy.REQUIRE)
-public class NamedConnectionFactory implements INamedConnectionFactory {
+public class NamedDatabase implements INamedConnectionFactory {
 
   @Configurable(name="dialect", required=true)
   private String dialectName;
@@ -68,14 +68,20 @@ public class NamedConnectionFactory implements INamedConnectionFactory {
 
   @Override
   public IConnection getIConnection() {
-    java.sql.Connection conn = getConnection();
-    return new Connection(conn);
+    IDialect dialect = dialectRegistry.getDialect(dialectName);
+    String url = MessageFormat.format(dialect.getURLTemplate(), serverName, dbname);
+
+    Properties props = new Properties();
+    props.put("user", username);
+    props.put("password", password);
+    
+    java.sql.Connection conn = dialect.getConnection(url, props);
+    return new Connection(dialect, conn);
   }
   
   
   @Override
   public java.sql.Connection getConnection() {
-    System.out.println("================== " + dialectName);
     IDialect dialect = dialectRegistry.getDialect(dialectName);
     String url = MessageFormat.format(dialect.getURLTemplate(), serverName, dbname);
 

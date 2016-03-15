@@ -1,9 +1,6 @@
 package org.pennyledger.form.plan;
 
 import org.pennyledger.form.EntryMode;
-import org.pennyledger.form.reflect.IContainerReference;
-import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectModel;
 
 /**
  * The detail of a class field. The plan contains sufficient detail about a
@@ -52,24 +49,6 @@ public interface IObjectPlan {
     }
   }
 
-  /**
-   * Can this field take a <code>null</code> value and still be valid.
-   * <p>
-   * Note that is attribute is similar to the @Nullable/@NotNull annotations,
-   * except that:
-   * <ul>
-   * <li>While an instance of the field is being constructed the field can be
-   * <code>null</code></li>
-   * <li>If a field is not nullable, and there is no entered value, the field is
-   * shown as an error.</li>
-   * </ul>
-   */
-  public boolean isOptional();
-
   public PlanKind kind();
   
-  public IObjectModel buildModel (IForm<?> form, IObjectModel parent, IContainerReference container);
-
-  public Object newValue();
-
 }

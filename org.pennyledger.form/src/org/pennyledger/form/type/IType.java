@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.util.UserEntryException;
 
 public interface IType<T> {
@@ -66,6 +70,39 @@ public interface IType<T> {
     } else {
       return primalValue();
     }
+  }
+
+  /**
+   * Returns the SQL type description for this type.
+   */
+  public String getSQLType();
+
+  
+  public default String[] getSQLTypes() {
+    return null;
+  }
+
+  
+  /**
+   * Set an value, of this type, in a SQL statement.
+   * @throws SQLException 
+   */
+  public void setSQLValue (PreparedStatement stmt, int sqlIndex, T value) throws SQLException;
+    
+    
+  public default void setSQLValue (PreparedStatement stmt, int[] sqlIndex, T value) throws SQLException {
+    setSQLValue (stmt, sqlIndex[0]++, value);
+  }
+  
+
+  /**
+   * Get a value from a SQL statement
+   */
+  public T getSQLValue (ResultSet resultSet, int sqlIndex) throws SQLException;
+  
+  
+  public default T getSQLValue (ResultSet resultSet, int[] sqlIndex) throws SQLException {
+    return getSQLValue (resultSet, sqlIndex[0]++);
   }
 
 }

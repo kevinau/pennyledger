@@ -7,29 +7,25 @@ import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.PlanKind;
-import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
-import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectModel;
-import org.pennyledger.form.value.impl.FieldModel;
 
 public class FieldPlan extends ObjectPlan implements IFieldPlan {
 
   private final IType<?> type;
   private final Field field;
-  private final boolean optional;
+  private final boolean nullable;
   //private final Field lastEntryField;
   //private final Object staticDefaultValue;
   
   
-  public FieldPlan (IObjectPlan parent, String name, IType<?> type, Field field, EntryMode entryMode, boolean optional) {
+  public FieldPlan (IObjectPlan parent, String name, IType<?> type, Field field, EntryMode entryMode, boolean nullable) {
     super (parent, name, entryMode);
     if (type == null) { 
       throw new IllegalArgumentException("Type argument cannot be null");
     }
     this.type = type;
     this.field = field;
-    this.optional = optional;
+    this.nullable = nullable;
     //this.lastEntryField = lastEntryField;
     //this.staticDefaultValue = staticDefaultValue;
   }
@@ -42,8 +38,8 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
   
   
   @Override
-  public boolean isOptional () {
-    return optional;
+  public boolean isNullable () {
+    return nullable;
   }
   
   
@@ -61,7 +57,7 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
   @Override
   public void dump (int level) {
     indent(level);
-    System.out.println("FieldPlan("  + type + ",optional=" + optional + "," + super.toString() + ")");
+    System.out.println("FieldPlan("  + type + ",nullable=" + nullable + "," + super.toString() + ")");
   }
   
   
@@ -83,15 +79,15 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
   }
 
 
-  @Override
-  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
-    return new FieldModel(form, parent, container, this);
-  }
-
-  @Override
-  public Object newValue () {
-    return type.newValue();
-  }
+//  @Override
+//  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
+//    return new FieldModel(form, parent, container, this);
+//  }
+//
+//  @Override
+//  public Object newValue () {
+//    return type.newValue();
+//  }
 
 
   @Override

@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.NumberSign;
 import org.pennyledger.math.Decimal;
 import org.pennyledger.util.UserEntryException;
@@ -65,6 +70,19 @@ public class DecimalType extends DecimalBasedType<Decimal> {
   protected void validate(Decimal value) throws UserEntryException {
     validatePrecision(value.longValue());
     validateDecimals(value.trim().getScale());
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Decimal value) throws SQLException {
+    stmt.setBigDecimal(sqlIndex, new BigDecimal(value.toString()));
+  }
+
+
+  @Override
+  public Decimal getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    BigDecimal bd = resultSet.getBigDecimal(sqlIndex);
+    return new Decimal(bd.toString());
   }
 
 }

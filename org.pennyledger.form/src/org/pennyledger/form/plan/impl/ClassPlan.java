@@ -41,18 +41,13 @@ import org.pennyledger.form.plan.IRuntimeOccursProvider;
 import org.pennyledger.form.plan.IRuntimeTypeProvider;
 import org.pennyledger.form.plan.IValidationMethod;
 import org.pennyledger.form.plan.PlanKind;
-import org.pennyledger.form.reflect.IContainerReference;
 import org.pennyledger.form.type.IType;
-import org.pennyledger.form.value.IForm;
-import org.pennyledger.form.value.IObjectModel;
-import org.pennyledger.form.value.impl.ClassModel;
 import org.pennyledger.util.UserEntryException;
 
 
 public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   private final Class<T> klass;
-  private final boolean optional;
 
   private final Map<String, IObjectPlan> memberPlans = new LinkedHashMap<>();
   private final Map<String, Field> memberFields = new HashMap<>();
@@ -69,14 +64,13 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   
   public ClassPlan (Class<T> klass) {
-    this (null, entityName(klass), klass, entityEntryMode(klass), false);
+    this (null, entityName(klass), klass, entityEntryMode(klass));
   }
   
 
-  public ClassPlan (IObjectPlan parent, String pathName, Class<T> klass, EntryMode entryMode, boolean optional) {
+  public ClassPlan (IObjectPlan parent, String pathName, Class<T> klass, EntryMode entryMode) {
     super (parent, pathName, entryMode);
     this.klass = klass;
-    this.optional = optional;
     
 //    Mode modeAnn = klass.getAnnotation(Mode.class);
 //    if (modeAnn != null) {
@@ -191,7 +185,6 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
           if (optionalAnn != null) {
             optional = optionalAnn.value();
           } else {
-            // nullable should equal type.isOptional(), but this has not been implemented on IType
             optional = false;
           }
         }
@@ -283,12 +276,12 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
             // members are considered as potential entry fields.
             boolean embdAnn = field.isAnnotationPresent(Embedded.class);
             if (embdAnn) {
-              objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode, optional);
+              objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
             } else {
               // The Embeddable annotation on the field class also identifies a class type.
               boolean emblAnn = fieldClass.isAnnotationPresent(Embeddable.class);
               if (emblAnn) {
-                objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode, optional);
+                objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
               } else {
                 // Otherwise, throw an error.
                 throw new RuntimeException("Field type not recognised: " + name + " " + fieldType);
@@ -807,31 +800,25 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   }
 
 
-  @Override
-  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
-    return new ClassModel(form, parent, container, this);
-  }
-
-
-  @Override
-  public boolean isOptional() {
-    return optional;
-  }
-
-
-  @Override
-  public T newValue() {
-    T newValue;
-    try {
-      newValue = klass.newInstance();
-      for (IObjectPlan memberPlan : memberPlans.values()) {
-        Field field = memberFields.get(memberPlan.getName());
-        field.set(newValue, memberPlan.newValue());
-      }
-    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException ex) {
-      throw new RuntimeException(ex);
-    }
-    return newValue;
-  }
+//  @Override
+//  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
+//    return new ClassModel(form, parent, container, this);
+//  }
+//
+//
+//  @Override
+//  public T newValue() {
+//    T newValue;
+//    try {
+//      newValue = klass.newInstance();
+//      for (IObjectPlan memberPlan : memberPlans.values()) {
+//        Field field = memberFields.get(memberPlan.getName());
+//        field.set(newValue, memberPlan.newValue());
+//      }
+//    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException ex) {
+//      throw new RuntimeException(ex);
+//    }
+//    return newValue;
+//  }
 
 }

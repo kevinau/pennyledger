@@ -7,9 +7,9 @@ import org.pennyledger.util.UserEntryException;
 
 public interface IForm<T> {
 
-  public void setValue(T value);
-  
-  public T getValue();
+//  public void setValue(T value);
+//  
+//  public T getValue();
 
   public List<IObjectModel> getObjectModels();
 

@@ -61,5 +61,15 @@ public interface IDialect {
    *         to be issued from a connection pool.
    */
   public ConnectionFactory getConnectionFactory(String url, Properties props);
+
+  public default String dropTableTemplate() {
+    return "DROP TABLE {}";
+  }
+  
+  public default String createTableTemplate () {
+    return "CREATE TABLE {0}";
+  }
+
+  public String idColumnTemplate();
   
 }

@@ -22,30 +22,36 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Serializable;
 
-public class FileContent extends File implements Serializable {
+public class FileContent implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+  private final String fileName;
   private byte[] contents;
   
-  public FileContent (String fileName) {
-    super (fileName);
-    loadFile();
+  public FileContent (String pathName) {
+    this (new File(pathName));
   }
   
   
   public FileContent (File file) {
-    super (file.getAbsolutePath());
-    loadFile();
+    this.fileName = file.getName();
+    loadFile(file);
   }
   
   
-  private void loadFile () {
-    if (exists() && isFile() && canRead()) {
-      int n = (int)length();
+  public FileContent (String fileName, byte[] contents) {
+    this.fileName = fileName;
+    this.contents = contents;
+  }
+  
+  
+  private void loadFile (File file) {
+    if (file.exists() && file.isFile() && file.canRead()) {
+      int n = (int)file.length();
       contents = new byte[n];
       try {
-        InputStream is = new FileInputStream(this);
+        InputStream is = new FileInputStream(file);
         is.read(contents);
         is.close();
       } catch (FileNotFoundException ex) {
@@ -57,7 +63,6 @@ public class FileContent extends File implements Serializable {
   }
   
   
-  @Override
   public long length() {
     return contents.length;
   }
@@ -69,8 +74,7 @@ public class FileContent extends File implements Serializable {
   
   
   public File save (File destDir) {
-    String name = getName();
-    File outputFile = new File(destDir, name);
+    File outputFile = new File(destDir, fileName);
     try {
       OutputStream outputStream = new FileOutputStream(outputFile);
       outputStream.write(contents);
@@ -91,6 +95,11 @@ public class FileContent extends File implements Serializable {
   
   public Reader getReader () {
     return new InputStreamReader(new ByteArrayInputStream(contents));
+  }
+
+
+  public String getFileName() {
+    return fileName;
   }
   
 }

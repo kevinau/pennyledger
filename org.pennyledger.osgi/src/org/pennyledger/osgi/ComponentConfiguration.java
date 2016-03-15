@@ -19,11 +19,13 @@ public class ComponentConfiguration {
     if (context != null) {
       Dictionary<String, Object> dict = context.getProperties();
 
-//      for (Enumeration<String> e = dict.keys(); e.hasMoreElements(); ) {
-//        String n = e.nextElement();
-//        Object v = dict.get(n);
-//        System.out.println(">>>>>>>>>>>>>>>>>>>>>>> "+ n + "=" + v);
-//      }
+      System.out.println();
+      for (Enumeration<String> e = dict.keys(); e.hasMoreElements(); ) {
+        String n = e.nextElement();
+        Object v = dict.get(n);
+        System.out.println("############# "+ n + "=" + v);
+      }
+
       try {
         Class<?> klass = target.getClass();
         Field[] fields = klass.getDeclaredFields();
@@ -36,10 +38,6 @@ public class ComponentConfiguration {
             }
             String propertyValue = (String)dict.get(propertyName);
             if (propertyValue != null) {
-<<<<<<< HEAD
-              System.out.println(">>>> " + field + " = " + propertyValue);
-=======
->>>>>>> refs/remotes/origin/master
               Object fieldValue = getFieldValue(field.getType(), propertyValue);
               field.setAccessible(true);
               field.set(target, fieldValue);

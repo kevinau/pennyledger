@@ -7,14 +7,16 @@ Bundle-Vendor: Kevin Holloway
 Export-Package: org.pennyledger.sql,
  org.pennyledger.sql.conn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: org.apache.commons.dbcp,
+Import-Package: ch.qos.logback.classic;version="1.1.3",
+ ch.qos.logback.core;version="1.1.3",
+ org.apache.commons.dbcp,
  org.osgi.framework,
  org.osgi.service.component,
- org.osgi.service.component.annotations;version="1.2.0",
  org.pennyledger.math,
  org.pennyledger.osgi,
  org.pennyledger.sql.dialect,
- org.pennyledger.util
-Service-Component: OSGI-INF/org.pennyledger.sql.conn.ConnectionFactoryRegistry.xml,
- OSGI-INF/org.pennyledger.sql.conn.DefaultConnectionFactory.xml,
- OSGI-INF/org.pennyledger.sql.conn.NamedConnectionFactory.xml
+ org.pennyledger.util,
+ org.slf4j;version="1.7.14"
+Service-Component: OSGI-INF/org.pennyledger.sql.conn.DefaultDatabase.xml,
+ OSGI-INF/org.pennyledger.sql.conn.NamedDatabase.xml,
+ OSGI-INF/org.pennyledger.sql.conn.NamedDatabaseRegistry.xml

@@ -11,6 +11,9 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -65,6 +68,18 @@ public class DateType extends DateBasedType<Date> {
     components[1] = calendar.get(Calendar.MONTH) + 1;
     components[2] = calendar.get(Calendar.DAY_OF_MONTH);
     return components;
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Date value) throws SQLException {
+    stmt.setDate(sqlIndex, new java.sql.Date(value.getTime()), tzCal);
+  }
+
+
+  @Override
+  public Date getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getDate(sqlIndex, tzCal);
   }
   
 }

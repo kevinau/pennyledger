@@ -16,7 +16,7 @@ import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 
 
-public abstract class FileBasedType<T extends File> extends Type<T> implements IType<T> {
+public abstract class PathBasedType<T extends File> extends Type<T> implements IType<T> {
 
   private static final String REQUIRED_MESSAGE = "a file name is required";
   
@@ -29,12 +29,12 @@ public abstract class FileBasedType<T extends File> extends Type<T> implements I
   private final String[] filterNames;
   
   
-  public FileBasedType () {
+  public PathBasedType () {
     this (DIALOG_SIZE, DIALOG_NAME, new String[] {"*.*"}, new String[] {"All Files (*.*)"});
   }
   
   
-  public FileBasedType (int viewSize, String dialogName, String[] filterExtensions, String[] filterNames) {
+  public PathBasedType (int viewSize, String dialogName, String[] filterExtensions, String[] filterNames) {
     if (viewSize == -1) {
       this.viewSize = DIALOG_SIZE;
     } else {

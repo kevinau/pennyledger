@@ -11,6 +11,9 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import org.pennyledger.util.UserEntryException;
@@ -53,6 +56,19 @@ public class LocalDateType extends DateBasedType<LocalDate> {
     components[1] = date.getMonthValue();
     components[2] = date.getDayOfMonth();
     return components;
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, LocalDate value) throws SQLException {
+    stmt.setDate(sqlIndex, new java.sql.Date(value.toEpochDay()), tzCal);
+  }
+
+
+  @Override
+  public LocalDate getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    java.util.Date d = (java.util.Date)resultSet.getDate(sqlIndex, tzCal);
+    return LocalDate.ofEpochDay(d.getTime());
   }
   
 }

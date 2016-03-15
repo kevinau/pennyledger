@@ -11,6 +11,9 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -71,6 +74,25 @@ public class TimestampType extends StringBasedType<TimestampValue> {
   @Override
   protected void validate(TimestampValue value) throws UserEntryException {
     // Nothing more to do
+  }
+
+
+  @Override
+  public String getSQLType() {
+    return "TIMESTAMP";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, TimestampValue value) throws SQLException {
+    stmt.setTimestamp(sqlIndex, value.timestampValue());
+  }
+
+
+  @Override
+  public TimestampValue getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    Timestamp t = resultSet.getTimestamp(sqlIndex);
+    return new TimestampValue(t);
   }
 
 }

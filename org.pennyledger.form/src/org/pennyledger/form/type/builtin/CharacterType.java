@@ -1,5 +1,9 @@
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.TextCase;
 import org.pennyledger.form.type.ICaseSettable;
 import org.pennyledger.util.UserEntryException;
@@ -106,6 +110,29 @@ public class CharacterType extends Type<Character> implements ICaseSettable {
   @Override
   public int getFieldSize() {
     return 1;
+  }
+
+  
+  @Override
+  public String getSQLType() {
+    return "CHAR";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Character value) throws SQLException {
+    stmt.setString(sqlIndex, String.valueOf(value));
+  }
+
+
+  @Override
+  public Character getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    String s = resultSet.getString(sqlIndex);
+    if (s.length() == 0) {
+      return ' ';
+    } else {
+      return s.charAt(0);
+    }
   }
 
 }

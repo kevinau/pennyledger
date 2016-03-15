@@ -12,8 +12,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.pennyledger.sql.INamedConnectionFactory;
 
 
-@Component(service=ConnectionFactoryRegistry.class)
-public class ConnectionFactoryRegistry {
+@Component(service=NamedDatabaseRegistry.class)
+public class NamedDatabaseRegistry {
 
   private BundleContext context;
   

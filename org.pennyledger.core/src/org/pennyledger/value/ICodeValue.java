@@ -16,8 +16,12 @@ public interface ICodeValue {
   
   public String getDescription();
   
-  public boolean isObsolete();
+  public default boolean isObsolete() {
+    return false;
+  }
   
-  public boolean isSelfDescribing();
+  public default boolean isSelfDescribing() {
+    return false;
+  }
   
 }

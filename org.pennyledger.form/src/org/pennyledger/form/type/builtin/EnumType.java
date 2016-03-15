@@ -11,12 +11,16 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 import org.pennyledger.value.ICodeValue;
 
 
-public class EnumType<E> extends Type<E> implements IType<E> {
+public class EnumType<E extends Enum<E>> extends Type<E> implements IType<E> {
 
   private final Class<E> enumClass;
   private final boolean isCodeValues;
@@ -302,5 +306,30 @@ public class EnumType<E> extends Type<E> implements IType<E> {
       throw new RuntimeException(ex.getMessage());
     }
   }
+
+
+  @Override
+  public String getSQLType() {
+    return "SMALLINT";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, E value) throws SQLException {
+    stmt.setShort(sqlIndex, (short)value.ordinal());
+  }
+
+
+  @Override
+  public E getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    short i = resultSet.getShort(sqlIndex);
+    E[] values = enumClass.getEnumConstants();
+    if (i >= 0 && i < values.length) {
+      return values[i];
+    } else {
+      throw new IllegalArgumentException("Ordinal value: " + i);
+    }
+  }
+
 
 }

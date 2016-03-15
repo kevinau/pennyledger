@@ -10,5 +10,4 @@ Export-Package: org.pennyledger.sql.dialect.postgresql
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/org.pennyledger.sql.dialect.postgresql.PostgresqlDialect.xml
 Import-Package: org.apache.commons.dbcp,
- org.osgi.service.component.annotations;version="1.2.0",
  org.pennyledger.sql.dialect

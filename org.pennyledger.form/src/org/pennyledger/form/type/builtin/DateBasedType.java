@@ -11,12 +11,17 @@
 package org.pennyledger.form.type.builtin;
 
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import org.pennyledger.form.type.IType;
 import org.pennyledger.time.DateFactory;
 import org.pennyledger.util.UserEntryException;
 
 
 public abstract class DateBasedType<T> extends Type<T> implements IType<T> {
+
+  protected static final Calendar tzCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
   private static final String REQUIRED_MESSAGE = "a date is required";
   
@@ -177,4 +182,10 @@ public abstract class DateBasedType<T> extends Type<T> implements IType<T> {
   
   protected abstract int[] splitDate (T date);
   
+
+  @Override
+  public String getSQLType() {
+    return "DATE";
+  }
+
 }

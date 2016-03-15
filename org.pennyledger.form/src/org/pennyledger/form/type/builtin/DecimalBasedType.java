@@ -279,6 +279,16 @@ public abstract class DecimalBasedType<T> extends Type<T> implements IType<T>, I
   }
   
   
+  @Override
+  public String getSQLType() {
+    if (decimals > 0) {
+      return "DECIMAL(" + precision + "," + decimals + ")";
+    } else {
+      return "DECIMAL(" + precision + ")";
+    }
+  }
+
+  
   //public void validate (T value, boolean nullable, boolean creating) throws UserEntryException {
   //  if (value == null) {
   //    if (nullable) {

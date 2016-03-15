@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.NumberSign;
 import org.pennyledger.util.UserEntryException;
 
@@ -64,5 +68,23 @@ public class FloatType extends DecimalBasedType<Float> {
   protected void validate(Float value) throws UserEntryException {
     validatePrecision(value.longValue());
   }
+ 
   
+  @Override
+  public String getSQLType() {
+    return "REAL";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Float value) throws SQLException {
+    stmt.setFloat(sqlIndex, value);
+  }
+
+
+  @Override
+  public Float getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getFloat(sqlIndex);
+  }
+
 }

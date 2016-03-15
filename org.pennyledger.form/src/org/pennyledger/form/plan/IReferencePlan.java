@@ -3,9 +3,8 @@ package org.pennyledger.form.plan;
 
 public interface IReferencePlan<T> extends IObjectPlan {
 
-  @Override
   public boolean isOptional();
 
-  public IClassPlan<T> getReferencedPlan();
+  public IEntityPlan<T> getReferencedPlan();
   
 }

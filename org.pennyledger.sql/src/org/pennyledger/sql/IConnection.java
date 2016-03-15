@@ -1,6 +1,6 @@
 package org.pennyledger.sql;
 
-
+import org.pennyledger.sql.dialect.IDialect;
 
 public interface IConnection {
 
@@ -8,6 +8,8 @@ public interface IConnection {
   
   public void close ();
 
+  public void beginTransaction ();
+  
   public void setAutoCommit(boolean b);
 
   public void commit();
@@ -19,5 +21,7 @@ public interface IConnection {
   public void executeCommand (String sql);
   
   public IDatabaseMetaData getMetaData();
+  
+  public IDialect getDialect();
   
 }

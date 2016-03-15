@@ -32,7 +32,7 @@ import org.pennyledger.form.type.builtin.DoubleType;
 import org.pennyledger.form.type.builtin.EntityLifeType;
 import org.pennyledger.form.type.builtin.EnumType;
 import org.pennyledger.form.type.builtin.FileContentType;
-import org.pennyledger.form.type.builtin.FileType;
+import org.pennyledger.form.type.builtin.PathType;
 import org.pennyledger.form.type.builtin.FloatType;
 import org.pennyledger.form.type.builtin.IntegerType;
 import org.pennyledger.form.type.builtin.LocalDateType;
@@ -79,7 +79,7 @@ public class BuiltinRegistry {
     // entries.put(EmailAddress.class, EmailAddressType.class);
     typeMap.put(EntityLife.class, EntityLifeType.class);
     typeMap.put(FileContent.class, FileContentType.class);
-    typeMap.put(File.class, FileType.class);
+    typeMap.put(File.class, PathType.class);
     typeMap.put(Float.class, FloatType.class);
     typeMap.put(Float.TYPE, FloatType.class);
     // entries.put(ImageCode.class, ImageCodeType.class);

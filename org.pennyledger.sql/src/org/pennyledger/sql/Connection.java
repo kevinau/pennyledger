@@ -16,15 +16,23 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import org.pennyledger.math.Decimal;
+import org.pennyledger.sql.dialect.IDialect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Connection implements IConnection {
 
-  private final java.sql.Connection conn;
-  private boolean withinTransaction = false;
- 
+  private static final Logger logger = LoggerFactory.getLogger(Connection.class);
   
-  public Connection (java.sql.Connection conn) {
+  private final IDialect dialect;
+  private final java.sql.Connection conn;
+
+  private boolean logSQL = true;
+  
+  
+  public Connection (IDialect dialect, java.sql.Connection conn) {
+    this.dialect = dialect;
     this.conn = conn;
   }
   
@@ -81,19 +89,12 @@ public class Connection implements IConnection {
   }
 
   
+  @Override
   public void beginTransaction () {
     try {
       conn.setAutoCommit(false);
-      withinTransaction = true;
     } catch (SQLException ex) {
       throw new RuntimeException(ex);
-    }
-  }
-
-  
-  public void endTransaction () {
-    if (withinTransaction) {
-      rollback();
     }
   }
 
@@ -103,7 +104,6 @@ public class Connection implements IConnection {
     try {
       conn.rollback();
       conn.setAutoCommit(true);
-      withinTransaction = false;
     } catch (SQLException ex) {
       throw new RuntimeException(ex);
     }
@@ -125,7 +125,6 @@ public class Connection implements IConnection {
     try {
       conn.commit();
       conn.setAutoCommit(true);
-      withinTransaction = false;
     } catch (SQLException ex) {
       throw new RuntimeException(ex);
     }
@@ -152,6 +151,9 @@ public class Connection implements IConnection {
   public void executeCommand (String sql) {
     try {
       java.sql.Statement stmt = conn.createStatement();
+      if (logSQL) {
+        logger.info(sql);
+      }
       stmt.executeUpdate(sql);
       stmt.close();
     } catch (SQLException ex) {
@@ -169,4 +171,10 @@ public class Connection implements IConnection {
     }
   }
     
+  
+  @Override
+  public IDialect getDialect () {
+    return dialect;
+  }
+
 }

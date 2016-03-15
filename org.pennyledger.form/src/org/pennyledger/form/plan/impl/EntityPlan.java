@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 import org.pennyledger.form.NaturalKey;
+import org.pennyledger.form.UniqueConstraint;
+import org.pennyledger.form.UniqueConstraints;
 import org.pennyledger.form.plan.IClassPlan;
 import org.pennyledger.form.plan.IEntityPlan;
 import org.pennyledger.form.plan.IFieldPlan;
@@ -23,7 +25,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   private String entityName;
   private IFieldPlan idFieldPlan;
   private IFieldPlan versionFieldPlan;
-//  private List<IFieldPlan[]> indexes;
+  private List<IFieldPlan[]> uniqueConstraints;
   private IFieldPlan[] keyFields;
   private IObjectPlan[] dataFields;
   private IFieldPlan lifeFieldPlan;
@@ -34,6 +36,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
     this.entityClass = entityClass;
     this.entityName = entityClass.getSimpleName();
     buildEntityFields();
+    buildUniqueConstraints();
   }
 
 
@@ -83,7 +86,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   
   
   @Override
-  public IFieldPlan getLifeField () {
+  public IFieldPlan getEntityLifeField () {
     return lifeFieldPlan;
   }
   
@@ -225,8 +228,22 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
 
   @Override
   public List<IFieldPlan[]> getUniqueConstraints() {
-    // TODO Auto-generated method stub
-    return null;
+    return uniqueConstraints;
   }
   
+  
+  private void buildUniqueConstraints() {
+    UniqueConstraints ucsAnn = entityClass.getAnnotation(UniqueConstraints.class);
+    if (ucsAnn != null) {
+      uniqueConstraints = new ArrayList<>(ucsAnn.value().length);
+      for (UniqueConstraint ucAnn : ucsAnn.value()) {
+        IFieldPlan[] fields = new IFieldPlan[ucAnn.value().length];
+        int i = 0;
+        for (String name : ucAnn.value()) {
+          fields[i] = getMemberPlan(name);
+        }
+        uniqueConstraints.add(fields);
+      }
+    }
+  }
 }

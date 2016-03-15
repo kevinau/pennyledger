@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.pennyledger.form.type.builtin;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.pennyledger.form.NumberSign;
 import org.pennyledger.util.UserEntryException;
 
@@ -67,5 +71,23 @@ public class DoubleType extends DecimalBasedType<Double> {
   protected void validate(Double value) throws UserEntryException {
     validatePrecision(value.longValue());
   }
+
   
+  @Override
+  public String getSQLType() {
+    return "DOUBLE";
+  }
+
+
+  @Override
+  public void setSQLValue(PreparedStatement stmt, int sqlIndex, Double value) throws SQLException {
+    stmt.setDouble(sqlIndex,  value);
+  }
+
+
+  @Override
+  public Double getSQLValue(ResultSet resultSet, int sqlIndex) throws SQLException {
+    return resultSet.getDouble(sqlIndex);
+  }
+
 }

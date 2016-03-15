@@ -1,3 +1,6 @@
 /org.pennyledger.sql.conn.ConnectionFactoryRegistry.xml
 /org.pennyledger.sql.conn.DefaultConnectionFactory.xml
 /org.pennyledger.sql.conn.NamedConnectionFactory.xml
+/org.pennyledger.sql.conn.NamedDatabase.xml
+/org.pennyledger.sql.conn.DefaultDatabase.xml
+/org.pennyledger.sql.conn.NamedDatabaseRegistry.xml
