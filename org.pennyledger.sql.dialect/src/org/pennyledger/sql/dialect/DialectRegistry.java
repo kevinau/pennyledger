@@ -35,7 +35,7 @@ public class DialectRegistry {
       
       int i = 0;
       for (ServiceReference<IDialect> serviceRef : serviceRefs) {
-        names[i++] = (String)serviceRef.getProperty("dialectName");
+        names[i++] = (String)serviceRef.getProperty("dialect");
       }
       Arrays.sort(names);
       return names;
@@ -47,7 +47,7 @@ public class DialectRegistry {
   
   public IDialect getDialect (String name) {
     try {
-      Collection<ServiceReference<IDialect>> serviceRefs = context.getServiceReferences(IDialect.class, "(dialectName=" + name + ")");
+      Collection<ServiceReference<IDialect>> serviceRefs = context.getServiceReferences(IDialect.class, "(dialect=" + name + ")");
       if (serviceRefs.size() != 1) {
         System.out.println("Dialect name <" + name + ">");
         System.out.println("+++ service refs " + serviceRefs.size());

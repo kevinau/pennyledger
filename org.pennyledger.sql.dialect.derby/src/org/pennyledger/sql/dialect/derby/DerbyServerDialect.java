@@ -17,12 +17,12 @@ import org.pennyledger.sql.dialect.IDialect;
  * @author Kevin Holloway
  * 
  */
-@Component(property={"dialectName:String=DerbyServer"})
+@Component(property={"dialect:String=derbyServer"})
 public class DerbyServerDialect implements IDialect {
 
   @Override
   public String getName () {
-    return "DerbyServer";
+    return "derbyServer";
   }
   
   @Override

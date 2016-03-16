@@ -19,7 +19,7 @@ import org.pennyledger.sql.dialect.IDialect;
  * @author Kevin Holloway
  * 
  */
-@Component(property={"dialectName:String=DerbyEmbedded"}, service=IDialect.class)
+@Component(property={"dialect:String=derbyEmbedded"}, service=IDialect.class)
 public class DerbyEmbeddedDialect extends DerbyServerDialect {
 
   /**
@@ -41,7 +41,7 @@ public class DerbyEmbeddedDialect extends DerbyServerDialect {
   
   @Override
   public String getName () {
-    return "DerbyEmbedded";
+    return "derbyEmbedded";
   }
   
   @Override

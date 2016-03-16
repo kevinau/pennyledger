@@ -14,16 +14,20 @@ import org.pennyledger.db.IDatabaseRegistry;
 import org.pennyledger.db.ITableSet;
 import org.pennyledger.osgi.ComponentConfiguration;
 import org.pennyledger.osgi.Configurable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Component(configurationPolicy=ConfigurationPolicy.REQUIRE, immediate=true)
 public class TableSet implements ITableSet {
 
+  private static final Logger logger = LoggerFactory.getLogger(TableSet.class);
+  
   @Configurable(required=true)
   private String name;
   
   
-  @Configurable(required=true)
+  @Configurable(name="database", required=true)
   private String databaseName;
   
   
@@ -52,11 +56,13 @@ public class TableSet implements ITableSet {
   @Activate
   public void activate (ComponentContext context) {
     ComponentConfiguration.load(this, context);
+    logger.info("Activate table set: {} ({} {} {})", name, databaseName, schema, table.size());
   }
   
   
   @Deactivate
   public void deativate (ComponentContext context) {
+    logger.info("Deactivate table set: {}", name);
   }
   
   
