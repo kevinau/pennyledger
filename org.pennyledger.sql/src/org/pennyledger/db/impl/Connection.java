@@ -8,7 +8,7 @@
  * Contributors:
  *     Kevin Holloway - initial API and implementation
  ******************************************************************************/
-package org.pennyledger.sql;
+package org.pennyledger.db.impl;
 
 
 import java.math.BigDecimal;

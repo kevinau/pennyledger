@@ -1,4 +1,4 @@
-package org.pennyledger.sql;
+package org.pennyledger.db.impl;
 
 import java.sql.SQLException;
 

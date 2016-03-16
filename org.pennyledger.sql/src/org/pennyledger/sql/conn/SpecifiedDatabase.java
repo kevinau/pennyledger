@@ -3,8 +3,8 @@ package org.pennyledger.sql.conn;
 import java.util.Properties;
 
 import org.pennyledger.db.IConnection;
-import org.pennyledger.sql.Connection;
-import org.pennyledger.sql.DatabaseProperties;
+import org.pennyledger.db.impl.Connection;
+import org.pennyledger.db.impl.DatabaseProperties;
 import org.pennyledger.sql.IDefaultConnectionFactory;
 import org.pennyledger.sql.dialect.IDialect;
 

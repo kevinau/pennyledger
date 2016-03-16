@@ -9,15 +9,14 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Reference;
 import org.pennyledger.db.IConnection;
+import org.pennyledger.db.impl.Connection;
 import org.pennyledger.osgi.ComponentConfiguration;
 import org.pennyledger.osgi.Configurable;
-import org.pennyledger.sql.Connection;
 import org.pennyledger.sql.INamedConnectionFactory;
 import org.pennyledger.sql.dialect.DialectRegistry;
 import org.pennyledger.sql.dialect.IDialect;
 
 
-@Component(configurationPolicy=ConfigurationPolicy.REQUIRE)
 public class NamedDatabase implements INamedConnectionFactory {
 
   @Configurable(name="dialect", required=true)

@@ -11,23 +11,27 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.pennyledger.db.IConnection;
 import org.pennyledger.db.IDatabase;
 import org.pennyledger.db.ITableSet;
 import org.pennyledger.osgi.ComponentConfiguration;
 import org.pennyledger.osgi.Configurable;
-import org.pennyledger.sql.Connection;
 import org.pennyledger.sql.dialect.DialectRegistry;
 import org.pennyledger.sql.dialect.IDialect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-@Component(configurationPolicy=ConfigurationPolicy.REQUIRE)
+@Component(configurationPolicy=ConfigurationPolicy.REQUIRE, immediate=true)
 public class Database implements IDatabase {
 
+  private static final Logger logger = LoggerFactory.getLogger(Database.class);
+  
   private ComponentContext context;
   
-  @Configurable(required=true)
+  @Configurable(name="dialect", required=true)
   private String dialectName;
   
   @Configurable(required=true)
@@ -64,6 +68,14 @@ public class Database implements IDatabase {
   public void activate (ComponentContext context) {
     this.context = context;
     ComponentConfiguration.load(this, context);
+    logger.info("Activate database: {} ({} {} {})", name, dialectName, server, dbname);
+  }
+  
+  
+  @Deactivate
+  public void deactivate () {
+    ComponentConfiguration.load(this, context);
+    logger.info("Deactivate database: {}", name);
   }
   
   

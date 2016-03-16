@@ -16,7 +16,7 @@ import org.pennyledger.osgi.ComponentConfiguration;
 import org.pennyledger.osgi.Configurable;
 
 
-@Component(configurationPolicy=ConfigurationPolicy.REQUIRE)
+@Component(configurationPolicy=ConfigurationPolicy.REQUIRE, immediate=true)
 public class TableSet implements ITableSet {
 
   @Configurable(required=true)

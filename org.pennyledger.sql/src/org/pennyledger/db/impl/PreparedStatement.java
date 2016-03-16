@@ -8,7 +8,7 @@
  * Contributors:
  *     Kevin Holloway - initial API and implementation
  ******************************************************************************/
-package org.pennyledger.sql;
+package org.pennyledger.db.impl;
 
 
 import java.math.BigDecimal;
@@ -24,6 +24,7 @@ import java.util.TimeZone;
 import org.pennyledger.db.IPreparedStatement;
 import org.pennyledger.db.IResultSet;
 import org.pennyledger.db.NoValueException;
+import org.pennyledger.db.SQLExecuteException;
 import org.pennyledger.math.Decimal;
 
 
