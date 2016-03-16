@@ -35,8 +35,8 @@ public class TableSet implements ITableSet {
   private String schema;
   
   
-  @Configurable(required=true)
-  private List<String> table;
+  @Configurable(name="table", required=true)
+  private List<String> entityPrefixes;
   
   
   private IDatabaseRegistry databaseRegistry;
@@ -56,7 +56,7 @@ public class TableSet implements ITableSet {
   @Activate
   public void activate (ComponentContext context) {
     ComponentConfiguration.load(this, context);
-    logger.info("Activate table set: {} ({} {} {})", name, databaseName, schema, table.size());
+    logger.info("Activate table set: {} ({} {} {})", name, databaseName, schema, entityPrefixes.size());
   }
   
   
@@ -93,8 +93,8 @@ public class TableSet implements ITableSet {
 
 
   @Override
-  public List<String> getTablePrefixes() {
-    return table;
+  public List<String> getEntityPrefixes() {
+    return entityPrefixes;
   }
   
 }

@@ -1,15 +1,13 @@
-package org.pennyledger.sql.conn;
+package org.pennyledger.db;
 
 import java.util.Properties;
 
-import org.pennyledger.db.IConnection;
 import org.pennyledger.db.impl.Connection;
 import org.pennyledger.db.impl.DatabaseProperties;
-import org.pennyledger.sql.IDefaultConnectionFactory;
 import org.pennyledger.sql.dialect.IDialect;
 
 
-public class SpecifiedDatabase implements IDefaultConnectionFactory {
+public class SpecifiedDatabase {
 
   private final DatabaseProperties db;
   
@@ -24,7 +22,6 @@ public class SpecifiedDatabase implements IDefaultConnectionFactory {
   }
   
   
-  @Override
   public IConnection getIConnection() {
     Properties props = new Properties();
     props.put("user", db.getUserName());
@@ -34,7 +31,6 @@ public class SpecifiedDatabase implements IDefaultConnectionFactory {
   }
   
   
-  @Override
   public java.sql.Connection getConnection() {
     Properties props = new Properties();
     props.put("user", db.getUserName());

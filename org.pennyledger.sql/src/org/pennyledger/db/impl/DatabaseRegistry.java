@@ -13,7 +13,7 @@ import org.pennyledger.db.IDatabase;
 import org.pennyledger.db.IDatabaseRegistry;
 
 
-@Component(service=DatabaseRegistry.class)
+@Component
 public class DatabaseRegistry implements IDatabaseRegistry {
 
   private BundleContext context;

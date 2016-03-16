@@ -1,6 +1,5 @@
 package org.pennyledger.osgi;
 
-import java.awt.List;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.activation.UnsupportedDataTypeException;
@@ -22,12 +22,12 @@ public class ComponentConfiguration {
     if (context != null) {
       Dictionary<String, Object> dict = context.getProperties();
 
-      System.out.println();
-      for (Enumeration<String> e = dict.keys(); e.hasMoreElements();) {
-        String n = e.nextElement();
-        Object v = dict.get(n);
-        System.out.println("############# " + n + "=" + v);
-      }
+//      System.out.println();
+//      for (Enumeration<String> e = dict.keys(); e.hasMoreElements();) {
+//        String n = e.nextElement();
+//        Object v = dict.get(n);
+//        System.out.println("############# " + n + "=" + v);
+//      }
 
       try {
         Class<?> klass = target.getClass();
@@ -40,6 +40,12 @@ public class ComponentConfiguration {
               propertyName = field.getName();
             }
             Class<?> fieldClass = field.getType();
+//            System.out.println(">>>> " + fieldClass);
+//            System.out.println(">>>> " + List.class);
+//            System.out.println(">>>> " + List.class.isAssignableFrom(fieldClass));
+//            System.out.println(">>>> " + fieldClass.isAssignableFrom(List.class));
+//            System.out.println(">>>> " + fieldClass.isAssignableFrom(List.class));
+
             if (List.class.isAssignableFrom(fieldClass)) {
               // The list is assumed to be a list of String
               ArrayList<String> list = new ArrayList<>();

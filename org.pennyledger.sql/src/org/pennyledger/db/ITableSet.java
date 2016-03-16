@@ -12,6 +12,6 @@ public interface ITableSet {
   
   public String getSchema();
   
-  public List<String> getTablePrefixes();
+  public List<String> getEntityPrefixes();
   
 }

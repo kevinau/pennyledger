@@ -12,3 +12,4 @@
 /org.pennyledger.db.impl.DatabaseRegistry.xml
 /org.pennyledger.db.impl.Database.xml
 /org.pennyledger.db.impl.TableSet.xml
+/org.pennyledger.db.impl.ConsoleCommands.xml
