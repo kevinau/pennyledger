@@ -15,6 +15,9 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import org.pennyledger.db.IConnection;
+import org.pennyledger.db.IDatabaseMetaData;
+import org.pennyledger.db.IPreparedStatement;
 import org.pennyledger.math.Decimal;
 import org.pennyledger.sql.dialect.IDialect;
 import org.slf4j.Logger;

@@ -1,10 +1,12 @@
 package org.pennyledger.osgi;
 
+import java.awt.List;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
@@ -13,6 +15,7 @@ import javax.activation.UnsupportedDataTypeException;
 
 import org.osgi.service.component.ComponentContext;
 
+
 public class ComponentConfiguration {
 
   public static void load(Object target, ComponentContext context) {
@@ -20,10 +23,10 @@ public class ComponentConfiguration {
       Dictionary<String, Object> dict = context.getProperties();
 
       System.out.println();
-      for (Enumeration<String> e = dict.keys(); e.hasMoreElements(); ) {
+      for (Enumeration<String> e = dict.keys(); e.hasMoreElements();) {
         String n = e.nextElement();
         Object v = dict.get(n);
-        System.out.println("############# "+ n + "=" + v);
+        System.out.println("############# " + n + "=" + v);
       }
 
       try {
@@ -36,13 +39,31 @@ public class ComponentConfiguration {
             if (propertyName.length() == 0) {
               propertyName = field.getName();
             }
-            String propertyValue = (String)dict.get(propertyName);
-            if (propertyValue != null) {
-              Object fieldValue = getFieldValue(field.getType(), propertyValue);
+            Class<?> fieldClass = field.getType();
+            if (List.class.isAssignableFrom(fieldClass)) {
+              // The list is assumed to be a list of String
+              ArrayList<String> list = new ArrayList<>();
+              String prefix = propertyName + ".";
+              
+              for (Enumeration<String> e = dict.keys(); e.hasMoreElements(); ) {
+                String key = e.nextElement();
+                if (key.equals(propertyName) || key.startsWith(prefix)) {
+                  String value = dict.get(key).toString();
+                  list.add(value);
+                }
+              }
               field.setAccessible(true);
-              field.set(target, fieldValue);
-            } else if (configAnn.required()) {
-              throw new RuntimeException("Configuration value '" + propertyName + "' required for " + klass.getSimpleName()); 
+              field.set(target, list);
+            } else {
+              String propertyValue = (String)dict.get(propertyName);
+              if (propertyValue != null) {
+                Object fieldValue = getFieldValue(field.getType(), propertyValue);
+                field.setAccessible(true);
+                field.set(target, fieldValue);
+              } else if (configAnn.required()) {
+                throw new RuntimeException(
+                    "Configuration value '" + propertyName + "' required for " + klass.getSimpleName());
+              }
             }
           }
         }
@@ -52,6 +73,7 @@ public class ComponentConfiguration {
       }
     }
   }
+
 
   private static Object getFieldValue(Class<?> type, String propertyValue) throws InstantiationException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException, UnsupportedDataTypeException {
@@ -77,6 +99,7 @@ public class ComponentConfiguration {
     }
     return value;
   }
+
 
   private static <E> E getPropertyAsEnum(String property, Class<E> enumClass) {
     E[] values = enumClass.getEnumConstants();

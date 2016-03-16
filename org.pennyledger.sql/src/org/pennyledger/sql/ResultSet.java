@@ -12,6 +12,9 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.pennyledger.db.IResultSet;
+import org.pennyledger.db.IResultSetMetaData;
+import org.pennyledger.db.ResultSetMetaData;
 import org.pennyledger.math.Decimal;
 
 public class ResultSet implements IResultSet {

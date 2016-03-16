@@ -4,3 +4,11 @@
 /org.pennyledger.sql.conn.NamedDatabase.xml
 /org.pennyledger.sql.conn.DefaultDatabase.xml
 /org.pennyledger.sql.conn.NamedDatabaseRegistry.xml
+/org.pennyledger.db.TableSetRegistry.xml
+/org.pennyledger.db.impl.TableSetRegistry.xml
+/org.pennyledger.db.NamedDatabase.xml
+/org.pennyledger.db.Database.xml
+/org.pennyledger.db.impl.NamedDatabaseRegistry.xml
+/org.pennyledger.db.impl.DatabaseRegistry.xml
+/org.pennyledger.db.impl.Database.xml
+/org.pennyledger.db.impl.TableSet.xml

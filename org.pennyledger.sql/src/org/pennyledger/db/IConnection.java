@@ -1,4 +1,4 @@
-package org.pennyledger.sql;
+package org.pennyledger.db;
 
 import org.pennyledger.sql.dialect.IDialect;
 

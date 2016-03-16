@@ -1,4 +1,4 @@
-package org.pennyledger.sql.dialect;
+package org.pennyledger.db.impl;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,10 +9,12 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.pennyledger.db.IDatabase;
+import org.pennyledger.db.IDatabaseRegistry;
 
 
-@Component(service=DialectRegistry.class)
-public class DialectRegistry {
+@Component(service=DatabaseRegistry.class)
+public class DatabaseRegistry implements IDatabaseRegistry {
 
   private BundleContext context;
   
@@ -28,14 +30,15 @@ public class DialectRegistry {
   }
   
   
-  public String[] getDialectNames () {
+  @Override
+  public String[] getDatabaseNames () {
     try {
-      Collection<ServiceReference<IDialect>> serviceRefs = context.getServiceReferences(IDialect.class, null);
+      Collection<ServiceReference<IDatabase>> serviceRefs = context.getServiceReferences(IDatabase.class, null);
       String[] names = new String[serviceRefs.size()];
       
       int i = 0;
-      for (ServiceReference<IDialect> serviceRef : serviceRefs) {
-        names[i++] = (String)serviceRef.getProperty("dialectName");
+      for (ServiceReference<IDatabase> serviceRef : serviceRefs) {
+        names[i++] = (String)serviceRef.getProperty("name");
       }
       Arrays.sort(names);
       return names;
@@ -45,16 +48,15 @@ public class DialectRegistry {
   }
   
   
-  public IDialect getDialect (String name) {
+  @Override
+  public IDatabase getDatabase (String name) {
     try {
-      Collection<ServiceReference<IDialect>> serviceRefs = context.getServiceReferences(IDialect.class, "(dialectName=" + name + ")");
+      Collection<ServiceReference<IDatabase>> serviceRefs = context.getServiceReferences(IDatabase.class, "(name=" + name + ")");
       if (serviceRefs.size() != 1) {
-        System.out.println("Dialect name <" + name + ">");
-        System.out.println("+++ service refs " + serviceRefs.size());
-        throw new IllegalArgumentException("Unknown dialect: " + name);
+        throw new IllegalArgumentException(name);
       }
-      ServiceReference<IDialect> serviceRef = serviceRefs.iterator().next();
-      return (IDialect)context.getService(serviceRef);
+      ServiceReference<IDatabase> serviceRef = serviceRefs.iterator().next();
+      return (IDatabase)context.getService(serviceRef);
     } catch (InvalidSyntaxException ex) {
       throw new RuntimeException(ex);
     }

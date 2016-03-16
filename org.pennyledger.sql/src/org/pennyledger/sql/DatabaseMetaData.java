@@ -2,6 +2,9 @@ package org.pennyledger.sql;
 
 import java.sql.SQLException;
 
+import org.pennyledger.db.IDatabaseMetaData;
+import org.pennyledger.db.IResultSet;
+
 public class DatabaseMetaData implements IDatabaseMetaData {
 
   private java.sql.DatabaseMetaData metadata;

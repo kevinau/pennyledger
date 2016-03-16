@@ -1,4 +1,4 @@
-package org.pennyledger.sql;
+package org.pennyledger.db;
 
 public interface IEntityResultSet<T> extends IResultSet {
 
