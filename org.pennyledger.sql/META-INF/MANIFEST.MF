@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Database instance
-Bundle-SymbolicName: org.pennyledger.sql
+Bundle-SymbolicName: org.pennyledger.db
 Bundle-Version: 0.2.0
 Bundle-Vendor: Kevin Holloway
 Export-Package: org.pennyledger.sql,
