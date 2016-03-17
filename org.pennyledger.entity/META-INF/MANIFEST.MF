@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PennyLedger persistence service
+Bundle-SymbolicName: org.pennyledger.entity
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: lib/derby-10.5.3.0_1.jar,
+ .
+Bundle-Vendor: Kevin Holloway
+Export-Package: org.pennyledger.entity
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/org.pennyledger.entity.EntityCommands.xml,
+ OSGI-INF/org.pennyledger.entity.impl.EntityRegistry.xml
+Import-Package: org.apache.felix.gogo.api;version="0.16.2",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.util.tracker,
+ org.pennyledger.db,
+ org.pennyledger.form,
+ org.pennyledger.form.factory,
+ org.pennyledger.form.plan,
+ org.pennyledger.form.type,
+ org.pennyledger.sql.dialect,
+ org.pennyledger.value,
+ org.slf4j
