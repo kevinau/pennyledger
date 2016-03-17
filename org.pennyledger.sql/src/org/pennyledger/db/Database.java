@@ -1,4 +1,4 @@
-package org.pennyledger.db.impl;
+package org.pennyledger.db;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -13,9 +13,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.pennyledger.db.IConnection;
-import org.pennyledger.db.IDatabase;
-import org.pennyledger.db.ITableSet;
+import org.pennyledger.db.impl.Connection;
 import org.pennyledger.osgi.ComponentConfiguration;
 import org.pennyledger.osgi.Configurable;
 import org.pennyledger.sql.dialect.DialectRegistry;
