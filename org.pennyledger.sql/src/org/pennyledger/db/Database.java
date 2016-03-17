@@ -66,7 +66,7 @@ public class Database implements IDatabase {
   public void activate (ComponentContext context) {
     this.context = context;
     ComponentConfiguration.load(this, context);
-    logger.info("Activate database: {} ({} {} {})", name, dialectName, server, dbname);
+    logger.info("=====================================> Activate database: {} ({} {} {})", name, dialectName, server, dbname);
   }
   
   
