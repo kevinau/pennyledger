@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Accounts data objects
+Bundle-SymbolicName: org.pennyledger.accounts;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.pennyledger.core;bundle-version="0.2.0"
+Export-Package: org.pennyledger.accounts.party
+Bundle-ActivationPolicy: lazy
+Import-Package: javax.persistence;version="2.1.0",
+ org.pennyledger.form
+PennyLedger-Entity: org.pennyledger.accounts.party.Party
