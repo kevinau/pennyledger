@@ -67,7 +67,7 @@ public class ComponentConfiguration {
                 field.setAccessible(true);
                 field.set(target, fieldValue);
               } else if (configAnn.required()) {
-                throw new RuntimeException(
+                throw new IllegalConfigurationException(
                     "Configuration value '" + propertyName + "' required for " + klass.getSimpleName());
               }
             }

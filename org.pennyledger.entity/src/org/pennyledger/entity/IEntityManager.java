@@ -1,9 +1,5 @@
 package org.pennyledger.entity;
 
-import java.sql.Timestamp;
-
-import org.pennyledger.value.EntityLife;
-
 public interface IEntityManager<T> {
 
   public void dropAndCreateTableSet();

@@ -7,7 +7,6 @@ import org.osgi.service.component.annotations.Reference;
 
 @Component(property = { 
     "osgi.command.scope=entity",
-//    "osgi.command.function=create",
     "osgi.command.function=list",
   }, 
   service = Object.class)

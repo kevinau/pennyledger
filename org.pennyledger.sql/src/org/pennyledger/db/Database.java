@@ -1,12 +1,8 @@
 package org.pennyledger.db;
 
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Properties;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -110,22 +106,4 @@ public class Database implements IDatabase {
     return conn;
   }
 
-
-  @Override
-  public ITableSet[] getTableSets() {
-    try {
-      BundleContext bc = context.getBundleContext();
-      Collection<ServiceReference<ITableSet>> serviceRefs = bc.getServiceReferences(ITableSet.class, "(databaseName=" + name + ")");
-      ITableSet[] tableSets = new ITableSet[serviceRefs.size()];
-      
-      int i = 0;
-      for (ServiceReference<ITableSet> serviceRef : serviceRefs) {
-        tableSets[i++] = bc.getService(serviceRef);
-      }
-      return tableSets;
-    } catch (InvalidSyntaxException ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-  
 }

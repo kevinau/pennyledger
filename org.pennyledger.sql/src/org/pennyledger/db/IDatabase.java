@@ -8,6 +8,4 @@ public interface IDatabase {
 
   public java.sql.Connection getConnection();
 
-  public ITableSet[] getTableSets();
-  
 }
