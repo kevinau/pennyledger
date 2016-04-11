@@ -238,7 +238,7 @@ public class PreparedStatement implements IPreparedStatement {
   @Override
   public void setLocalDate (int i, LocalDate d) {
     try {
-      stmt.setDate(i, new java.sql.Date(d.toEpochDay()), tzCal);
+      stmt.setDate(i, new java.sql.Date(d.toEpochDay() * 24L * 60L * 60L * 1000L), tzCal);
     } catch (SQLException ex) {
       throw new RuntimeException(ex);
     }

@@ -18,3 +18,4 @@ Export-Package: org.pennyledger.form,
  org.pennyledger.form.type,
  org.pennyledger.form.type.builtin
 Require-Bundle: org.pennyledger.core
+Eclipse-BuddyPolicy: registered

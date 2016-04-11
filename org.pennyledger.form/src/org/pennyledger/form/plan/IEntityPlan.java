@@ -7,7 +7,7 @@ public interface IEntityPlan<T> extends IClassPlan<T> {
 
   public IObjectPlan[] getDataFields();
   
-  public Class<T> getEntityClass();
+  public Class<?> getEntityClass();
   
   public String getEntityName();
 

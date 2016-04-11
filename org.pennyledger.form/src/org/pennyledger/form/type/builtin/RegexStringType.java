@@ -11,10 +11,6 @@
 package org.pennyledger.form.type.builtin;
 
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 import org.pennyledger.form.TextCase;

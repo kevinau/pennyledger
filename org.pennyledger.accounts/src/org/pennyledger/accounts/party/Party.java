@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 import org.pennyledger.form.Entity;
+import org.pennyledger.form.FormField;
 import org.pennyledger.form.UniqueConstraint;
 
 @Entity
@@ -19,6 +20,7 @@ public class Party {
   @Version
   private Timestamp version;
   
+  @FormField(length=6)
   private String code;
   
   private String name;

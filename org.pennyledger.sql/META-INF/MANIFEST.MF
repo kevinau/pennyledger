@@ -4,7 +4,8 @@ Bundle-Name: Database
 Bundle-SymbolicName: org.pennyledger.db
 Bundle-Version: 0.2.0
 Bundle-Vendor: Kevin Holloway
-Export-Package: org.pennyledger.db
+Export-Package: org.pennyledger.db,
+ org.pennyledger.db.impl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.apache.commons.dbcp,
  org.osgi.framework,

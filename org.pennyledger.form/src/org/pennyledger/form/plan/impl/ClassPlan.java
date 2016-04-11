@@ -22,7 +22,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
-import org.pennyledger.form.BuiltinRegistry;
 import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.FormField;
 import org.pennyledger.form.Mode;
@@ -31,6 +30,7 @@ import org.pennyledger.form.OccursFor;
 import org.pennyledger.form.Optional;
 import org.pennyledger.form.Validation;
 import org.pennyledger.form.plan.IClassPlan;
+import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IRuntimeDefaultProvider;
 import org.pennyledger.form.plan.IRuntimeFactoryProvider;
@@ -41,6 +41,7 @@ import org.pennyledger.form.plan.IRuntimeOccursProvider;
 import org.pennyledger.form.plan.IRuntimeTypeProvider;
 import org.pennyledger.form.plan.IValidationMethod;
 import org.pennyledger.form.plan.PlanKind;
+import org.pennyledger.form.type.BuiltinTypeRegistry;
 import org.pennyledger.form.type.IType;
 import org.pennyledger.util.UserEntryException;
 
@@ -212,13 +213,17 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   public static IObjectPlan buildObjectPlan (IObjectPlan parent, Field field, String name, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
     IObjectPlan objPlan;
     
+    System.out.println("build object plan: " + name);
     if (fieldType instanceof GenericArrayType) {
+      System.out.println("... array type");
       Type type1 = ((GenericArrayType)fieldType).getGenericComponentType();
       objPlan = new ArrayPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
     } else if (fieldType instanceof ParameterizedType) {
+      System.out.println("... parameterized type");
       ParameterizedType ptype = (ParameterizedType)fieldType;
       Type type1 = ptype.getRawType();
       if (type1.equals(List.class)) {
+        System.out.println("... List type");
         Type[] typeArgs = ptype.getActualTypeArguments();
         if (typeArgs.length != 1) {
           throw new IllegalArgumentException("List must have one, and only one, type parameter");
@@ -229,12 +234,13 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
         throw new IllegalArgumentException("Parameterized type that is not a List");
       }
     } else if (fieldType instanceof Class) {
+      System.out.println("... Class " + fieldType);
       Class<?> klass = (Class<?>)fieldType;
       if (klass.isArray()) {
         Type type1 = klass.getComponentType();
         objPlan = new ArrayPlan(parent, field, name, (Class<?>)type1, dimension + 1, entryMode);
       } else {
-        objPlan = fieldPlanDetail(parent, field, name, fieldType, -1, entryMode, optional);
+        objPlan = fieldPlanDetail(parent, field, name, fieldType, dimension, entryMode, optional);
       }
     } else {
       throw new IllegalArgumentException("Unsupported type: " + fieldType);
@@ -254,34 +260,38 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
     
     // Is there a named IType for the field (via type parameter of the FormField annotation),
     // or does the field type match one of the build in field types
-    IType<?> type = BuiltinRegistry.lookupType(fieldClass, formFieldAnn, columnAnn);
+    System.out.println("field plan detail: " + fieldClass);
+    IType<?> type = BuiltinTypeRegistry.lookupType(fieldClass, formFieldAnn, columnAnn);
+    System.out.println("field plan detail: type = " + type);
     if (type != null) {
       objectPlan = new FieldPlan(parent, name, type, field, entryMode, optional);
     } else {
-      //If within a collection (array or list) any object that is not a field, is an embedded class type.
-      if (dimension >= 0) {
-        objectPlan = buildObjectPlan(parent, field, field.getName(), fieldType, dimension, entryMode, false);
+      System.out.println("dimension :" + dimension);
+      // Is it a reference type (identified by the ManyToOne annotation).
+      ManyToOne fkAnn = field.getAnnotation(ManyToOne.class);
+      if (fkAnn != null) {
+        objectPlan = new ReferencePlan(parent, field.getName(), fieldClass, entryMode, fkAnn.optional());
       } else {
-        // Is it a reference type (identified by the ManyToOne annotation).
-        ManyToOne fkAnn = field.getAnnotation(ManyToOne.class);
-        if (fkAnn != null) {
-          objectPlan = new ReferencePlan(parent, field.getName(), fieldClass, entryMode, fkAnn.optional());
+        // A reference type can also be identified by the OneToOne annotation.
+        OneToOne fkAnn1 = field.getAnnotation(OneToOne.class);
+        if (fkAnn1 != null) {
+          objectPlan = new ReferencePlan(parent, field.getName(), fieldClass, entryMode, fkAnn1.optional());
         } else {
-          // A reference type can also be identified by the OneToOne annotation.
-          OneToOne fkAnn1 = field.getAnnotation(OneToOne.class);
-          if (fkAnn1 != null) {
-            objectPlan = new ReferencePlan(parent, field.getName(), fieldClass, entryMode, fkAnn1.optional());
+          // Is it a class type (identified by the Embedded annotation.  The class is traversed and all
+          // members are considered as potential entry fields.
+          boolean embdAnn = field.isAnnotationPresent(Embedded.class);
+          if (embdAnn) {
+            objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
           } else {
-            // Is it a class type (identified by the Embedded annotation.  The class is traversed and all
-            // members are considered as potential entry fields.
-            boolean embdAnn = field.isAnnotationPresent(Embedded.class);
-            if (embdAnn) {
+            // The Embeddable annotation on the field class also identifies a class type.
+            boolean emblAnn = fieldClass.isAnnotationPresent(Embeddable.class);
+            if (emblAnn) {
               objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
             } else {
-              // The Embeddable annotation on the field class also identifies a class type.
-              boolean emblAnn = fieldClass.isAnnotationPresent(Embeddable.class);
-              if (emblAnn) {
+              //If within a collection (array or list) any object that is not a field, is an embedded class type.
+              if (dimension >= 0) {
                 objectPlan = new EmbeddedPlan(parent, field.getName(), fieldClass, entryMode);
+                //buildObjectPlan(parent, field, field.getName(), fieldType, -1, entryMode, false);
               } else {
                 // Otherwise, throw an error.
                 throw new RuntimeException("Field type not recognised: " + name + " " + fieldType);
@@ -797,6 +807,14 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   @Override
   public PlanKind kind() {
     return PlanKind.CLASS;
+  }
+
+
+  @Override
+  public void accumulateFieldPlans(List<IFieldPlan> fieldPlans) {
+    for (IObjectPlan memberPlan : memberPlans.values()) {
+      memberPlan.accumulateFieldPlans(fieldPlans);
+    }
   }
 
 

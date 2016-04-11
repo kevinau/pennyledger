@@ -35,6 +35,11 @@ public class VoidType implements IType<Void> {
   }
 
   @Override
+  public String toValueString(Void value) {
+    throw new IllegalStateException("There is not value associated with the Void type");
+  }
+
+  @Override
   public Void primalValue() {
     return null;
   }

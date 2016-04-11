@@ -54,6 +54,12 @@ public class TimestampType extends StringBasedType<TimestampValue> {
   
   
   @Override
+  public JsonType getJsonType () {
+    return JsonType.PLAIN_STRING;
+  }
+  
+  
+  @Override
   public TimestampValue primalValue () {
     return new TimestampValue(new Timestamp(0L));
   }

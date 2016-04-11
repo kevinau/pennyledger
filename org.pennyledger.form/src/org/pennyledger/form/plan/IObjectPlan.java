@@ -1,5 +1,7 @@
 package org.pennyledger.form.plan;
 
+import java.util.List;
+
 import org.pennyledger.form.EntryMode;
 
 /**
@@ -51,4 +53,6 @@ public interface IObjectPlan {
 
   public PlanKind kind();
   
+  public void accumulateFieldPlans(List<IFieldPlan> fieldPlans);
+    
 }

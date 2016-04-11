@@ -286,6 +286,12 @@ public class EnumType<E extends Enum<E>> extends Type<E> implements IType<E> {
   
   
   @Override
+  public JsonType getJsonType () {
+    return JsonType.PLAIN_STRING;
+  }
+  
+  
+  @Override
   public E primalValue () {
     E[] values = enumClass.getEnumConstants();
     return values[0];

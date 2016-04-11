@@ -28,5 +28,7 @@ public interface IClassPlan<T> extends IObjectPlan {
   public List<IRuntimeTypeProvider> getRuntimeTypeProviders();
 
   public Set<IValidationMethod> getValidationMethods();
+  
+  public Class<?> getSourceClass();
 
 }

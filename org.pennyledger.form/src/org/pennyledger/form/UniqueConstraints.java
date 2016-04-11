@@ -25,6 +25,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface UniqueConstraints {
   
-  UniqueConstraint[] value() default {};
+  UniqueConstraint[] value();
   
 }

@@ -79,23 +79,27 @@ public class EntityRegistry implements IEntityRegistry {
   }
 
   private EntityTracker bundleTracker;
-  private Map<Long, List<Class<?>>> entityMap = new HashMap<>();
+  private Map<Long, List<Class<?>>> entityMap;
 
 
   @Activate
   public void activate(BundleContext context) throws Exception {
     System.out.println("Starting entity tracker");
+    entityMap = new HashMap<>();
+
     int trackStates = Bundle.ACTIVE | Bundle.STOPPING; // | Bundle.RESOLVED | Bundle.INSTALLED | Bundle.UNINSTALLED;
     bundleTracker = new EntityTracker(context, trackStates, null);
     bundleTracker.open();
-    
     // Get all existing bundles, and check those for a PennyLedger-Entity header.
     Bundle[] bundles = context.getBundles();
     for (Bundle bundle : bundles) {
-      if (bundle.getState() == Bundle.ACTIVE) {
-        System.out.println("startup");
-        print(bundle, null);
-        checkForEntityHeader(bundle);
+      if (bundle.getState() == Bundle.RESOLVED) {
+        String entityHeader = getEntityHeader(bundle);
+        if (entityHeader != null) {
+          System.out.println("addingBundle");
+          print(bundle, null);
+          parseEntityHeader(bundle, entityHeader);
+        }
       }
     }
   }
@@ -104,42 +108,45 @@ public class EntityRegistry implements IEntityRegistry {
   @Deactivate
   public void deactivate(BundleContext context) throws Exception {
     System.out.println("Stopping entity tracker");
-    Long bundleId = context.getBundle().getBundleId();
-    entityMap.remove(bundleId);
-    
     bundleTracker.close();
     bundleTracker = null;
+    entityMap = null;
   }
 
   
-  private Object checkForEntityHeader (Bundle bundle) {
+  private String getEntityHeader (Bundle bundle) {
     Dictionary<String, String> headers = bundle.getHeaders();
-    String entityHeader = headers.get("PennyLedger-Entity");
-    if (entityHeader != null) {
-      logger.info("Found PennyLedger-Entity: {}", entityHeader);
-      String[] entities = entityHeader.split(",");
-      List<Class<?>> classList = new ArrayList<>(entities.length);
-      
-      for (String entityName : entities) {
-        System.out.println(">>>>>>>>>>>>>>> " + entityName);
-        try {
-          Class<?> entityClass = bundle.loadClass(entityName);
-          classList.add(entityClass);
-          System.out.println(entityClass);
-        } catch (ClassNotFoundException ex) {
-          logger.warn("Bundle: " + bundle.getBundleId(), ex);
-        }
+    return headers.get("PennyLedger-Entity");
+  }
+
+  
+  private void parseEntityHeader (Bundle bundle, String entityHeader) {
+    logger.info("Found PennyLedger-Entity: {}", entityHeader);
+    String[] entities = entityHeader.split(",");
+    List<Class<?>> classList = new ArrayList<>(entities.length);
+    
+    for (String entityName : entities) {
+      System.out.println(">>>>>>>>>>>>>>> " + entityName);
+      try {
+        //for (Enumeration e = bundle.findEntries(arg0, arg1, arg2)
+        Class<?> entityClass = bundle.loadClass(entityName);
+        classList.add(entityClass);
+        System.out.println(entityClass);
+      } catch (ClassNotFoundException ex) {
+        logger.warn("Bundle: " + bundle.getBundleId(), ex);
       }
-      System.out.println(bundle);
-      System.out.println(classList);
-      System.out.println(bundle.getBundleId());
+    }
+    synchronized (entityMap) {
       entityMap.put(bundle.getBundleId(), classList);
-      return bundle;
-    } else {
-      return null;
     }
   }
 
+  
+  private synchronized void removeClassList (Bundle bundle) {
+    entityMap.remove(bundle.getBundleId());
+  }
+  
+  
   private static void print(Bundle bundle, BundleEvent event) {
     String symbolicName = bundle.getSymbolicName();
     if (symbolicName.startsWith("org.pennyledger.")) {
@@ -158,25 +165,35 @@ public class EntityRegistry implements IEntityRegistry {
 
     @Override
     public Object addingBundle(Bundle bundle, BundleEvent event) {
-      System.out.println("addingBundle");
-      print(bundle, event);
-      return checkForEntityHeader(bundle);
+      String entityHeader = getEntityHeader(bundle);
+      if (entityHeader != null) {
+        System.out.println("addingBundle");
+        print(bundle, event);
+        parseEntityHeader(bundle, entityHeader);
+      }
+      return bundle;
     }
 
 
     @Override
     public void removedBundle(Bundle bundle, BundleEvent event, Object object) {
-      System.out.println("removedBundle");
-      print(bundle, event);
-      checkForEntityHeader(bundle);
+      String entityHeader = getEntityHeader(bundle);
+      if (entityHeader != null) {
+        System.out.println("removedBundle");
+        print(bundle, event);
+        removeClassList(bundle);
+      }
     }
 
 
     @Override
     public void modifiedBundle(Bundle bundle, BundleEvent event, Object object) {
-      System.out.println("modifiedBundle");
-      print(bundle, event);
-      checkForEntityHeader(bundle);
+      String entityHeader = getEntityHeader(bundle);
+      if (entityHeader != null) {
+        System.out.println("modifiedBundle");
+        print(bundle, event);
+        parseEntityHeader(bundle, entityHeader);
+      }
     }
   }
 

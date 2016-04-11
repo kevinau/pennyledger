@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.plan.IClassPlan;
+import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IRuntimeDefaultProvider;
 import org.pennyledger.form.plan.IRuntimeFactoryProvider;
@@ -25,6 +26,11 @@ public class ClassPlanAdapter implements IClassPlan<Object> {
     this.classPlan = classPlan;
   }
 
+  @Override
+  public Class<?> getSourceClass() {
+    return classPlan.getSourceClass();
+  }
+  
   @Override
   public void dump(int level) {
     classPlan.dump(level);
@@ -48,11 +54,6 @@ public class ClassPlanAdapter implements IClassPlan<Object> {
   @Override
   public IObjectPlan getParent() {
     return classPlan.getParent();
-  }
-
-  @Override
-  public boolean isOptional() {
-    return classPlan.isOptional();
   }
 
   @Override
@@ -113,6 +114,11 @@ public class ClassPlanAdapter implements IClassPlan<Object> {
   @Override
   public Set<IValidationMethod> getValidationMethods() {
     return classPlan.getValidationMethods();
+  }
+  
+  @Override
+  public void accumulateFieldPlans(List<IFieldPlan> fieldPlans) {
+    classPlan.accumulateFieldPlans(fieldPlans);
   }
 }
 

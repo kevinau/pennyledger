@@ -60,6 +60,15 @@ public class LocalDateType extends DateBasedType<LocalDate> {
 
 
   @Override
+  public String toValueString (LocalDate value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value cannot be null");
+    }
+    return value.toString();
+  }
+
+
+  @Override
   public void setSQLValue(PreparedStatement stmt, int sqlIndex, LocalDate value) throws SQLException {
     stmt.setDate(sqlIndex, new java.sql.Date(value.toEpochDay()), tzCal);
   }

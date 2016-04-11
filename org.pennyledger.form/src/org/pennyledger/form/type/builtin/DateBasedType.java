@@ -52,6 +52,23 @@ public abstract class DateBasedType<T> extends Type<T> implements IType<T> {
   }
 
   
+  private static String valueDateFormat (int year, int month, int day) {
+    StringBuilder buffer = new StringBuilder(10);
+    buffer.append(year);
+    buffer.append('-');
+    if (month < 10) {
+      buffer.append('0');
+    }
+    buffer.append(month);
+    buffer.append('-');
+    if (day < 10) {
+      buffer.append('0');
+    }
+    buffer.append(day);
+    return buffer.toString();
+  }
+
+  
   /**
    * Parse a string that contains a date.  The string can contain a day, month and year, as follows:
    * <ul>
@@ -97,6 +114,12 @@ public abstract class DateBasedType<T> extends Type<T> implements IType<T> {
   
   @Override
   public abstract T primalValue();
+  
+  
+  @Override
+  public JsonType getJsonType () {
+    return JsonType.PLAIN_STRING;
+  }
   
   
   @Override
@@ -161,6 +184,16 @@ public abstract class DateBasedType<T> extends Type<T> implements IType<T> {
     }
     int[] components = splitDate(value);
     return entryDateFormat(components[0], components[1], components[2]);
+  }
+
+
+  @Override
+  public String toValueString (T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value cannot be null");
+    }
+    int[] components = splitDate(value);
+    return valueDateFormat(components[0], components[1], components[2]);
   }
 
 

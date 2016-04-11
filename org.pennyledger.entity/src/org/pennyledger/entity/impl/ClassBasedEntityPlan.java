@@ -1,5 +1,7 @@
 package org.pennyledger.entity.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,17 +16,21 @@ public class ClassBasedEntityPlan extends ClassPlanAdapter implements IEntityPla
     super(classPlan);
   }
 
+  
   @Override
   public IObjectPlan[] getDataFields() {
-    return super.getMemberPlans();
+    IObjectPlan[] members = super.getMemberPlans();
+    IObjectPlan[] dataFields = Arrays.copyOfRange(members, 1, members.length - 1);
+    return dataFields;
   }
+  
 
   @Override
-  public Class<Object> getEntityClass() {
-    // TODO Auto-generated method stub
-    return null;
+  public Class<?> getEntityClass() {
+    return super.getSourceClass();
   }
 
+  
   @Override
   public String getEntityName() {
     
@@ -32,25 +38,35 @@ public class ClassBasedEntityPlan extends ClassPlanAdapter implements IEntityPla
     return null;
   }
 
+  
   @Override
   public IFieldPlan getIdField() {
-    return new IdFieldPlan();
-    // TODO Auto-generated method stub
+    // There is not ID field
     return null;
   }
 
+  
   @Override
   public IFieldPlan[] getKeyFields() {
-    return new IFieldPlan[0];
+    IObjectPlan[] members = super.getMemberPlans();
+    IObjectPlan keyMember = members[0];
+    
+    List<IFieldPlan> fieldPlans = new ArrayList<>();
+    keyMember.accumulateFieldPlans(fieldPlans);
+    int n = fieldPlans.size();
+    
+    return fieldPlans.toArray(new IFieldPlan[n]);
   }
 
+  
   @Override
   public List<IFieldPlan[]> getUniqueConstraints() {
     return Collections.emptyList();
   }
 
+  
   @Override
-  public IFieldPlan getLifeField() {
+  public IFieldPlan getEntityLifeField() {
     // There is no entity life field
     return null;
   }

@@ -147,6 +147,15 @@ public abstract class CodeBasedType<T extends ICodeValue> implements IType<T> {
   
   
   @Override
+  public String toValueString (T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value must not be null");
+    }
+    return value.getCode();
+  }
+  
+  
+  @Override
   public String toDescriptionString (T value) {
     if (value == null) {
       return "";
@@ -174,6 +183,12 @@ public abstract class CodeBasedType<T extends ICodeValue> implements IType<T> {
       n = Integer.max(n, code.length());
     }
     return n;
+  }
+  
+  
+  @Override
+  public JsonType getJsonType () {
+    return JsonType.PLAIN_STRING;
   }
   
   

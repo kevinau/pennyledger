@@ -18,6 +18,13 @@ import org.pennyledger.util.UserEntryException;
 
 public interface IType<T> {
   
+  public enum JsonType {
+    ESCAPED_STRING,
+    PLAIN_STRING,
+    NUMBER,
+    BOOLEAN;
+  }
+  
   public T createFromString (String source) throws UserEntryException;
 
   /**
@@ -44,6 +51,12 @@ public interface IType<T> {
 
   public String toEntryString (T value, T fillValue);
 
+  public String toValueString (T value);
+  
+  public default JsonType getJsonType () {
+    return JsonType.ESCAPED_STRING;
+  }
+  
   /**
    * A zero or empty field value.  For string values it will be the empty string.  For numeric values it will be zero.
    * Other fields will have an appropriate primal value.

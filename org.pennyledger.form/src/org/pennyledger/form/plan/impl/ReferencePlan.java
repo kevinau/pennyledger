@@ -1,8 +1,11 @@
 package org.pennyledger.form.plan.impl;
 
+import java.util.List;
+
 import org.pennyledger.form.Entity;
 import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.plan.IEntityPlan;
+import org.pennyledger.form.plan.IFieldPlan;
 import org.pennyledger.form.plan.IObjectPlan;
 import org.pennyledger.form.plan.IReferencePlan;
 import org.pennyledger.form.plan.PlanKind;
@@ -46,6 +49,12 @@ public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
   @Override
   public PlanKind kind() {
     return PlanKind.REFERENCE;
+  }
+
+
+  @Override
+  public void accumulateFieldPlans(List<IFieldPlan> fieldPlans) {
+    referencedPlan.accumulateFieldPlans(fieldPlans);
   }
 
 

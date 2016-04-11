@@ -2,6 +2,7 @@ package org.pennyledger.form.plan.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.pennyledger.form.EntryMode;
 import org.pennyledger.form.plan.IFieldPlan;
@@ -93,6 +94,12 @@ public class FieldPlan extends ObjectPlan implements IFieldPlan {
   @Override
   public <A extends Annotation> A getAnnotation(Class<A> klass) {
     return field.getAnnotation(klass);
+  }
+
+
+  @Override
+  public void accumulateFieldPlans(List<IFieldPlan> fieldPlans) {
+    fieldPlans.add(this);
   }
 
 }

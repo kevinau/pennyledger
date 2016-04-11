@@ -41,6 +41,12 @@ public class BooleanType extends Type<Boolean> implements IType<Boolean> {
 
 
   @Override
+  public JsonType getJsonType () {
+    return JsonType.BOOLEAN;
+  }
+  
+  
+  @Override
   public String getRequiredMessage() {
     return REQUIRED_MESSAGE;
   }
@@ -53,6 +59,15 @@ public class BooleanType extends Type<Boolean> implements IType<Boolean> {
     }
     boolean v = (Boolean) value;
     return v ? "Y" : "N";
+  }
+
+  @Override
+  public String toValueString(Boolean value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value cannot be null");
+    }
+    boolean v = (Boolean) value;
+    return v ? "true" : "false";
   }
 
   /**

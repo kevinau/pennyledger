@@ -44,7 +44,7 @@ public class ResultSet implements IResultSet {
       case Types.DATE :
         Date d = rs.getDate(i);
         if (d != null) {
-          return LocalDate.ofEpochDay(d.getTime());
+          return LocalDate.ofEpochDay(d.getTime() / (24L * 60L * 60L * 1000L));
         } else {
           return d;
         }
@@ -230,7 +230,7 @@ public class ResultSet implements IResultSet {
   public LocalDate getLocalDate (int i) {
     try {
       java.util.Date d = (java.util.Date)rs.getDate(i, tzCal);
-      return LocalDate.ofEpochDay(d.getTime());
+      return LocalDate.ofEpochDay(d.getTime() / (24L * 60L * 60L * 1000L));
     } catch (SQLException ex) {
       throw new RuntimeException(ex);
     }

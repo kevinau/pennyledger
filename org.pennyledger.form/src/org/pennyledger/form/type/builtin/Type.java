@@ -87,6 +87,15 @@ public abstract class Type<T> implements IType<T> {
   }
   
   
+  @Override
+  public String toValueString(T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value cannot be null");
+    }
+    return value.toString();
+  }
+  
+  
   protected abstract void validate(T value) throws UserEntryException;
 
   

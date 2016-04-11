@@ -4,13 +4,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pennyledger.form.Entity;
+import org.pennyledger.form.FormField;
+import org.pennyledger.form.UniqueConstraint;
 import org.pennyledger.math.Decimal;
 
+@Entity
+@UniqueConstraint("reference")
 public class GLEntry {
 
+  @FormField(length=10)
   private final String reference;
+  
   private final LocalDate date;
+  
   private final String narrative;
+  
   private final List<GLEntryDetail> entryDetails;
   
   

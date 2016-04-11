@@ -3,7 +3,6 @@ package org.pennyledger.time;
 import java.util.Calendar;
 
 import org.pennyledger.text.DayDateFormat;
-import org.pennyledger.util.UserEntryException;
 
 
 public abstract class DateFactory {
@@ -380,26 +379,26 @@ public abstract class DateFactory {
   }
   
   
-  public static int[] createFromString (String source, int[] fillYMD) throws UserEntryException {
-    if (source.equals("0100-01-01") || source.equals("0000-01-01")) {
-      return null;
-    } else {
-      int[] resultYMD = new int[3];
-      String[] completion = new String[1];
-      String[] msg = new String[1];
-      int result = validate(source, fillYMD, msg, resultYMD, completion);
-      switch (result) {
-      case OK :
-        return resultYMD;
-      case INCOMPLETE :
-        throw new UserEntryException(msg[0], UserEntryException.Type.INCOMPLETE, completion[0]);
-      case REQUIRED :
-        throw new UserEntryException(msg[0], UserEntryException.Type.REQUIRED, completion[0]);
-      default :
-        throw new UserEntryException(msg[0]);
-      }
-    }
-  }
+//  public static int[] createFromString (String source, int[] fillYMD) throws UserEntryException {
+//    if (source.equals("0100-01-01") || source.equals("0000-01-01")) {
+//      return null;
+//    } else {
+//      int[] resultYMD = new int[3];
+//      String[] completion = new String[1];
+//      String[] msg = new String[1];
+//      int result = validate(source, fillYMD, msg, resultYMD, completion);
+//      switch (result) {
+//      case OK :
+//        return resultYMD;
+//      case INCOMPLETE :
+//        throw new UserEntryException(msg[0], UserEntryException.Type.INCOMPLETE, completion[0]);
+//      case REQUIRED :
+//        throw new UserEntryException(msg[0], UserEntryException.Type.REQUIRED, completion[0]);
+//      default :
+//        throw new UserEntryException(msg[0]);
+//      }
+//    }
+//  }
   
   
 }
