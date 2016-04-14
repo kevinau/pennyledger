@@ -11,16 +11,16 @@ public class ReportEngine {
   private int pOffset = 0;
   private int levelDepth = 0;
   private Queue<IReportBlock> queuedHeaders = new LinkedList<>();
-  private ReportLevel[] levels = new ReportLevel[20];
+  private EngineLevel[] levels = new EngineLevel[20];
 
-  private static class ReportLevel {
+  private static class EngineLevel {
     private int useCount;
     private IReportBlock physicalHeader;
     private IReportBlock physicalFooter;
     private IReportBlock firstFooter;
-    // detail and logicalFooter blocks are used when they are added.  They are not queued in a ReportLevel
+    // detail and logicalFooter blocks are used when they are added.  They are not queued in a ReportEngineLevel
 
-    public ReportLevel (IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
+    public EngineLevel (IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
       this.physicalHeader = physicalHeader;
       this.physicalFooter = physicalFooter;
       this.firstFooter = firstFooter;
@@ -53,36 +53,37 @@ public class ReportEngine {
   }
 
 
-  public void addHeader (IReportLevel level) {
-    addHeader(level.getLogicalHeader(), level.getPhysicalHeader(), level.getPhysicalFooter(), level.getFirstFooter());
+  public void printHeader (IReportLevel level) {
+    printHeader (level.getLogicalHeader(), level.getPhysicalHeader(), level.getPhysicalFooter(), level.getFirstFooter());
   }
+
   
-  
-  public void addHeader (IReportBlock logicalHeader, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
+  public void printHeader (IReportBlock logicalHeader, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
     if (logicalHeader.isMandatory()) {
       doEmittableBlock(logicalHeader);
     } else {
       queuedHeaders.add(logicalHeader);
     }
-    ReportLevel level = new ReportLevel(physicalHeader, physicalFooter, firstFooter);
+    
+    EngineLevel level = new EngineLevel(physicalHeader, physicalFooter, firstFooter);
     levels[levelDepth++] = level;
   }
 
   
-  public void addDetail (IReportBlock detail) {
+  public void printDetail (IReportBlock detail) {
     doEmittableBlock(detail);
   }
   
   
-  public void addFooter (IReportBlock logicalFooter) {
-    ReportLevel level = levels[--levelDepth];
+  public void printFooter (IReportBlock logicalFooter) {
+    EngineLevel level = levels[--levelDepth];
     IReportBlock footer = level.getEffectiveLogicalFooter(logicalFooter);
     doEmittableBlock(footer);
   }
   
   
-  public void addFooter (IReportLevel level) {
-    addFooter(level.getLogicalFooter());
+  public void printFooter (IReportLevel level) {
+    printFooter(level.getLogicalFooter());
   }
   
   
@@ -107,27 +108,28 @@ public class ReportEngine {
       // There is not enough space on the page for this block
       int breakDepth = levelDepth - queuedHeaders.size();
       for (int i = breakDepth - 1; i >= 0; i--) {
-        System.out.println("Pysucal footer: " + levels[i].physicalFooter);
-        levels[i].physicalFooter.emit(pOffset, useCount);
-        pOffset += levels[i].physicalFooter.getHeight();
+        IReportBlock physicalFooter = levels[i].physicalFooter;
+        if (physicalFooter != null) {
+          physicalFooter.emit(pOffset, useCount);
+          pOffset += physicalFooter.getHeight();
+        }
       }
       pager.newPage();
-      System.out.println("----------------------");
       pOffset = 0;
       for (int i = 0; i < breakDepth; i++) {
-        System.out.println("Physical header: " + levels[i].physicalHeader);
-        levels[i].physicalHeader.emit(pOffset, useCount);
-        pOffset += levels[i].physicalHeader.getHeight();
+        IReportBlock physicalHeader = levels[i].physicalHeader;
+        if (physicalHeader != null) {
+          physicalHeader.emit(pOffset, useCount);
+          pOffset += physicalHeader.getHeight();
+        }
       }
     }
     // There is now enough space for this block
     for (IReportBlock queuedHeader : queuedHeaders) {
-      System.out.println("Queued logical header: " + queuedHeader);
       queuedHeader.emit(pOffset, useCount);
       pOffset += queuedHeader.getHeight();
     }
     queuedHeaders.clear();
-    System.out.println("Detail or logical footer: " + block);
     block.emit(pOffset, useCount);
     pOffset += block.getHeight();
     if (levelDepth > 0) {

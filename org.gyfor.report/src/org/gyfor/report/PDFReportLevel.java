@@ -36,13 +36,18 @@ public class PDFReportLevel {
   }
   
   
+  public int getLevel () {
+    return level;
+  }
+  
+  
   @Test
   public void test() throws IOException {
     PDFReportPager pager = new PDFReportPager("test.pdf", PaperSize.A4);
 
     ReportEngine reportEngine = new ReportEngine(pager);
     IReportBlock detail = new PDFReportBlock(pager);
-    reportEngine.addDetail(detail);
+    reportEngine.printDetail(detail);
     reportEngine.close();
   }
 

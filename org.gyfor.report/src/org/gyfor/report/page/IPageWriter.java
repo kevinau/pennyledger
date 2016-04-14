@@ -9,18 +9,12 @@ public interface IPageWriter {
   public void newPage();
 
   
-  //public void writeTemplate(PageCountTemplate templ);
-
-  
   public IPageDocument getDocument();
   
   
   public IPageContent getPageContent();
   
 
-  public IPageTemplate createTemplate(int x0, int y0, int x1, int y1);
-
-  
   public int getPageWidth();
 
   

@@ -2,6 +2,8 @@ package org.gyfor.report.page;
 
 import java.awt.Color;
 
+import org.gyfor.report.page.pdf.PDFName;
+
 public interface IPageContent {
 
   public final static int LINE_CAP_BUTT = 0;
@@ -21,10 +23,12 @@ public interface IPageContent {
   public void optionalLineBreak();
   
   public void drawImage(IPageImage image, int x, int y, int w);
-  
+
+  public void drawTemplate(PDFName templateId, int xOffset, int yOffset);
+
   public void drawTemplate(IPageTemplate template);
   
-  public void drawTemplate(IPageTemplate template, int x, int y);
+  //public void drawTemplate(IPageTemplate template, int x, int y);
 
   public void setNonStrokeGrey(int grey);
   

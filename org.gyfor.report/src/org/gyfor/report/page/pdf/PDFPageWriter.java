@@ -105,12 +105,6 @@ public class PDFPageWriter implements IPageWriter {
 
 
   @Override
-  public PDFTemplate createTemplate(int x0, int y0, int x1, int y1) {
-    return document.createTemplate(x0, y0, x1, y1);
-  }
-
-  
-  @Override
   public int getPageWidth() {
     return pageWidth;
   }

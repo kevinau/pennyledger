@@ -1,5 +1,6 @@
 package org.gyfor.report.page.pdf;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.gyfor.report.PaperSize;
+import org.gyfor.report.page.BaseFont;
+import org.gyfor.report.page.BaseFontFactory;
 import org.gyfor.report.page.IPageDocument;
 
 public class PDFDocument implements IPageDocument {
@@ -23,6 +26,10 @@ public class PDFDocument implements IPageDocument {
   private static final String PRODUCER = "Gecko Software (UK and Australia)";
 
   private final CountedOutputStream writer;
+  
+  private PDFTemplate pageCountTemplate;
+  private BaseFont pageCountFont;
+  private float pageCountFontSize;
   
   private PDFIndirect catalogObject;
   private PDFIndirect infoObject;
@@ -51,12 +58,17 @@ public class PDFDocument implements IPageDocument {
     this (new FileOutputStream(file));
   }
   
-  
+  private static final BaseFont pageLevelFont = BaseFontFactory.getFont("Helvetica");
+
   public PDFDocument (OutputStream os) {
     writer = new CountedOutputStream(os);
     writer.writeln("%PDF-1.7");
     writer.writeln("%\u00f6\u00e4\u00fc\u00df");
+
     pageNumber = 0;
+    pageCountTemplate = createTemplate();
+
+//    createPageCountTemplate (pageLevelFont, 10);
   }
   
   
@@ -121,15 +133,23 @@ public class PDFDocument implements IPageDocument {
     pageNumber++;
     PDFPage pageObject = new PDFPage(this, paperSize);
     pageObject.put("Parent", pageSetObject);
-    pageObject.put("MediaBox", paperSize);
     pageObjectList.add(pageObject.getReference());
+
+    pageObject.addTemplateRef(pageCountTemplate);
     return pageObject;
   }
   
   
   @Override
-  public PDFTemplate createTemplate (int x0, int y0, int x1, int y1) {
-    PDFTemplate templateObject = new PDFTemplate(this, templateIndex, x0, y0, x1, y1);
+  public PDFIndirect createIndirect (PaperSize paperSize) {
+    PDFIndirect indirect = new PDFIndirect(this);
+    return indirect;
+  }
+  
+  
+  @Override
+  public PDFTemplate createTemplate () {
+    PDFTemplate templateObject = new PDFTemplate(this, templateIndex);
     templateIndex++;
     return templateObject;
   }
@@ -189,7 +209,6 @@ public class PDFDocument implements IPageDocument {
   }
   
   
-
   public void writeTop (PDFIndirect indirect) {
     int n = indirect.getObjNumber();
     while (xrefs.size() <= n) {
@@ -204,15 +223,33 @@ public class PDFDocument implements IPageDocument {
   private NumberFormat nformat = new DecimalFormat("0000000000");
   private DateFormat dformat = new SimpleDateFormat("yyyyMMddhhmmss"); 
   
+  public PDFName getPageCountRef (BaseFont font, float fontSize) {
+    if (pageCountFont == null) {
+      this.pageCountFont = font;
+      this.pageCountFontSize = fontSize;
+
+      int width = font.getAdvance("000", fontSize);
+      int height = font.getLineHeight(fontSize);
+      
+      // Create the content--but don't use it yet
+      pageCountTemplate.createContent(0, 0, width, height);
+      writeTop (pageCountTemplate);
+    }
+    return pageCountTemplate.getId();
+  }
+  
   
   @Override
   public void close () {
-    //PDFReference outlinesObject = new PDFReference(this, "Outlines");
-    //outlinesObject.put("Count", 0);
-    //writeTop(outlinesObject);
+    PDFContent cx = pageCountTemplate.getContent();
+    if (cx != null) {
+      cx.beginText();
+      cx.drawText(Integer.toString(pageNumber));
+      cx.endText();
+      writeTop(cx);
+    }
     
     catalogObject = new PDFIndirect(this, "Catalog");
-    //catalogObject.put("Outlines", outlinesObject);
     catalogObject.put("Pages", pageSetObject);
     writeTop(catalogObject);
     

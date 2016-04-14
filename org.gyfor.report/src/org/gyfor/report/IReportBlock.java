@@ -30,6 +30,9 @@ public interface IReportBlock {
   public void emit (int offset);
   
   
+  public void setData (Object data);
+  
+  
   /**
    * Is this block always written out, or will it only be written out if required.
    * <ul>

@@ -45,4 +45,11 @@ public class PDFReportBlock implements IReportBlock {
     return false;
   }
 
+
+  @Override
+  public void setData(Object data) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

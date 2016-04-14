@@ -66,29 +66,29 @@ public class ReportLayoutTest {
         case "h" :
           block = new TestReportBlock(pager, elems[1]);
           if (elems.length == 2) {
-            reportEngine.addHeader(block, null, null, null);
+            reportEngine.printHeader(block, null, null, null);
           } else {
             IReportBlock block2 = new TestReportBlock(pager, elems[2]);
             if (elems.length == 3) {
-              reportEngine.addHeader(block, block2, null, null);
+              reportEngine.printHeader(block, block2, null, null);
             } else {
               IReportBlock block3 = new TestReportBlock(pager, elems[3]);
               if (elems.length == 4) {
-                reportEngine.addHeader(block, block2, block3, null);
+                reportEngine.printHeader(block, block2, block3, null);
               } else {
                 IReportBlock block4 = new TestReportBlock(pager, elems[4]);
-                reportEngine.addHeader(block, block2, block3, block4);
+                reportEngine.printHeader(block, block2, block3, block4);
               }
             }
           }
           break;
         case "d" :
           block = new TestReportBlock(pager, elems[1]);
-          reportEngine.addDetail(block);
+          reportEngine.printDetail(block);
           break;
         case "f" :
           block = new TestReportBlock(pager, elems[1]);
-          reportEngine.addFooter(block);
+          reportEngine.printFooter(block);
           break;
         default :
           throw new RuntimeException("Unknown line: " + line);

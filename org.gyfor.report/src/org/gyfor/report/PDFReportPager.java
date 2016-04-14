@@ -42,10 +42,9 @@ public class PDFReportPager implements IReportPager, AutoCloseable {
 
   
   @Override
-  public PDFContent newPage() {
+  public void newPage() {
     pdfWriter.newPage();
     pdfContent = pdfWriter.getPageContent();
-    return pdfContent;
   }
 
   

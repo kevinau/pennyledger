@@ -88,7 +88,6 @@ public class PDFImage extends PDFContentReference implements IPageImage {
         int i = 0;
         for (int x = 0; x < pixelsWide; x++) {
           int rgb = img.getRGB(x, y);
-          //System.out.println(Integer.toHexString(rgb));
           for (int c = 0; c < rgbArray.length; c++) {
             if (rgbArray[c] == rgb) {
               source[i++] = (byte)c;

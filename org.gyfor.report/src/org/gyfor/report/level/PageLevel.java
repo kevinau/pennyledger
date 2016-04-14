@@ -1,5 +1,6 @@
 package org.gyfor.report.level;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.gyfor.report.IReportBlock;
 import org.gyfor.report.IReportLevel;
 import org.gyfor.report.PDFReportBlock;
@@ -7,6 +8,7 @@ import org.gyfor.report.PDFReportPager;
 import org.gyfor.report.page.BaseFont;
 import org.gyfor.report.page.BaseFontFactory;
 import org.gyfor.report.page.pdf.PDFContent;
+import org.gyfor.report.page.pdf.PDFName;
 
 
 public class PageLevel implements IReportLevel {
@@ -18,7 +20,7 @@ public class PageLevel implements IReportLevel {
   
   private static final BaseFont pageLevelFont = BaseFontFactory.getFont("Helvetica");
 
-  private final IReportBlock pageHeader;
+  private final @NonNull IReportBlock pageHeader;
   private final IReportBlock pageFooter;
 
 
@@ -61,6 +63,7 @@ public class PageLevel implements IReportLevel {
       @Override
       public void emit(int offset) {
         PDFContent pdfContent = getContent();
+        PDFName pageCountRef = pdfContent.getPageCountRef(pageLevelFont, pageLevelFontSize);
 
         int pageNumber = pdfContent.getPageNumber();
 
@@ -69,7 +72,10 @@ public class PageLevel implements IReportLevel {
         pdfContent.setNonStrokeGrey(128);
         int lineHeight = pageLevelFont.getLineHeight(pageLevelFontSize);
         int baseLineOffset = pageLevelFont.getAboveBaseLine(pageLevelFontSize);
-        pdfContent.drawText(LEFT_MARGIN, offset + lineHeight + baseLineOffset, "Page " + pageNumber + " of ?");
+        String text = "Page " + pageNumber + " of ";
+        pdfContent.drawText(LEFT_MARGIN, offset + lineHeight + baseLineOffset, text);
+        int n = pageLevelFont.getAdvance(text, pageLevelFontSize);
+        pdfContent.drawTemplate(pageCountRef, LEFT_MARGIN + n, offset + lineHeight + baseLineOffset);
         pdfContent.endText();
       }
 
@@ -83,7 +89,7 @@ public class PageLevel implements IReportLevel {
 
 
   @Override
-  public IReportBlock getLogicalHeader() {
+  public @NonNull IReportBlock getLogicalHeader() {
     return pageHeader;
   }
 
@@ -97,5 +103,17 @@ public class PageLevel implements IReportLevel {
   @Override
   public IReportBlock getPhysicalFooter() {
     return pageFooter;
+  }
+
+
+  @Override
+  public IReportBlock getPhysicalHeader() {
+    return pageHeader;
+  }
+
+
+  @Override
+  public IReportBlock getFirstFooter() {
+    return null;
   }
 }

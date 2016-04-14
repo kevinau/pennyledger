@@ -308,6 +308,15 @@ public class PDFContent extends PDFIndirect implements IPageContent {
   }
   
   
+  public void templateOffset (int x, int y) {
+    buffer.append(" 1 0 0 1 ");
+    appendMeasure(x);
+    buffer.appendSpace();
+    appendMeasure(paperHeight - y);
+    buffer.append(" cm ");
+  }
+  
+  
   @Override
   public void textTransform (int a, int b, int c, int d, int x, int y) {
     appendMeasure(a);
@@ -367,9 +376,6 @@ public class PDFContent extends PDFIndirect implements IPageContent {
       buffer.append((byte)c);
     }
     buffer.append(") Tj ");
-    System.out.println("--------------------------------");
-    System.out.println(buffer.toString());
-    System.out.println("================================");
   }
   
   
@@ -458,7 +464,6 @@ public class PDFContent extends PDFIndirect implements IPageContent {
     //}
 //    transform(x, paperHeight - (y + height));
 //    //scale (scaleX, scaleY);
-//    System.out.println("   " + scaleX + " " + scaleY);
 //    PDFName imageId = contentReference.getImage(image);
 //    buffer.append('/');
 //    buffer.append(imageId.getName());
@@ -475,26 +480,31 @@ public class PDFContent extends PDFIndirect implements IPageContent {
   
   
   @Override
-  public void drawTemplate (IPageTemplate template) {
-    PDFName templateId = contentReference.getTemplate((PDFTemplate)template);
+  public void drawTemplate (PDFName templateId, int xOffset, int yOffset) {
+    saveGraphicState();
+    templateOffset(xOffset, yOffset);
     buffer.append('/');
     buffer.append(templateId.getName());
     buffer.append(" Do ");
+    restoreGraphicState();
   }
   
   
   @Override
-  public void drawTemplate (IPageTemplate template, int x, int y) {
-    int y0 = y + template.getHeight();
-    transform(x, paperHeight - y0);
-    drawTemplate(template);
-    transform(-x, y0 - paperHeight);
+  public void drawTemplate (IPageTemplate template) {
+    saveGraphicState();
+    PDFName templateId = contentReference.getTemplate((PDFTemplate)template);
+    buffer.append('/');
+    buffer.append(templateId.getName());
+    buffer.append(" Do ");
+    restoreGraphicState();
   }
   
   
   public int getPageNumber() {
     return document.getPageNumber();
   }
+  
   
   public byte[] array () {
     return buffer.array();
@@ -509,5 +519,10 @@ public class PDFContent extends PDFIndirect implements IPageContent {
   public void close () {
     put("Length", buffer.size());
     document.writeTop(this);
+  }
+
+
+  public PDFName getPageCountRef (BaseFont pagelevelfont, float pagelevelfontsize) {
+    return document.getPageCountRef(pagelevelfont, pagelevelfontsize);
   }
 }

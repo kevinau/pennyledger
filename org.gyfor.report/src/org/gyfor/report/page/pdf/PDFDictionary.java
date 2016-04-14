@@ -10,8 +10,7 @@ public class PDFDictionary extends PDFObject {
 
   private Map<String, PDFObject> map = new LinkedHashMap<String, PDFObject>();
   
-  @Override
-  public void write (int indent, CountedOutputStream writer) {
+  public void writeDictionary (int indent, CountedOutputStream writer) {
     writer.writeln("<<");
     for (Map.Entry<String, PDFObject> entry : map.entrySet()) {
       spaceIn (indent + 3, writer);
@@ -68,6 +67,12 @@ public class PDFDictionary extends PDFObject {
   
   public PDFObject get (String name) {
     return map.get(name);
+  }
+
+
+  @Override
+  public void write(int indent, CountedOutputStream writer) {
+    writeDictionary (indent, writer);
   }
   
 }

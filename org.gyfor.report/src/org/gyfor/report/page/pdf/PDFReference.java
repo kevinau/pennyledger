@@ -10,6 +10,11 @@ public class PDFReference extends PDFObject {
   }
   
   
+  public PDFReference (PDFIndirect indirect) {
+    this.objNumber = indirect.getObjNumber();
+  }
+  
+  
   @Override
   public void write (int indent, CountedOutputStream writer) {
     writer.write(objNumber);

@@ -1,19 +1,17 @@
 package org.gyfor.report;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 public interface IReportLevel {
 
-  public IReportBlock getLogicalHeader();
+  public @NonNull IReportBlock getLogicalHeader();
   
-  public default IReportBlock getPhysicalHeader() {
-    return getLogicalHeader();
-  };
+  public IReportBlock getPhysicalHeader();
   
   public IReportBlock getLogicalFooter();
   
   public IReportBlock getPhysicalFooter();
   
-  public default IReportBlock getFirstFooter() {
-    return null;
-  }
+  public IReportBlock getFirstFooter();
   
 }

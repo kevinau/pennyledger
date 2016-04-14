@@ -60,6 +60,19 @@ public class PDFContentReference extends PDFIndirect {
   }
   
   
+  public void addTemplateRef (PDFTemplate template) {
+    if (resourcesObject == null) {
+      resourcesObject = new PDFDictionary();
+    }
+    if (xobjSetObject == null) {
+      xobjSetObject = new PDFDictionary();
+      resourcesObject.put("XObject", xobjSetObject);
+    }
+    PDFName templateId = template.getId();
+    xobjSetObject.put(templateId.getName(), template.getReference());
+  }
+  
+  
   public void addExtGraphicState () {
     if (resourcesObject == null) {
       resourcesObject = new PDFDictionary();
@@ -76,6 +89,11 @@ public class PDFContentReference extends PDFIndirect {
       contentObject = new PDFContent(document, this, paperWidth, paperHeight);
       put("Contents", contentObject);
     }
+    return contentObject;
+  }
+
+  
+  public PDFContent getContent () {
     return contentObject;
   }
 

@@ -10,8 +10,6 @@ public class ByteArrayBuilder {
   private int index;
   
   public ByteArrayBuilder (int allocation) {
-    System.out.println("............................ByteArrayBuilder: create");
-
     buffer = new byte[allocation];
     index = 0;
   }
@@ -104,7 +102,6 @@ public class ByteArrayBuilder {
   
   
   public void reset () {
-    System.out.println("........................ByteArrayBuilder: reset");
     index = 0;
   }
   

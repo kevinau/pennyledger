@@ -11,7 +11,7 @@ public class StreamReport {
 
   private final String ownerName;
   
-  private static final int LEFT_MARGIN = 24 * 720;  
+  private static final int LEFT_MARGIN = 30 * 720;  
   private static final BaseFont normalFont = BaseFontFactory.getFont("Helvetica");
 
   public StreamReport (String ownerName) {
@@ -24,7 +24,7 @@ public class StreamReport {
     IReportLevel pageLevel = new PageLevel(pager, ownerName);
     
     ReportEngine reportEngine = new ReportEngine(pager);
-    reportEngine.addHeader(pageLevel);
+    reportEngine.printHeader(pageLevel);
     
     Object line = supplier.get();
     while (line != null) {
@@ -44,17 +44,16 @@ public class StreamReport {
           pdfContent.setFontAndSize(normalFont, 10);
           pdfContent.setNonStrokeGrey(0);
           int baseLineOffset = normalFont.getAboveBaseLine(10);
-          System.out.println(offset + "  " + (offset + baseLineOffset) + "  " + linex);
           pdfContent.drawText(LEFT_MARGIN, offset + baseLineOffset, linex);
           pdfContent.endText();
         }
       };
-      reportEngine.addDetail(detail);
-      reportEngine.addDetail(detail);
+      reportEngine.printDetail(detail);
+      reportEngine.printDetail(detail);
       line = supplier.get();
     }
     
-    reportEngine.addFooter(pageLevel);
+    reportEngine.printFooter(pageLevel);
     reportEngine.close();
   }
 

@@ -17,7 +17,7 @@ public class PDFReportTest {
 
     ReportEngine reportEngine = new ReportEngine(pager);
     IReportBlock detail = new PDFReportBlock(pager);
-    reportEngine.addDetail(detail);
+    reportEngine.printDetail(detail);
     reportEngine.close();
   }
     
