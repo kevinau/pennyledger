@@ -1,6 +1,5 @@
 package org.gyfor.report.page.pdf;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.util.Map;
 
 import org.gyfor.report.PaperSize;
 import org.gyfor.report.page.BaseFont;
-import org.gyfor.report.page.BaseFontFactory;
 import org.gyfor.report.page.IPageDocument;
 
 public class PDFDocument implements IPageDocument {
@@ -28,8 +26,7 @@ public class PDFDocument implements IPageDocument {
   private final CountedOutputStream writer;
   
   private PDFTemplate pageCountTemplate;
-  private BaseFont pageCountFont;
-  private float pageCountFontSize;
+  private boolean pageCountTemplateReady = false;
   
   private PDFIndirect catalogObject;
   private PDFIndirect infoObject;
@@ -58,8 +55,6 @@ public class PDFDocument implements IPageDocument {
     this (new FileOutputStream(file));
   }
   
-  private static final BaseFont pageLevelFont = BaseFontFactory.getFont("Helvetica");
-
   public PDFDocument (OutputStream os) {
     writer = new CountedOutputStream(os);
     writer.writeln("%PDF-1.7");
@@ -224,16 +219,14 @@ public class PDFDocument implements IPageDocument {
   private DateFormat dformat = new SimpleDateFormat("yyyyMMddhhmmss"); 
   
   public PDFName getPageCountRef (BaseFont font, float fontSize) {
-    if (pageCountFont == null) {
-      this.pageCountFont = font;
-      this.pageCountFontSize = fontSize;
-
+    if (!pageCountTemplateReady) {
       int width = font.getAdvance("000", fontSize);
       int height = font.getLineHeight(fontSize);
       
       // Create the content--but don't use it yet
       pageCountTemplate.createContent(0, 0, width, height);
       writeTop (pageCountTemplate);
+      pageCountTemplateReady = true;
     }
     return pageCountTemplate.getId();
   }

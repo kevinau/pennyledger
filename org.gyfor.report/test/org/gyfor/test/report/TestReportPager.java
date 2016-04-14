@@ -4,6 +4,7 @@ import java.util.Queue;
 
 import org.gyfor.report.IReportBlock;
 import org.gyfor.report.IReportPager;
+import org.gyfor.report.page.pdf.PDFContent;
 import org.junit.Assert;
 
 public class TestReportPager implements IReportPager {
@@ -60,5 +61,12 @@ public class TestReportPager implements IReportPager {
   @Override
   public void close() {
     Assert.assertTrue("All expected blocks emitted", expecteds.isEmpty());
+  }
+
+
+  @Override
+  public PDFContent getContent() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

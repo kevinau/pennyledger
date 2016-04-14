@@ -37,4 +37,9 @@ public class TestReportBlock implements IReportBlock {
   public boolean isMandatory() {
     return false;
   }
+
+
+  @Override
+  public void setData(Object data) {
+  }
 }
