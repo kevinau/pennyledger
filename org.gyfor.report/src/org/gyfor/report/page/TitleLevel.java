@@ -1,10 +1,7 @@
-package org.gyfor.report.level;
+package org.gyfor.report.page;
 
 import org.gyfor.report.IReportBlock;
 import org.gyfor.report.IReportGrouping;
-import org.gyfor.report.page.BaseFont;
-import org.gyfor.report.page.BaseFontFactory;
-import org.gyfor.report.page.Greys;
 import org.gyfor.report.page.pdf.PDFContent;
 import org.gyfor.report.page.pdf.PDFName;
 
@@ -78,7 +75,7 @@ public class TitleLevel implements IReportGrouping<Object> {
 
       
       @Override
-      public void calcWidth() {
+      public void calcWidths() {
       }
     };
 
@@ -103,19 +100,15 @@ public class TitleLevel implements IReportGrouping<Object> {
         int baseLineOffset = ownerFont.getAboveBaseLine(ownerFontSize);
         String text = "Page " + pageNumber + " of ";
         canvas.drawText(LEFT_MARGIN, offset + lineHeight + baseLineOffset, text);
-        canvas.endText();
 
         int n = ownerFont.getAdvance(text, ownerFontSize);
-        canvas.beginText();
-        canvas.setFontAndSize(ownerFont, ownerFontSize);
-        canvas.setNonStrokeGrey(Greys.MID);
         canvas.drawTemplate(pageCountRef, LEFT_MARGIN + n, offset + lineHeight + baseLineOffset);
         canvas.endText();
       }
 
 
       @Override
-      public void calcWidth() {
+      public void calcWidths() {
       }
     };
   }

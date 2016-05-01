@@ -12,7 +12,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +41,8 @@ public class PDFDocument implements IPageDocument {
   private final List<Integer> xrefs = new ArrayList<Integer>();
   private final PDFDictionary trailer = new PDFDictionary();
   
-  private Map<String, PDFIndirect> fontMap = new HashMap<String, PDFIndirect>();
-  private Map<String, PDFImage> imageMap = new HashMap<String, PDFImage>();
+  private Map<String, PDFIndirect> fontMap = new LinkedHashMap<String, PDFIndirect>();
+  private Map<String, PDFImage> imageMap = new LinkedHashMap<String, PDFImage>();
   
   private int pageNumber;
   
@@ -91,10 +91,11 @@ public class PDFDocument implements IPageDocument {
       int fontIndex = fontMap.size() + 1;
       String fn = "F" + fontIndex;
       PDFName fontId = new PDFName(fn);
-      fontObject = new PDFIndirect(this, "Font");
+      fontObject = new PDFIndirect(this);
+      fontObject.put("BaseFont", new PDFName(fontName));
       fontObject.put("Subtype", new PDFName("Type1"));
       fontObject.put("Name", fontId);
-      fontObject.put("BaseFont", new PDFName(fontName));
+      fontObject.put("Type", new PDFName("Font"));
       fontObject.put("Encoding", new PDFName("WinAnsiEncoding"));
       writeTop(fontObject);
       fontMap.put(fontName, fontObject);
@@ -213,7 +214,7 @@ public class PDFDocument implements IPageDocument {
     }
     xrefs.set(n, writer.getOffset());
     indirect.write(writer);
-    writer.writeln();
+    //writer.writeln();
   }
   
   

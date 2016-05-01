@@ -11,8 +11,8 @@ public abstract class PDFObject {
   
   
   protected void spaceIn (int indent, CountedOutputStream writer) {
-    for (int i = 0; i < indent; i++) {
-      writer.write(' ');
-    }
+//    for (int i = 0; i < indent; i++) {
+//      writer.write(' ');
+//    }
   }
 }

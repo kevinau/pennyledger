@@ -74,12 +74,13 @@ public class PDFContentReference extends PDFIndirect {
   
   
   public void addExtGraphicState () {
+    PDFDictionary extGraphicStateDict = new PDFDictionary();
+    PDFIndirect extGraphicStateObject = document.createExtGraphicState();
+    extGraphicStateDict.put("GS1", extGraphicStateObject.getReference());
+
     if (resourcesObject == null) {
       resourcesObject = new PDFDictionary();
     }
-    PDFIndirect extGraphicStateObject = document.createExtGraphicState();
-    PDFDictionary extGraphicStateDict = new PDFDictionary();
-    extGraphicStateDict.put("GS1", extGraphicStateObject.getReference());
     resourcesObject.put("ExtGState", extGraphicStateDict);
   }
 

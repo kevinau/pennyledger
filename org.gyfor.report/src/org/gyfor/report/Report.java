@@ -4,20 +4,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
-import org.gyfor.report.level.TitleLevel;
+import org.gyfor.report.page.TitleLevel;
 
 public class Report<T> {
 
-  private final Supplier<T> supplier;
+  private final ResettableSupplier<T> supplier;
   
   private List<IReportLevel> workingLevels = new ArrayList<>();
   
-  private ReportEngine reportEngine;
+  private Engine engine;
   
     
-  public Report (Supplier<T> supplier) {
+  public Report (ResettableSupplier<T> supplier) {
     this.supplier = supplier;
   }
   
@@ -70,9 +69,13 @@ public class Report<T> {
   
   
   public void generate(Path path, PaperSize paperSize) {
-    IReportPager pager = new PDFReportPager(paperSize);
-    reportEngine = new ReportEngine(pager);
+    engine = new CalcWidthsEngine();
     T record = supplier.get();
+    prepareLevel(0, record);
+    
+    IReportPager pager = new PDFReportPager(paperSize);
+    engine = new ReportingEngine(pager);
+    record = supplier.reset().get();
     prepareLevel(0, record);
     pager.close(path);
   }
@@ -85,7 +88,7 @@ public class Report<T> {
       IReportGrouping<T> grouping = (IReportGrouping<T>)level;
       if (record != null) {
         grouping.setData(record);
-        reportEngine.printHeader(grouping);
+        engine.processHeader(grouping);
 
         Object thisGroup = grouping.getGroup(record);
         Object group = thisGroup;
@@ -97,13 +100,13 @@ public class Report<T> {
           group = grouping.getGroup(record);
         }
 
-        reportEngine.printFooter(grouping);
+        engine.processFooter(grouping);
       }
       return record;
     } else {
       IReportDetail detail = (IReportDetail)level;
       detail.setData(record);
-      reportEngine.printDetail(detail);
+      engine.processDetail(detail);
 
       // Allow all upper level groupings to accumulate the detail that has been printed.
       for (IReportLevel g : workingLevels) {

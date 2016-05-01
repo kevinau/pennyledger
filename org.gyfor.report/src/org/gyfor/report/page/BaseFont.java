@@ -145,7 +145,7 @@ public class BaseFont {
   }
   
   
-  private static final double LINE_HEIGHT_PERCENT = 1.5;
+  private static final double LINE_HEIGHT_PERCENT = 1.3;
   
   
   public int getLineHeight (float fontSize) {

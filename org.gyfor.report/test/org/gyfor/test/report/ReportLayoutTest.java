@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.gyfor.report.IReportBlock;
-import org.gyfor.report.ReportEngine;
+import org.gyfor.report.ReportingEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -54,7 +54,7 @@ public class ReportLayoutTest {
       throw new RuntimeException(ex);
     }
     
-    ReportEngine reportEngine = new ReportEngine(pager);
+    ReportingEngine reportEngine = new ReportingEngine(pager);
     try (CleanTextReader reader = new CleanTextReader(file)) {
       String line = reader.readLine();
       while (line != null && !line.startsWith("---")) {

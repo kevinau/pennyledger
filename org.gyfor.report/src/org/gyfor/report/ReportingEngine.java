@@ -6,7 +6,7 @@ import java.util.Queue;
 import org.gyfor.report.page.pdf.PDFContent;
 
 
-public class ReportEngine {
+public class ReportingEngine implements Engine {
   
   private final IReportPager pager;
   private final int pHeight;
@@ -49,13 +49,14 @@ public class ReportEngine {
   }
  
   
-  public ReportEngine (IReportPager pager) {
+  public ReportingEngine (IReportPager pager) {
     this.pager = pager;
     pHeight = pager.getPageHeight();
   }
 
 
-  public void printHeader (IReportGrouping level) {
+  @Override
+  public void processHeader (IReportGrouping<?> level) {
     printHeader (level.getLogicalHeader(), level.getPhysicalHeader(), level.getPhysicalFooter(), level.getFirstFooter());
   }
 
@@ -72,27 +73,29 @@ public class ReportEngine {
   }
 
   
+  @Override
+  public void processDetail (IReportDetail detail) {
+    printDetail(detail.getDetail());
+  }
+  
+  
   public void printDetail (IReportBlock detail) {
     doEmittableBlock(detail);
   }
   
   
-  public void printDetail (IReportDetail detail) {
-    printDetail(detail.getDetail());
+  @Override
+  public void processFooter (IReportGrouping<?> level) {
+    printFooter(level.getLogicalFooter());
   }
   
   
-  public void printFooter (IReportBlock logicalFooter) {
+  private void printFooter (IReportBlock logicalFooter) {
     EngineLevel level = levels[--levelDepth];
     IReportBlock footer = level.getEffectiveLogicalFooter(logicalFooter);
     if (footer != null) {
       doEmittableBlock(footer);
     }
-  }
-  
-  
-  public void printFooter (IReportGrouping<?> level) {
-    printFooter(level.getLogicalFooter());
   }
   
   

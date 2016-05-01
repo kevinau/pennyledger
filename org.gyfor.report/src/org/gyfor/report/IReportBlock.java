@@ -27,7 +27,7 @@ public interface IReportBlock {
   public void emit (PDFContent canvas, int offset);
   
 
-  public void calcWidth ();
+  public void calcWidths ();
   
   
   public default <T> void setData (T record) {
