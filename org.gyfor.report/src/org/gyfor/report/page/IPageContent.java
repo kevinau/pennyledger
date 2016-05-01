@@ -20,8 +20,6 @@ public interface IPageContent {
   
   public void closeAndStroke();
   
-  public void optionalLineBreak();
-  
   public void drawImage(IPageImage image, int x, int y, int w);
 
   public void drawTemplate(PDFName templateId, int xOffset, int yOffset);

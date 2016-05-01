@@ -1,10 +1,11 @@
 package org.gyfor.report.page.pdf;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -47,13 +48,14 @@ public class PDFDocument implements IPageDocument {
   
   
   public PDFDocument (String fileName) throws IOException {
-    this(new File(fileName));
+    this(new FileOutputStream(fileName));
   }
   
   
-  public PDFDocument (File file) throws IOException {
-    this (new FileOutputStream(file));
+  public PDFDocument (Path path) throws IOException {
+    this (Files.newOutputStream(path));
   }
+
   
   public PDFDocument (OutputStream os) {
     writer = new CountedOutputStream(os);

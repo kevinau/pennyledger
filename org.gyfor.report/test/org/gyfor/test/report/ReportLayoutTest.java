@@ -8,13 +8,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.gyfor.report.CleanTextReader;
 import org.gyfor.report.IReportBlock;
 import org.gyfor.report.ReportEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.pennyledger.nio.CleanTextReader;
 
 @RunWith(Parameterized.class)
 public class ReportLayoutTest {

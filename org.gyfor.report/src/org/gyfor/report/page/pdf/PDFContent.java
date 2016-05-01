@@ -21,7 +21,6 @@ public class PDFContent extends PDFIndirect implements IPageContent {
   private final int paperHeight;
   
   private final ByteArrayBuilder buffer;
-  private int lineIndex = 0;
   private BaseFont font;
   private float fontSize;
   
@@ -83,26 +82,21 @@ public class PDFContent extends PDFIndirect implements IPageContent {
   }
 
   
-  @Override
-  public void optionalLineBreak () {
-    if (buffer.getIndex() > lineIndex) {
-      buffer.append('\r');
-      buffer.append('\n');
-      lineIndex = buffer.getIndex();
-    }
+  private void appendMeasure (double n) {
+    appendMeasure((int)(n * 1000));
   }
-  
+
   
   @Override
   public void setStrokeGrey (int g) {
-    buffer.append(g / 255.0F);
+    buffer.append(g / 256.0F);
     buffer.append(" G ");
   }
   
   
   @Override
   public void setNonStrokeGrey (int g) {
-    buffer.append(g / 255.0F);
+    buffer.append(g / 256.0F);
     buffer.append(" g ");
   }
   
@@ -123,11 +117,11 @@ public class PDFContent extends PDFIndirect implements IPageContent {
     if (r == g && g == b) {
       setStrokeGrey(r);
     } else {
-      buffer.append(r / 255.0F);
+      buffer.append(r / 256.0F);
       buffer.appendSpace();
-      buffer.append(g / 255.0F);
+      buffer.append(g / 256.0F);
       buffer.appendSpace();
-      buffer.append(b / 255.0F);
+      buffer.append(b / 256.0F);
       buffer.append(" RG ");
     }
   }
@@ -149,11 +143,11 @@ public class PDFContent extends PDFIndirect implements IPageContent {
     if (r == g && g == b) {
       setNonStrokeGrey(r);
     } else {
-      buffer.append(r / 255.0F);
+      buffer.append(r / 256.0F);
       buffer.appendSpace();
-      buffer.append(g / 255.0F);
+      buffer.append(g / 256.0F);
       buffer.appendSpace();
-      buffer.append(b / 255.0F);
+      buffer.append(b / 256.0F);
       buffer.append(" rg ");
     }
   }

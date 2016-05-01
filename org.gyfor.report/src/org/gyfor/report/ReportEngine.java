@@ -3,6 +3,8 @@ package org.gyfor.report;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.gyfor.report.page.pdf.PDFContent;
+
 
 public class ReportEngine {
   
@@ -53,7 +55,7 @@ public class ReportEngine {
   }
 
 
-  public void printHeader (IReportLevel level) {
+  public void printHeader (IReportGrouping level) {
     printHeader (level.getLogicalHeader(), level.getPhysicalHeader(), level.getPhysicalFooter(), level.getFirstFooter());
   }
 
@@ -75,24 +77,26 @@ public class ReportEngine {
   }
   
   
-  public void printFooter (IReportBlock logicalFooter) {
-    EngineLevel level = levels[--levelDepth];
-    IReportBlock footer = level.getEffectiveLogicalFooter(logicalFooter);
-    doEmittableBlock(footer);
+  public void printDetail (IReportDetail detail) {
+    printDetail(detail.getDetail());
   }
   
   
-  public void printFooter (IReportLevel level) {
+  public void printFooter (IReportBlock logicalFooter) {
+    EngineLevel level = levels[--levelDepth];
+    IReportBlock footer = level.getEffectiveLogicalFooter(logicalFooter);
+    if (footer != null) {
+      doEmittableBlock(footer);
+    }
+  }
+  
+  
+  public void printFooter (IReportGrouping<?> level) {
     printFooter(level.getLogicalFooter());
   }
   
   
   private void doEmittableBlock (IReportBlock block) {
-    int useCount = 0;
-    if (levelDepth > 0) {
-      useCount = levels[levelDepth - 1].useCount;
-    }
-
     int tryOffset = pOffset;
     for (IReportBlock queuedHeader : queuedHeaders) {
       tryOffset += queuedHeader.getHeight();
@@ -101,7 +105,9 @@ public class ReportEngine {
     int tryHeight = pHeight;
     for (int i = 0; i < levelDepth; i++) {
       IReportBlock pf = levels[i].getEffectivePhysicalFooter();
-      tryHeight -= pf.getHeight();
+      if (pf != null) {
+        tryHeight -= pf.getHeight();
+      }
     }
     
     if (tryOffset > tryHeight) {
@@ -110,7 +116,8 @@ public class ReportEngine {
       for (int i = breakDepth - 1; i >= 0; i--) {
         IReportBlock physicalFooter = levels[i].physicalFooter;
         if (physicalFooter != null) {
-          physicalFooter.emit(pOffset, useCount);
+          PDFContent canvas = pager.getContent();
+          physicalFooter.emit(canvas, pOffset);
           pOffset += physicalFooter.getHeight();
         }
       }
@@ -119,18 +126,21 @@ public class ReportEngine {
       for (int i = 0; i < breakDepth; i++) {
         IReportBlock physicalHeader = levels[i].physicalHeader;
         if (physicalHeader != null) {
-          physicalHeader.emit(pOffset, useCount);
+          PDFContent canvas = pager.getContent();
+          physicalHeader.emit(canvas, pOffset);
           pOffset += physicalHeader.getHeight();
         }
       }
     }
     // There is now enough space for this block
     for (IReportBlock queuedHeader : queuedHeaders) {
-      queuedHeader.emit(pOffset, useCount);
+      PDFContent canvas = pager.getContent();
+      queuedHeader.emit(canvas, pOffset);
       pOffset += queuedHeader.getHeight();
     }
     queuedHeaders.clear();
-    block.emit(pOffset, useCount);
+    PDFContent canvas = pager.getContent();
+    block.emit(canvas, pOffset);
     pOffset += block.getHeight();
     if (levelDepth > 0) {
       levels[levelDepth - 1].useCount++;

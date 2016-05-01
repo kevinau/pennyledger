@@ -10,10 +10,11 @@
  ******************************************************************************/
 package org.gyfor.report.page.pdf;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.gyfor.report.PaperSize;
 import org.gyfor.report.page.IPageWriter;
@@ -28,22 +29,22 @@ public class PDFPageWriter implements IPageWriter {
   private final int pageHeight;
 
  
-  public PDFPageWriter(String outputFileName) {
-    this(new File(outputFileName), PaperSize.A4);
+  public PDFPageWriter(String outputPathName) {
+    this(Paths.get(outputPathName), PaperSize.A4);
   }
   
   
-  public PDFPageWriter(String outputFileName, PaperSize paperSize) {
-    this(new File(outputFileName), paperSize);
+  public PDFPageWriter(String outputPathName, PaperSize paperSize) {
+    this(Paths.get(outputPathName), paperSize);
   }
   
   
-  public PDFPageWriter(File outputFile, PaperSize paperSize) {
+  public PDFPageWriter(Path outputPath, PaperSize paperSize) {
     this.paperSize = paperSize;
     pageWidth = paperSize.getMilliWidth();
     pageHeight = paperSize.getMilliHeight();
     try {
-      document = new PDFDocument(outputFile);
+      document = new PDFDocument(outputPath);
     } catch (FileNotFoundException ex) {
       throw new RuntimeException(ex.getMessage());
     } catch (IOException ex) {

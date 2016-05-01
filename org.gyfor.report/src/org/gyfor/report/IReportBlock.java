@@ -1,5 +1,6 @@
 package org.gyfor.report;
 
+import org.gyfor.report.page.pdf.PDFContent;
 
 public interface IReportBlock {
 
@@ -23,27 +24,30 @@ public interface IReportBlock {
    * The vertical space occupied by the block when written out must match
    * exactly the value returned by getHeight.
    */
-  public default void emit (int offset, int useCount) {
-    emit(offset);
-  }
+  public void emit (PDFContent canvas, int offset);
+  
 
-  public void emit (int offset);
+  public void calcWidth ();
   
   
-  public void setData (Object data);
+  public default <T> void setData (T record) {
+  }
   
   
   /**
    * Is this block always written out, or will it only be written out if required.
    * <ul>
-   * <li>Detail, logical footers and first footers are always mandatory.</li>
+   * <li>Detail, logical footers and first footers are always mandatory.  This method
+   * is not applicable for these report block types.</li>
    * <li>Logical headers can be marked as mandatory or not.  A mandatory logical
    * header is always written out regardless of whether there is any nested content.</li>
    * <li>Physical headers and footers are never mandatory.  They will only be written out 
-   * if required.</li>
+   * if required.  This method is not applicable for these report block types.</li>
    * </ul>
    */
-  public boolean isMandatory ();
+  public default boolean isMandatory () {
+    return false;
+  }
 
 }
   

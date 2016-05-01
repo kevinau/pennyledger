@@ -1,17 +1,20 @@
 package org.gyfor.report;
 
-import org.eclipse.jdt.annotation.NonNull;
+import java.util.function.Function;
 
-public class ReportLevel implements IReportLevel {
+public class ReportGrouping<T> implements IReportGrouping<T> {
 
-  private final @NonNull IReportBlock logicalHeader;
+  private final Function<T,Object> grouper;
+  
+  private final IReportBlock logicalHeader;
   private final IReportBlock logicalFooter;
   
   private final IReportBlock physicalHeader;
   private final IReportBlock physicalFooter;
   private final IReportBlock firstFooter;
   
-  public ReportLevel (@NonNull IReportBlock logicalHeader) {
+  public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader) {
+    this.grouper = grouper;
     this.logicalHeader = logicalHeader;
     this.logicalFooter = null;
     this.physicalHeader = logicalHeader;
@@ -19,7 +22,8 @@ public class ReportLevel implements IReportLevel {
     this.firstFooter = null;
   }
   
-  public ReportLevel (@NonNull IReportBlock logicalHeader, IReportBlock logicalFooter) {
+  public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader, IReportBlock logicalFooter) {
+    this.grouper = grouper;
     this.logicalHeader = logicalHeader;
     this.logicalFooter = logicalFooter;
     this.physicalHeader = logicalHeader;
@@ -27,7 +31,8 @@ public class ReportLevel implements IReportLevel {
     this.firstFooter = null;
   }
   
-  public ReportLevel (@NonNull IReportBlock logicalHeader, IReportBlock logicalFooter, IReportBlock physicalHeader, IReportBlock physicalFooter) {
+  public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader, IReportBlock logicalFooter, IReportBlock physicalHeader, IReportBlock physicalFooter) {
+    this.grouper = grouper;
     this.logicalHeader = logicalHeader;
     this.logicalFooter = logicalFooter;
     this.physicalHeader = physicalHeader;
@@ -35,7 +40,8 @@ public class ReportLevel implements IReportLevel {
     this.firstFooter = null;
   }
   
-  public ReportLevel (@NonNull IReportBlock logicalHeader, IReportBlock logicalFooter, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
+  public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader, IReportBlock logicalFooter, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
+    this.grouper = grouper;
     this.logicalHeader = logicalHeader;
     this.logicalFooter = logicalFooter;
     this.physicalHeader = physicalHeader;
@@ -44,7 +50,7 @@ public class ReportLevel implements IReportLevel {
   }
   
   @Override
-  public @NonNull IReportBlock getLogicalHeader() {
+  public IReportBlock getLogicalHeader() {
     return logicalHeader;
   }
 
@@ -66,6 +72,28 @@ public class ReportLevel implements IReportLevel {
   @Override
   public IReportBlock getFirstFooter() {
     return firstFooter;
+  }
+
+  @Override
+  public void setData (Object source) {
+    logicalHeader.setData(source);
+    if (logicalFooter != null) {
+      logicalFooter.setData(source);
+    }
+    if (physicalHeader != null) {
+      physicalHeader.setData(source);
+    }
+    if (physicalFooter != null) {
+      physicalFooter.setData(source);
+    }
+    if (firstFooter != null) {
+      firstFooter.setData(source);
+    }
+  }
+
+  @Override
+  public Object getGroup(T source) {
+    return grouper.apply(source);
   }
 
 }

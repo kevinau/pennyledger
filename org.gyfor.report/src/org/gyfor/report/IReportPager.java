@@ -1,5 +1,7 @@
 package org.gyfor.report;
 
+import java.nio.file.Path;
+
 import org.gyfor.report.page.pdf.PDFContent;
 
 public interface IReportPager {
@@ -26,6 +28,8 @@ public interface IReportPager {
    * the last page before closing the output device.
    */
   public void close();
+
+  public void close(Path pathName);
 
 
   public PDFContent getContent();

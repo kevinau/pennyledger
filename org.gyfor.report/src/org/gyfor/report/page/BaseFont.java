@@ -175,8 +175,8 @@ public class BaseFont {
   }
 
   
-  public int getEmWidth () {
-    return emWidth;
+  public int getEmWidth (float fontSize) {
+    return (int)(emWidth * fontSize + 0.5);
   }
   
   
