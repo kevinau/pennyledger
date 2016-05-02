@@ -414,6 +414,17 @@ public class PDFContent extends PDFIndirect implements IPageContent {
  
   
   @Override
+  public void drawTextAligned (int x, int y, String s, int n, int width1) {
+    String s1 = s.substring(0, n);
+    String s2 = s.substring(n);
+    int advance = font.getAdvance(s1, fontSize);
+    textOffset (x + width1 - advance, y);
+    drawText (s1);
+    drawText (s2);
+  }
+ 
+  
+  @Override
   public void setFontAndSize (BaseFont baseFont, float fontSize) {
     this.font = baseFont;
     this.fontSize = fontSize;

@@ -17,5 +17,9 @@ public class ReportDetail implements IReportDetail {
   public void setData (Object source) {
     detail.setData(source);
   }
+
+  @Override
+  public void finalizeWidths() {
+  }
   
 }

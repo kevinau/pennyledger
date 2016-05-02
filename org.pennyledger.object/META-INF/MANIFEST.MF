@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Extended type information
+Bundle-SymbolicName: org.pennyledger.object
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.persistence,
+ org.pennyledger.math,
+ org.pennyledger.time,
+ org.pennyledger.util
+Export-Package: org.pennyledger.object,
+ org.pennyledger.object.plan,
+ org.pennyledger.object.type,
+ org.pennyledger.object.value

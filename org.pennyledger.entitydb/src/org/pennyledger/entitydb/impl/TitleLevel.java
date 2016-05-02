@@ -1,7 +1,10 @@
-package org.gyfor.report.page;
+package org.pennyledger.entitydb.impl;
 
 import org.gyfor.report.IReportBlock;
 import org.gyfor.report.IReportGrouping;
+import org.gyfor.report.page.BaseFont;
+import org.gyfor.report.page.BaseFontFactory;
+import org.gyfor.report.page.Greys;
 import org.gyfor.report.page.pdf.PDFContent;
 import org.gyfor.report.page.pdf.PDFName;
 
@@ -139,14 +142,18 @@ public class TitleLevel implements IReportGrouping<Object> {
 
 
   @Override
-  public IReportBlock getFirstFooter() {
-    return null;
+  public Object getGroup(Object source) {
+    return "";
   }
 
 
   @Override
-  public Object getGroup(Object source) {
-    return "";
+  public void setData(Object source) {
+  }
+
+
+  @Override
+  public void finalizeWidths() {
   }
 
 }

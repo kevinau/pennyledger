@@ -1,0 +1,59 @@
+package org.pennyledger.entitydb.impl;
+
+public class ColumnWidth {
+  private double maxHeading = 0;
+  private int k = 0;
+  private double Ak = 0;
+  private double Qk = 0;
+  private double max1 = 0;
+  private double max2 = 0;
+  
+  
+  public void noteHeadingWidth(double x) {
+    maxHeading = Math.max(maxHeading, x);
+  }
+  
+  
+  public void noteDataWidth(double x1, double x2) {
+    k++;
+    double Ak1 = Ak;
+    double x = x1 + x2;
+    Ak += (x - Ak1) / k;
+    Qk += (x - Ak1) * (x - Ak);
+    max1 = Math.max(max1, x1);
+    max2 = Math.max(max2, x2);
+  }
+  
+  
+  public double getMax1() {
+    return max1;
+  }
+  
+  
+  public double stdDev() {
+    return Math.sqrt(Qk / k);
+  }
+  
+
+  public double getWidth() {
+    double m = max1 + max2;
+    if (maxHeading > m) {
+      return maxHeading;
+    } else {
+      return m;
+    }
+  }
+  
+  
+  public double getHeadingLead() {
+    double w = getWidth();
+    return (w - maxHeading) / 2;
+  }
+
+  
+  public double getDataLead() {
+    double w = getWidth();
+    return (w - (max1 + max2)) / 2;
+  }
+
+}

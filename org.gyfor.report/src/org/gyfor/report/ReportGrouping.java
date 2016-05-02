@@ -74,6 +74,7 @@ public class ReportGrouping<T> implements IReportGrouping<T> {
     return firstFooter;
   }
 
+  
   @Override
   public void setData (Object source) {
     logicalHeader.setData(source);
@@ -94,6 +95,10 @@ public class ReportGrouping<T> implements IReportGrouping<T> {
   @Override
   public Object getGroup(T source) {
     return grouper.apply(source);
+  }
+
+  @Override
+  public void finalizeWidths() {
   }
 
 }

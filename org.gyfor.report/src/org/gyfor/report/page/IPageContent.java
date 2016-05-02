@@ -70,6 +70,8 @@ public interface IPageContent {
 
   public void drawTextCentered(int x, int y, String content, int w);
 
+  public void drawTextAligned (int x, int y, String s, int n, int width1);
+
   public void drawTextRight(int y, String content, int x1);
 
   public void setStrokeColor(int color);

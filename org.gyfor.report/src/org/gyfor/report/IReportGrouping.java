@@ -12,11 +12,13 @@ public interface IReportGrouping<T> extends IReportLevel {
   
   public IReportBlock getPhysicalFooter();
   
-  public IReportBlock getFirstFooter();
+  public default IReportBlock getFirstFooter() {
+    return null;
+  }
   
   @Override
-  public default boolean isGrouping () {
-    return true;
+  public default boolean isDetail () {
+    return false;
   }
     
   public default void accumulate(T source) {

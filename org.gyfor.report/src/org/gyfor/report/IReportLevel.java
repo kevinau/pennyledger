@@ -2,9 +2,10 @@ package org.gyfor.report;
 
 public interface IReportLevel {
 
-  public boolean isGrouping();
+  public boolean isDetail();
   
-  public default void setData(Object source) {
-  }
+  public void setData(Object source);
+  
+  public void finalizeWidths();
   
 }

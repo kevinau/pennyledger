@@ -5,7 +5,8 @@ public interface IReportDetail extends IReportLevel {
   public IReportBlock getDetail();
   
   @Override
-  public default boolean isGrouping () {
-    return false;
+  public default boolean isDetail () {
+    return true;
   }
+    
 }

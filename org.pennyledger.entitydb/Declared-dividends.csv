@@ -1,0 +1,32 @@
+Date,Distribution no.,Company year,Accounting year end,Dividend type,Dividend per share,Shares,Dividend payment,Tax credit,Total dividend,Name,Address,Town,Postcode,Shareholder code
+2007-06-22,1,2008,2008-06-30,Interim,275.91,75,20693.25,2299.25,22992.5,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2007-06-22,1,2008,2008-06-30,Interim,275.91,25,6897.75,766.41,7664.16,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2008-03-28,2,2008,2008-06-30,Final,60.00,75,4500,500,5000,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2008-03-28,2,2008,2008-06-30,Final,60.00,25,1500,166.66,1666.66,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2008-07-11,3,2009,2009-06-30,Interim,100.00,75,7500,833.33,8333.33,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2008-07-11,3,2009,2009-06-30,Interim,100.00,25,2500,277.77,2777.77,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2009-03-25,4,2009,2009-06-30,Interim,99.00,75,7425,825,8250,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2009-03-25,4,2009,2009-06-30,Interim,99.00,25,2475,275,2750,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2009-03-25,5,2009,2009-06-30,Final,160.00,75,12000,1333.33,13333.33,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2009-03-25,5,2009,2009-06-30,Final,160.00,25,4000,444.44,4444.44,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2009-09-08,6,2010,2010-06-30,Interim,60.00,75,4500,500,5000,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2009-09-08,6,2010,2010-06-30,Interim,60.00,25,1500,166.66,1666.66,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2010-03-26,7,2010,2010-06-30,Final,100.00,75,7500,833.33,8333.33,Kevin Holloway,24 Moss Way,Hitchin,SG5 2QW,KH
+2010-03-26,7,2010,2010-06-30,Final,100.00,25,2500,277.77,2777.77,Jackie Holloway,24 Moss Way,Hitchin,SG5 2QW,JH
+2010-07-01,8,2011,2011-06-30,Interim,124.00,75,9300,1033.33,10333.33,Kevin Holloway,4/7 Fountainhall Road,Edinburgh,EH9 2NL,KH
+2010-07-01,8,2011,2011-06-30,Interim,124.00,25,3100,344.44,3444.44,Jackie Holloway,4/7 Fountainhall Road,Edinburgh,EH9 2NL,JH
+2011-03-01,9,2011,2011-06-30,Final,124.00,75,9300,1033.33,10333.33,Kevin Holloway,101 Charterhall Grove,Edinburgh,EH9 3HT,KH
+2011-03-01,9,2011,2011-06-30,Final,124.00,25,3100,344.44,3444.44,Jackie Holloway,101 Charterhall Grove,Edinburgh,EH9 3HT,JH
+2011-07-01,10,2012,2012-06-30,Interim,124.00,75,9300,1033.33,10333.33,Kevin Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,KH
+2011-07-01,10,2012,2012-06-30,Interim,124.00,25,3100,344.44,3444.44,Jackie Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,JH
+2012-03-01,11,2012,2012-06-30,Final,124.00,75,9300,1033.33,10333.33,Kevin Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,KH
+2012-03-01,11,2012,2012-06-30,Final,124.00,25,3100,344.44,3444.44,Jackie Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,JH
+2012-07-01,12,2013,2013-06-30,Interim,124.00,75,9300,1033.33,10333.33,Kevin Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,KH
+2012-07-01,12,2013,2013-06-30,Interim,124.00,25,3100,344.44,3444.44,Jackie Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,JH
+2013-03-01,13,2013,2013-06-30,Final,124.00,75,9300,1033.33,10333.33,Kevin Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,KH
+2013-03-01,13,2013,2013-06-30,Final,124.00,25,3100,344.44,3444.44,Jackie Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,JH
+2013-07-01,14,2014,2014-06-30,Interim,124.00,75,9300,1033.33,10333.33,Kevin Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,KH
+2013-07-01,14,2014,2014-06-30,Interim,124.00,25,3100,344.44,3444.44,Jackie Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,JH
+2014-03-01,15,2014,2014-06-30,Final,124.00,75,9300,1033.33,10333.33,Kevin Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,KH
+2014-03-01,15,2014,2014-06-30,Final,124.00,25,3100,344.44,3444.44,Jackie Holloway,40 Fairlawns Langley Road,Watford,WD17 4UH,JH
+2015-05-31,16,2015,2015-06-30,Final,2781.36,100,278136,30904.00,309040.00,Kevin Holloway,48 Fairclough Road Beach Haven,Auckland,0626,KH
