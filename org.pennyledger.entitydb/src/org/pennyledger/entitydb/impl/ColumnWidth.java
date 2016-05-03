@@ -7,6 +7,7 @@ public class ColumnWidth {
   private double Qk = 0;
   private double max1 = 0;
   private double max2 = 0;
+  private double sum = 0;
   
   
   public void noteHeadingWidth(double x) {
@@ -22,6 +23,7 @@ public class ColumnWidth {
     Qk += (x - Ak1) * (x - Ak);
     max1 = Math.max(max1, x1);
     max2 = Math.max(max2, x2);
+    sum += x1 + x2;
   }
   
   
@@ -30,8 +32,22 @@ public class ColumnWidth {
   }
   
   
+  public double getMax2() {
+    return max2;
+  }
+  
+  
   public double stdDev() {
     return Math.sqrt(Qk / k);
+  }
+  
+
+  public double getAveData() {
+    if (k > 0) {
+      return sum / k;
+    } else {
+      return 0;
+    }
   }
   
 
@@ -45,9 +61,13 @@ public class ColumnWidth {
   }
   
   
-  public double getHeadingLead() {
-    double w = getWidth();
-    return (w - maxHeading) / 2;
+  public double getMaxHeading() {
+    return maxHeading;
+  }
+
+  
+  public double getMaxData() {
+    return max1 + max2;
   }
 
   

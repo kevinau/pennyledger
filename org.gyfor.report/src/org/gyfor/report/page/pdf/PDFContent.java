@@ -406,6 +406,14 @@ public class PDFContent extends PDFIndirect implements IPageContent {
  
   
   @Override
+  public void drawTextCentered (int x, int y, String s) {
+    int advance = font.getAdvance(s, fontSize);
+    textOffset (x - advance / 2, y);
+    drawText (s);
+  }
+ 
+  
+  @Override
   public void drawTextRight (int y, String s, int x) {
     int advance = font.getAdvance(s, fontSize);
     textOffset (x - advance, y);

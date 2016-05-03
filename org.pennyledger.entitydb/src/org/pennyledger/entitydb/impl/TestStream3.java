@@ -33,10 +33,10 @@ public class TestStream3 {
       + "accountingYearEnd,dividendType,dividendPerShare,shares,dividendPayment,taxCredit,"
       + "totalDividend,name,address,town,postcode,shareholderCode "
       + " FROM DividendVoucher "
-      + "ORDER BY shareholderCode, eventDate";
+      + "ORDER BY shareholderCode, eventDate DESC";
 
   private static String fromSql = " FROM DividendVoucher "
-      + "ORDER BY shareholderCode, eventDate";
+      + "ORDER BY shareholderCode, eventDate DESC";
 
   public static void main (String[] args) throws Exception {
     IEntityPlan<DividendVoucher> entityPlan = EntityPlanFactory.getEntityPlan(DividendVoucher.class);

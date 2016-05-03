@@ -6,10 +6,42 @@ import org.gyfor.report.page.BaseFont;
 import org.gyfor.report.page.BaseFontFactory;
 import org.gyfor.report.page.Greys;
 import org.gyfor.report.page.pdf.PDFContent;
+import org.junit.Assert;
+import org.pennyledger.object.type.Alignment;
 import org.pennyledger.object.type.IType;
 
 
 public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
+
+  private static class StringPair {
+    final String s1;
+    final String s0;
+    final int w1;
+    final int w0;
+
+
+    private StringPair(String s1, int w1, String s0, int w0) {
+      this.s1 = s1;
+      this.w1 = w1;
+      this.s0 = s0;
+      this.w0 = w0;
+    }
+
+
+    private StringPair(String s0, int w0) {
+      this.s1 = null;
+      this.w1 = 0;
+      this.s0 = s0;
+      this.w0 = w0;
+    }
+    
+    private int maxWidth() {
+      if (s1 == null) {
+        return w0;
+      } 
+      return Math.max(w0,  w1);
+    }
+  }
 
   private static final int LEFT_MARGIN = 30 * 720;
 
@@ -18,14 +50,17 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
   private static final BaseFont headingsFont = BaseFontFactory.getFont("Helvetica");
 
   private static final int underlineWidth = 100;
-  
+
   private final IReportBlock headingBlock;
 
   private String[] labels = new String[0];
   @SuppressWarnings("unchecked")
   private IType<Object>[] types = new IType[0];
   private ColumnSet colSet;
-  
+
+  private StringPair[] labelPairs;
+  private int lineCount = 1;
+
 
   public ColumnHeadingsLevel() {
     headingBlock = new IReportBlock() {
@@ -34,7 +69,7 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
         if (labels.length == 0) {
           return 0;
         } else {
-          return (int)(headingsFont.getLineHeight(headingsFontSize) * 1.5);
+          return (int)(headingsFont.getLineHeight(headingsFontSize) * (lineCount + 0.5));
         }
       }
 
@@ -49,45 +84,63 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
       @Override
       public void emit(PDFContent canvas, int voffset) {
         int baseLineOffset = headingsFont.getAboveBaseLine(headingsFontSize);
-        int voffset1 = voffset + baseLineOffset;
-
-        canvas.beginText();
-        canvas.setFontAndSize(headingsFont, headingsFontSize);
-        canvas.setNonStrokeGrey(headingsFontGrey);
-
-        int i = 0;
-        int hpos = LEFT_MARGIN;
-        for (String label : labels) {
-          IType<Object> type = types[i];
-
-          int width = (int)colSet.getWidth(i);
-          //int leadin = (int)colSet.getHeadingLead(i);
-          //boolean undersize = colSet.isHeadingSmall(i);
-          
-          switch (type.getAlignment()) {
-          case NUMERIC :
-            double width1 = colSet.getMax1(i);
-            int m = (int)(label.length() * width1 / width);
-            canvas.drawTextAligned(hpos /* + leadin */, voffset1, label, m, (int)width1);
-            break;
-          case LEFT :
-            canvas.drawText(hpos, voffset1, label);
-            break;
-          case CENTRE :
-            canvas.drawTextCentered(hpos, voffset1, label, width);
-            break;
-          case RIGHT :
-            canvas.drawTextRight(voffset1, label, hpos + width);
-            break;
-          }
-
-          hpos += width + colSet.getGap();
-          i++;
-        }
-        canvas.endText();
-        
         int lineHeight = headingsFont.getLineHeight(headingsFontSize);
-        int voffset2 = voffset + lineHeight;
+        int voffset1 = voffset + baseLineOffset;
+        int hpos = 0;
+
+        for (int j = lineCount - 1; j >= 0; j--) {
+          canvas.beginText();
+          canvas.setFontAndSize(headingsFont, headingsFontSize);
+          canvas.setNonStrokeGrey(headingsFontGrey);
+          
+          int i = 0;
+          hpos = LEFT_MARGIN;
+          for (StringPair labelPair : labelPairs) {
+            ColumnWidth colWidth = colSet.get(i);
+            int width = (int)colWidth.getWidth();
+
+            String label = (j == 1 ? labelPair.s1 : labelPair.s0);
+            if (label != null) {
+              IType<Object> type = types[i];
+              int aveData = (int)colWidth.getAveData();
+              int headingWidth = (int)colWidth.getMaxHeading();
+              int maxData = (int)colWidth.getMaxData();
+              int maxData1 = (int)colWidth.getMax1();
+              int headingCentre;
+              
+              if (headingWidth > maxData) {
+                // Heading size is greater than data width
+                headingCentre = headingWidth / 2;
+              } else {
+                // Heading size is less than data width
+                int slack = 0;
+                switch (type.getAlignment()) {
+                case LEFT :
+                  slack = 0;
+                  break;
+                case CENTRE :
+                  slack = (width - aveData) / 2;
+                  break;
+                case RIGHT :
+                  slack = width - aveData;
+                  break;
+                case NUMERIC :
+                  slack = (width - aveData) * maxData1 / width;
+                  break;
+                }
+                headingCentre = width / 2 + slack;
+              }
+              canvas.drawTextCentered(hpos + headingCentre, voffset1, label);
+            }
+            
+            hpos += width + colSet.getGap();
+            i++;
+          }
+          canvas.endText();
+          voffset1 += lineHeight;
+        }
+
+        int voffset2 = voffset + lineHeight * lineCount;
         canvas.setLineWidth(underlineWidth);
         canvas.setStrokeGrey(headingsFontGrey);
         canvas.moveTo(LEFT_MARGIN, voffset2);
@@ -143,12 +196,50 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
 
   @Override
   public void finalizeWidths() {
+    labelPairs = new StringPair[labels.length];
+
     int i = 0;
     for (String label : labels) {
+      StringPair labelPair;
+
       int labelWidth = headingsFont.getAdvance(label, headingsFontSize);
-      colSet.noteHeadingWidth(i, labelWidth);
+      int dataWidth = (int)colSet.getWidth(i);
+      if (labelWidth > dataWidth) {
+        labelPair = splitLabel(label, labelWidth);
+      } else {
+        labelPair = new StringPair(label, labelWidth);
+      }
+      labelPairs[i] = labelPair;
+      colSet.noteHeadingWidth(i, labelPair.w1);
+      colSet.noteHeadingWidth(i, labelPair.w0);
+      if (labelPair.s1 != null) {
+        lineCount = 2;
+      }
       i++;
     }
+  }
+
+
+  private static StringPair splitLabel(String label, int labelWidth) {
+    int minVariance = Integer.MAX_VALUE;
+    StringPair minLabels = new StringPair(label, labelWidth);
+
+    int n0 = 0;
+    int n = label.indexOf(' ', n0);
+    while (n != -1) {
+      String s1 = label.substring(0, n);
+      String s0 = label.substring(n + 1);
+      int w1 = headingsFont.getAdvance(s1, headingsFontSize);
+      int w0 = headingsFont.getAdvance(s0, headingsFontSize);
+      int variance = Math.abs(w1 - w0);
+      if (variance < minVariance) {
+        minLabels = new StringPair(s1, w1, s0, w0);
+        minVariance = variance;
+      }
+      n0 = n + 1;
+      n = label.indexOf(' ', n0);
+    }
+    return minLabels;
   }
 
 }

@@ -30,21 +30,26 @@ public class ColumnSet {
     cw.noteDataWidth(width1, width2);
   }
 
+  
+  public ColumnWidth get(int i) {
+    return columns.get(i);
+  }
+  
+  
   public double getWidth(int i) {
     return columns.get(i).getWidth();
   }
+  
   
   public double getMax1(int i) {
     return columns.get(i).getMax1();
   }
   
-  public double getHeadingLead(int i) {
-    return columns.get(i).getHeadingLead();
-  }
-  
+
   public double getDataLead(int i) {
     return columns.get(i).getDataLead();
   }
+  
   
   public int getGap() {
     return gapSize;
