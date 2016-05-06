@@ -2,7 +2,7 @@ package org.gyfor.report;
 
 import java.util.function.Function;
 
-public class ReportGrouping<T> implements IReportGrouping<T> {
+public class ReportGrouping<T> extends ReportLevel implements IReportGrouping<T> {
 
   private final Function<T,Object> grouper;
   
@@ -11,7 +11,8 @@ public class ReportGrouping<T> implements IReportGrouping<T> {
   
   private final IReportBlock physicalHeader;
   private final IReportBlock physicalFooter;
-  private final IReportBlock firstFooter;
+  private IReportBlock firstFooter;
+  
   
   public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader) {
     this.grouper = grouper;
@@ -19,7 +20,6 @@ public class ReportGrouping<T> implements IReportGrouping<T> {
     this.logicalFooter = null;
     this.physicalHeader = logicalHeader;
     this.physicalFooter = null;
-    this.firstFooter = null;
   }
   
   public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader, IReportBlock logicalFooter) {
@@ -28,7 +28,6 @@ public class ReportGrouping<T> implements IReportGrouping<T> {
     this.logicalFooter = logicalFooter;
     this.physicalHeader = logicalHeader;
     this.physicalFooter = null;
-    this.firstFooter = null;
   }
   
   public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader, IReportBlock logicalFooter, IReportBlock physicalHeader, IReportBlock physicalFooter) {
@@ -37,17 +36,20 @@ public class ReportGrouping<T> implements IReportGrouping<T> {
     this.logicalFooter = logicalFooter;
     this.physicalHeader = physicalHeader;
     this.physicalFooter = physicalFooter;
-    this.firstFooter = null;
   }
   
-  public ReportGrouping (Function<T,Object> grouper, IReportBlock logicalHeader, IReportBlock logicalFooter, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
-    this.grouper = grouper;
-    this.logicalHeader = logicalHeader;
-    this.logicalFooter = logicalFooter;
-    this.physicalHeader = physicalHeader;
-    this.physicalFooter = physicalFooter;
+
+  public ReportGrouping<T> firstFooter (IReportBlock firstFooter) {
     this.firstFooter = firstFooter;
+    return this;
   }
+  
+  
+  public ReportGrouping<T> separator (IReportBlock separator) {
+    setSeparator(separator);
+    return this;
+  }
+  
   
   @Override
   public IReportBlock getLogicalHeader() {

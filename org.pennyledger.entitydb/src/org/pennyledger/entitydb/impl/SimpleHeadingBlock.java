@@ -46,8 +46,8 @@ public class SimpleHeadingBlock implements IReportBlock {
   @Override
   public int getHeight() {
     // Heading lines, then a half a blank line
-    double n = labels.length + 0.5;
-    return (int)(headingFont.getLineHeight(headingFontSize) * n);
+    int lineHeight = (int)(headingFont.getLineHeight(headingFontSize));
+    return lineHeight / 2 + lineHeight * labels.length;
   }
 
 
@@ -59,8 +59,8 @@ public class SimpleHeadingBlock implements IReportBlock {
   @Override
   public void emit(PDFContent canvas, int offset) {
     int baseLineOffset = headingFont.getAboveBaseLine(headingFontSize);
-    offset += baseLineOffset;
     int lineHeight = headingFont.getLineHeight(headingFontSize);
+    offset += lineHeight / 2 + baseLineOffset;
 
     int i = 0;
     for (Field field : fields) {

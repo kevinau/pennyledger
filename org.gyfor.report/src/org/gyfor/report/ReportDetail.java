@@ -1,6 +1,6 @@
 package org.gyfor.report;
 
-public class ReportDetail implements IReportDetail {
+public class ReportDetail extends ReportLevel implements IReportDetail {
 
   private final IReportBlock detail;
   
@@ -21,5 +21,12 @@ public class ReportDetail implements IReportDetail {
   @Override
   public void finalizeWidths() {
   }
+  
+  
+  public ReportDetail separator (IReportBlock separator) {
+    setSeparator(separator);
+    return this;
+  }
+  
   
 }

@@ -8,4 +8,8 @@ public interface IReportLevel {
   
   public void finalizeWidths();
   
+  public default IReportBlock getSeparator() {
+    return null;
+  };
+  
 }

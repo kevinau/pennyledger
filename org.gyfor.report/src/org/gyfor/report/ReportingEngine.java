@@ -8,29 +8,77 @@ import org.gyfor.report.page.pdf.PDFContent;
 
 public class ReportingEngine implements Engine {
   
+  private class QueuedHeader {
+    final int levelDepth;
+    final IReportBlock header;
+    final IReportBlock separator;
+    
+    private QueuedHeader (int levelDepth, IReportBlock header, IReportBlock separator) {
+      this.levelDepth = levelDepth;
+      this.header = header;
+      this.separator = separator;
+    }
+    
+    private void emit (PDFContent canvas, int offset) {
+      if (separator != null) {
+        int useCount = levels[levelDepth - 1].useCount;
+        if (useCount > 0) {
+          separator.emit(canvas, offset);
+          offset += separator.getHeight();
+        }
+      }
+      header.emit(canvas, offset);
+    }
+    
+    private int getHeight () {
+      int n = header.getHeight();
+      if (separator != null) {
+        int useCount = levels[levelDepth - 1].useCount;
+        if (useCount > 0) {
+          n += separator.getHeight();
+        }
+      }
+      return n;
+    }
+  }
+  
   private final IReportPager pager;
   private final int pHeight;
   private int pOffset = 0;
   private int levelDepth = 0;
-  private Queue<IReportBlock> queuedHeaders = new LinkedList<>();
+  private Queue<QueuedHeader> queuedHeaders = new LinkedList<>();
   private EngineLevel[] levels = new EngineLevel[20];
+  {
+    levels[0] = new EngineLevel();
+    levelDepth++;
+  }
 
   private static class EngineLevel {
     private int useCount;
     private IReportBlock physicalHeader;
     private IReportBlock physicalFooter;
     private IReportBlock firstFooter;
+    private IReportBlock separator;
     // detail and logicalFooter blocks are used when they are added.  They are not queued in a ReportEngineLevel
 
-    public EngineLevel (IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
+    public EngineLevel () {
+      this.physicalHeader = null;
+      this.physicalFooter = null;
+      this.firstFooter = null;
+      this.separator = null;
+    }
+    
+    
+    public EngineLevel (IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter, IReportBlock separator) {
       this.physicalHeader = physicalHeader;
       this.physicalFooter = physicalFooter;
       this.firstFooter = firstFooter;
+      this.separator = separator;
     }
 
 
-    private IReportBlock getEffectivePhysicalFooter () {
-      if (firstFooter != null && useCount == 0) {
+    private IReportBlock getEffectivePhysicalFooter (int count) {
+      if (firstFooter != null && count == 0) {
         return firstFooter;
       } else {
         return physicalFooter;
@@ -38,14 +86,14 @@ public class ReportingEngine implements Engine {
     }
 
   
-    private IReportBlock getEffectiveLogicalFooter (IReportBlock logicalFooter) {
-      if (firstFooter != null && useCount == 0) {
+    private IReportBlock getEffectiveLogicalFooter (IReportBlock logicalFooter, int count) {
+      if (firstFooter != null && count == 0) {
         return firstFooter;
       } else {
         return logicalFooter;
       }
     }
-
+     
   }
  
   
@@ -57,30 +105,32 @@ public class ReportingEngine implements Engine {
 
   @Override
   public void processHeader (IReportGrouping<?> level) {
-    printHeader (level.getLogicalHeader(), level.getPhysicalHeader(), level.getPhysicalFooter(), level.getFirstFooter());
+    processHeader (level.getLogicalHeader(), level.getPhysicalHeader(), level.getPhysicalFooter(), level.getFirstFooter(), level.getSeparator());
   }
 
   
-  public void printHeader (IReportBlock logicalHeader, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
+  private void processHeader (IReportBlock logicalHeader, IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter, IReportBlock separator) {
     if (logicalHeader.isMandatory()) {
-      doEmittableBlock(logicalHeader);
+      doEmittableBlock(logicalHeader, separator);
+      levels[levelDepth - 1].useCount++;
     } else {
-      queuedHeaders.add(logicalHeader);
+      queuedHeaders.add(new QueuedHeader(levelDepth, logicalHeader, separator));
     }
     
-    EngineLevel level = new EngineLevel(physicalHeader, physicalFooter, firstFooter);
+    EngineLevel level = new EngineLevel(physicalHeader, physicalFooter, firstFooter, separator);
     levels[levelDepth++] = level;
   }
 
   
   @Override
   public void processDetail (IReportDetail detail) {
-    printDetail(detail.getDetail());
+    processDetail(detail.getDetail(), detail.getSeparator());
   }
   
   
-  public void printDetail (IReportBlock detail) {
-    doEmittableBlock(detail);
+  private void processDetail (IReportBlock detail, IReportBlock separator) {
+    doEmittableBlock(detail, separator);
+    levels[levelDepth - 1].useCount++;
   }
   
   
@@ -92,22 +142,25 @@ public class ReportingEngine implements Engine {
   
   private void printFooter (IReportBlock logicalFooter) {
     EngineLevel level = levels[--levelDepth];
-    IReportBlock footer = level.getEffectiveLogicalFooter(logicalFooter);
+    IReportBlock footer = level.getEffectiveLogicalFooter(logicalFooter, 0);
     if (footer != null) {
-      doEmittableBlock(footer);
+      doEmittableBlock(footer, null);
     }
   }
   
   
-  private void doEmittableBlock (IReportBlock block) {
+  private void doEmittableBlock (IReportBlock block, IReportBlock separator) {
     int tryOffset = pOffset;
-    for (IReportBlock queuedHeader : queuedHeaders) {
+    for (QueuedHeader queuedHeader : queuedHeaders) {
       tryOffset += queuedHeader.getHeight();
+    }
+    if (separator != null && levels[levelDepth - 1].useCount > 0) {
+      tryOffset += separator.getHeight();
     }
     tryOffset += block.getHeight();
     int tryHeight = pHeight;
     for (int i = 0; i < levelDepth; i++) {
-      IReportBlock pf = levels[i].getEffectivePhysicalFooter();
+      IReportBlock pf = levels[i].getEffectivePhysicalFooter(levels[levelDepth - 1].useCount);
       if (pf != null) {
         tryHeight -= pf.getHeight();
       }
@@ -127,6 +180,9 @@ public class ReportingEngine implements Engine {
       pager.newPage();
       pOffset = 0;
       for (int i = 0; i < breakDepth; i++) {
+        levels[i].useCount = 0;
+      }
+      for (int i = 0; i < breakDepth; i++) {
         IReportBlock physicalHeader = levels[i].physicalHeader;
         if (physicalHeader != null) {
           PDFContent canvas = pager.getContent();
@@ -136,18 +192,21 @@ public class ReportingEngine implements Engine {
       }
     }
     // There is now enough space for this block
-    for (IReportBlock queuedHeader : queuedHeaders) {
+    for (QueuedHeader queuedHeader : queuedHeaders) {
       PDFContent canvas = pager.getContent();
       queuedHeader.emit(canvas, pOffset);
       pOffset += queuedHeader.getHeight();
+      levels[queuedHeader.levelDepth - 1].useCount++;
     }
     queuedHeaders.clear();
+    
     PDFContent canvas = pager.getContent();
+    if (separator != null && levels[levelDepth - 1].useCount > 0) {
+      separator.emit(canvas, pOffset);
+      pOffset += separator.getHeight();
+    }
     block.emit(canvas, pOffset);
     pOffset += block.getHeight();
-    if (levelDepth > 0) {
-      levels[levelDepth - 1].useCount++;
-    }
   }
   
   

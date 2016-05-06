@@ -121,7 +121,7 @@ public class ResultSetSupplier<T> implements ResettableSupplier<T>, AutoCloseabl
   
   
   @SuppressWarnings("unchecked")
-  public IReportDetail simpleDetail(String... names) {
+  public ReportDetail simpleDetail(String... names) {
     String[] labels = new String[names.length];
     IType<Object>[] types = new IType[names.length];
     Field[] fields = new Field[names.length];

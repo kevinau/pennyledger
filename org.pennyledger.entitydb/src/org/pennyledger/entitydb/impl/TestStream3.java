@@ -33,7 +33,7 @@ public class TestStream3 {
       + "accountingYearEnd,dividendType,dividendPerShare,shares,dividendPayment,taxCredit,"
       + "totalDividend,name,address,town,postcode,shareholderCode "
       + " FROM DividendVoucher "
-      + "ORDER BY shareholderCode, eventDate DESC";
+      + "ORDER BY eventDate DESC, shareholderCode";
 
   private static String fromSql = " FROM DividendVoucher "
       + "ORDER BY shareholderCode, eventDate DESC";
@@ -54,7 +54,7 @@ public class TestStream3 {
     
     IReportGrouping<Selection> group1 = new ReportGrouping<Selection>(p -> p.shareholderCode, 
         supplier.simpleHeading("shareholderCode", "name"),
-        null);  //supplier.simpleDetail("eventDate", "distributionNo", "companyYear", "dividendType", "dividendPerShare", 
+        null); //.divider(new BlankReportBlock(10000));  //supplier.simpleDetail("eventDate", "distributionNo", "companyYear", "dividendType", "dividendPerShare", 
                   //            "shares", "dividendPayment", "taxCredit"));
 
     IReportGrouping<Selection> headings1 = supplier.simpleColumnHeadings();

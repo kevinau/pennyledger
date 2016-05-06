@@ -69,7 +69,8 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
         if (labels.length == 0) {
           return 0;
         } else {
-          return (int)(headingsFont.getLineHeight(headingsFontSize) * (lineCount + 0.5));
+          int lineHeight = (int)(headingsFont.getLineHeight(headingsFontSize));
+          return lineHeight * (lineCount + 1) + underlineWidth + lineHeight / 2;
         }
       }
 
@@ -85,7 +86,7 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
       public void emit(PDFContent canvas, int voffset) {
         int baseLineOffset = headingsFont.getAboveBaseLine(headingsFontSize);
         int lineHeight = headingsFont.getLineHeight(headingsFontSize);
-        int voffset1 = voffset + baseLineOffset;
+        int voffset1 = voffset + lineHeight + baseLineOffset;
         int hpos = 0;
 
         for (int j = lineCount - 1; j >= 0; j--) {
@@ -140,7 +141,7 @@ public class ColumnHeadingsLevel<T> implements IReportGrouping<T> {
           voffset1 += lineHeight;
         }
 
-        int voffset2 = voffset + lineHeight * lineCount;
+        int voffset2 = voffset + lineHeight * (lineCount + 1);
         canvas.setLineWidth(underlineWidth);
         canvas.setStrokeGrey(headingsFontGrey);
         canvas.moveTo(LEFT_MARGIN, voffset2);

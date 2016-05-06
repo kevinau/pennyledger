@@ -35,14 +35,12 @@ public class TitleLevel implements IReportGrouping<Object> {
     pageHeader = new IReportBlock() {
       @Override
       public int getHeight() {
-        // Top margin, then line, then a blank line
         int height = TOP_MARGIN;
         height += ownerFont.getLineHeight(ownerFontSize) * 2;
         height += titleFont.getLineHeight(titleFontSize);
         if (subTitle != null) {
           height += subTitleFont.getLineHeight(subTitleFontSize);
         }
-        height += ownerFont.getLineHeight(ownerFontSize);
         return height;
       }
 
