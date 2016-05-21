@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Reporting database selection
+Bundle-SymbolicName: org.gyfor.reportdb
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.persistence,
+ org.gyfor.report,
+ org.gyfor.report.page,
+ org.gyfor.report.page.pdf,
+ org.pennyledger.db,
+ org.pennyledger.math,
+ org.pennyledger.object,
+ org.pennyledger.object.plan,
+ org.pennyledger.object.type,
+ org.pennyledger.object.value,
+ org.pennyledger.sql.dialect,
+ org.pennyledger.sql.dialect.derby;resolution:=optional

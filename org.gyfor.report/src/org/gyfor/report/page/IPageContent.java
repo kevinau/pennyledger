@@ -56,6 +56,8 @@ public interface IPageContent {
   
   public void setFontAndSize(BaseFont font, float fontSize);
   
+  public void setFQFont(FQFont fqFont);
+  
   public void setLineCapStyle(int style);
 
   public void setLineDashPattern(int style, int... pattern);

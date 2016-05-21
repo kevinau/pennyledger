@@ -23,6 +23,7 @@ public abstract class DecimalBasedType<T> extends Type<T> implements IType<T>, I
   private NumberSign sign;
   private int precision;
   private int decimals;
+  private int minDecl = 2;
 
   private static final long[] limits = {
     9L,
@@ -139,29 +140,39 @@ public abstract class DecimalBasedType<T> extends Type<T> implements IType<T>, I
   }
   
   
-  protected String trimTrailingZeros (String source) {
-    int length = getTrimmedLength(source);
+  protected String trimTrailingZeros (String source, int minDecl) {
+    int length = getTrimmedLength(source, minDecl);
     return source.substring(0, length);
   }
 
+  
+  @Override
+  public String toValueString(T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value cannot be null");
+    }
+    return trimTrailingZeros(value.toString(), minDecl);
+  }
+  
   
   @Override
   public String toEntryString(T value, T fillValue) {
     if (value == null) {
       return "";
     }
-    return trimTrailingZeros(value.toString());
+    return trimTrailingZeros(value.toString(), 0);
   }
   
-
-  private int getTrimmedLength (String source) {
+  
+  private int getTrimmedLength (String source, int minDecl) {
     int length = source.length();
     int n = source.lastIndexOf('.');
     if (n >= 0) {
+      n += minDecl + 1;
       while (length > n && source.charAt(length - 1) == '0') {
         length--;
       }
-      if (n == length - 1) {
+      if (source.charAt(length - 1) == '.') {
         length--;
       }
     }
@@ -171,7 +182,7 @@ public abstract class DecimalBasedType<T> extends Type<T> implements IType<T>, I
   
   protected void validateDecimalSource (String source) throws UserEntryException {
     int i = 0;
-    int length = getTrimmedLength(source);
+    int length = getTrimmedLength(source, 0);
     int leadingDigits = precision - decimals;
     
     if (length == 0) {

@@ -6,11 +6,15 @@ public interface IReportGrouping<T> extends IReportLevel {
   
   public IReportBlock getLogicalHeader();
   
-  public IReportBlock getPhysicalHeader();
+  public default IReportBlock getPhysicalHeader() {
+    return getLogicalHeader();
+  }
   
   public IReportBlock getLogicalFooter();
   
-  public IReportBlock getPhysicalFooter();
+  public default IReportBlock getPhysicalFooter() {
+    return null;
+  }
   
   public default IReportBlock getFirstFooter() {
     return null;
@@ -21,7 +25,12 @@ public interface IReportGrouping<T> extends IReportLevel {
     return false;
   }
     
+  public void setData(T data);
+  
   public default void accumulate(T source) {
+  }
+
+  public default void reset() {
   }
 
 }

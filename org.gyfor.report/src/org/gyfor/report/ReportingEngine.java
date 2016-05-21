@@ -58,22 +58,19 @@ public class ReportingEngine implements Engine {
     private IReportBlock physicalHeader;
     private IReportBlock physicalFooter;
     private IReportBlock firstFooter;
-    private IReportBlock separator;
     // detail and logicalFooter blocks are used when they are added.  They are not queued in a ReportEngineLevel
 
     public EngineLevel () {
       this.physicalHeader = null;
       this.physicalFooter = null;
       this.firstFooter = null;
-      this.separator = null;
     }
     
     
-    public EngineLevel (IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter, IReportBlock separator) {
+    public EngineLevel (IReportBlock physicalHeader, IReportBlock physicalFooter, IReportBlock firstFooter) {
       this.physicalHeader = physicalHeader;
       this.physicalFooter = physicalFooter;
       this.firstFooter = firstFooter;
-      this.separator = separator;
     }
 
 
@@ -117,7 +114,7 @@ public class ReportingEngine implements Engine {
       queuedHeaders.add(new QueuedHeader(levelDepth, logicalHeader, separator));
     }
     
-    EngineLevel level = new EngineLevel(physicalHeader, physicalFooter, firstFooter, separator);
+    EngineLevel level = new EngineLevel(physicalHeader, physicalFooter, firstFooter);
     levels[levelDepth++] = level;
   }
 

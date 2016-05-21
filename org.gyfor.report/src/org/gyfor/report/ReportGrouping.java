@@ -2,6 +2,7 @@ package org.gyfor.report;
 
 import java.util.function.Function;
 
+@Deprecated
 public class ReportGrouping<T> extends ReportLevel implements IReportGrouping<T> {
 
   private final Function<T,Object> grouper;

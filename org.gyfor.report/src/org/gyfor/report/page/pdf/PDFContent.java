@@ -3,6 +3,7 @@ package org.gyfor.report.page.pdf;
 import java.awt.Color;
 
 import org.gyfor.report.page.BaseFont;
+import org.gyfor.report.page.FQFont;
 import org.gyfor.report.page.IPageContent;
 import org.gyfor.report.page.IPageImage;
 import org.gyfor.report.page.IPageTemplate;
@@ -82,9 +83,9 @@ public class PDFContent extends PDFIndirect implements IPageContent {
   }
 
   
-  private void appendMeasure (double n) {
-    appendMeasure((int)(n * 1000));
-  }
+  //private void appendMeasure (double n) {
+  //  appendMeasure((int)(n * 1000));
+  //}
 
   
   @Override
@@ -442,6 +443,17 @@ public class PDFContent extends PDFIndirect implements IPageContent {
     buffer.appendSpace();
     buffer.append(fontSize);
     buffer.append(" Tf ");
+  }
+  
+  
+  @Override
+  public void setFQFont (FQFont fqFont) {
+    setFontAndSize(fqFont.getBaseFont(), fqFont.getFontSize());
+    if (fqFont.isGrey()) {
+      setNonStrokeGrey(fqFont.getGrey());
+    } else {
+      setNonStrokeColor(fqFont.getColor());
+    }
   }
   
   
