@@ -10,3 +10,4 @@ Require-Bundle: org.junit;resolution:=optional,
 Export-Package: org.gyfor.report,
  org.gyfor.report.page,
  org.gyfor.report.page.pdf
+Import-Package: org.pennyledger.util

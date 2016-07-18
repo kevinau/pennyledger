@@ -5,18 +5,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.gyfor.report.CalcWidthsEngine;
-import org.gyfor.report.Engine;
-import org.gyfor.report.IReportBlock;
-import org.gyfor.report.IReportDetail;
-import org.gyfor.report.IReportGrouping;
-import org.gyfor.report.IReportLevel;
-import org.gyfor.report.IReportPager;
-import org.gyfor.report.PDFReportPager;
-import org.gyfor.report.PaperSize;
-import org.gyfor.report.ReportDetail;
-import org.gyfor.report.ReportingEngine;
-import org.gyfor.report.ResettableSupplier;
+import org.pennyledger.util.ResettableSupplier;
 
 public class Report<T> {
 

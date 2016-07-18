@@ -16,4 +16,5 @@ Import-Package: javax.persistence,
  org.pennyledger.object.type,
  org.pennyledger.object.value,
  org.pennyledger.sql.dialect,
- org.pennyledger.sql.dialect.derby;resolution:=optional
+ org.pennyledger.sql.dialect.derby;resolution:=optional,
+ org.pennyledger.util

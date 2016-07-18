@@ -12,10 +12,10 @@ import java.util.function.Function;
 import org.gyfor.report.IReportBlock;
 import org.gyfor.report.IReportGrouping;
 import org.gyfor.report.ReportDetail;
-import org.gyfor.report.ResettableSupplier;
 import org.pennyledger.object.plan.IEntityPlan;
 import org.pennyledger.object.plan.IFieldPlan;
 import org.pennyledger.object.type.IType;
+import org.pennyledger.util.ResettableSupplier;
 
 
 public class ResultSetSupplier<P> implements ResettableSupplier<P>, AutoCloseable {

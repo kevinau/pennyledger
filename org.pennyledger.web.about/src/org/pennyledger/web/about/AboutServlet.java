@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 
 
-@Component(service=AboutServlet.class, configurationPolicy=ConfigurationPolicy.REQUIRE, immediate=true)
+@Component(service=AboutServlet.class, configurationPolicy=ConfigurationPolicy.OPTIONAL, immediate=true)
 public class AboutServlet extends OSGiServlet {
 
   private static final long serialVersionUID = 1L;
@@ -53,7 +53,6 @@ public class AboutServlet extends OSGiServlet {
   
   @Reference
   protected void setTemplateService (ITemplateService templateService) {
-    System.out.println("===================>>> setTemplateServicefacgtory " + templateService.getClass());
     this.templateService = templateService;
   }
   
@@ -65,6 +64,7 @@ public class AboutServlet extends OSGiServlet {
 
   @Activate
   public void activate (ComponentContext componentContext) {
+    logger.info("Activate: " + this.getClass());
     super.activate(componentContext, "/about");
  
     BundleContext bundleContext = componentContext.getBundleContext();
