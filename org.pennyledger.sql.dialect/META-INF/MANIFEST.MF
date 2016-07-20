@@ -11,3 +11,4 @@ Import-Package: org.apache.commons.dbcp,
  org.osgi.service.component,
  org.osgi.service.log
 Service-Component: OSGI-INF/org.pennyledger.sql.dialect.DialectRegistry.xml
+Bundle-ActivationPolicy: lazy
