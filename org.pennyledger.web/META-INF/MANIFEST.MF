@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Common web classes
+Bundle-Name: PennyLedger web utilities
 Bundle-SymbolicName: org.pennyledger.web
 Bundle-Version: 0.2.0
 Bundle-Vendor: Kevin Holloway

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Simple "about" plugin
+Bundle-Name: PennyLedger about
 Bundle-SymbolicName: org.pennyledger.about
 Bundle-Version: 1.0.1
 Bundle-Vendor: Kevin Holloway
@@ -10,6 +10,6 @@ Service-Component: OSGI-INF/org.pennyledger.about.AboutCommand.xml,
  OSGI-INF/org.pennyledger.about.ConfiguredAbout.xml
 Import-Package: org.osgi.framework;version="1.8.0",
  org.osgi.service.component,
- org.osgi.service.log;version="1.3.0"
-Bundle-ActivationPolicy: lazy
+ org.slf4j;version="1.7.2"
 Bundle-Category: pennyledger
+Bundle-ActivationPolicy: lazy

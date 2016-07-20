@@ -11,8 +11,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.activation.UnsupportedDataTypeException;
-
 import org.osgi.service.component.ComponentContext;
 
 
@@ -74,7 +72,7 @@ public class ComponentConfiguration {
           }
         }
       } catch (InstantiationException | IllegalAccessException | SecurityException | IllegalArgumentException
-          | InvocationTargetException | UnsupportedDataTypeException ex) {
+          | InvocationTargetException ex) {
         throw new RuntimeException(ex);
       }
     }
@@ -82,7 +80,7 @@ public class ComponentConfiguration {
 
 
   private static Object getFieldValue(Class<?> type, String propertyValue) throws InstantiationException,
-      IllegalAccessException, IllegalArgumentException, InvocationTargetException, UnsupportedDataTypeException {
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Object value;
     if (type.isEnum()) {
       value = getPropertyAsEnum(propertyValue, type);
@@ -99,7 +97,7 @@ public class ComponentConfiguration {
         if (String.class.isAssignableFrom(type)) {
           value = (String)propertyValue;
         } else {
-          throw new UnsupportedDataTypeException(type.getCanonicalName());
+          throw new RuntimeException ("Unsupported data type: " + type.getCanonicalName());
         }
       }
     }
