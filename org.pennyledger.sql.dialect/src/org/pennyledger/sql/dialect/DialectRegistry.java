@@ -49,8 +49,6 @@ public class DialectRegistry {
     try {
       Collection<ServiceReference<IDialect>> serviceRefs = context.getServiceReferences(IDialect.class, "(dialect=" + name + ")");
       if (serviceRefs.size() != 1) {
-        System.out.println("Dialect name <" + name + ">");
-        System.out.println("+++ service refs " + serviceRefs.size());
         throw new IllegalArgumentException("Unknown dialect: " + name);
       }
       ServiceReference<IDialect> serviceRef = serviceRefs.iterator().next();

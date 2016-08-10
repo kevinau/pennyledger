@@ -9,8 +9,8 @@ import org.pennyledger.db.IConnection;
 import org.pennyledger.object.EntityPlanFactory;
 import org.pennyledger.object.plan.IClassPlan;
 import org.pennyledger.object.plan.IEntityPlan;
-import org.pennyledger.object.plan.IFieldPlan;
-import org.pennyledger.object.plan.IObjectPlan;
+import org.pennyledger.object.plan.IItemPlan;
+import org.pennyledger.object.plan.INodePlan;
 import org.pennyledger.object.plan.IReferencePlan;
 import org.pennyledger.object.plan.IRepeatingPlan;
 import org.pennyledger.object.type.IType;
@@ -66,7 +66,7 @@ public class DatabaseTableCreator {
       droppedTables.add(fqTableName);
       dropSingleTable(fqTableName);
 
-      for (IObjectPlan plan : entityPlan.getMemberPlans()) {
+      for (INodePlan plan : entityPlan.getMemberPlans()) {
         switch (plan.kind()) {
         case FIELD:
           // Nothing to do
@@ -82,7 +82,7 @@ public class DatabaseTableCreator {
           break;
         case REPEATING:
           IRepeatingPlan repeatingPlan = (IRepeatingPlan)plan;
-          IObjectPlan elemPlan = repeatingPlan.getElementPlan();
+          INodePlan elemPlan = repeatingPlan.getElementPlan();
           if (elemPlan instanceof IEntityPlan) {
             // If this plan is already a entity plan, use it.
             dropTable((IEntityPlan<?>)elemPlan, schema, droppedTables);
@@ -110,7 +110,7 @@ public class DatabaseTableCreator {
 
       createdTables.add(fqTableName);
       
-      for (IObjectPlan plan : entityPlan.getMemberPlans()) {
+      for (INodePlan plan : entityPlan.getMemberPlans()) {
         switch (plan.kind()) {
         case FIELD:
           // No additional table
@@ -127,11 +127,11 @@ public class DatabaseTableCreator {
         case REPEATING:
           System.out.println("==========>> repeating plan: " + plan.getName());
           IRepeatingPlan repeatingPlan = (IRepeatingPlan)plan;
-          IObjectPlan elemPlan = repeatingPlan.getElementPlan();
+          INodePlan elemPlan = repeatingPlan.getElementPlan();
           System.out.println("==========>> elem plan: " + elemPlan.kind());
           switch (elemPlan.kind()) {
           case FIELD:
-            createTable((IFieldPlan)elemPlan, schema, createdTables);
+            createTable((IItemPlan)elemPlan, schema, createdTables);
             break;
           case CLASS:
           case EMBEDDED:
@@ -263,7 +263,7 @@ public class DatabaseTableCreator {
     // We assume the Id field is called "id" and is an INTEGER
     buff.append(dialect.idColumnTemplate());
 
-    IFieldPlan versionField = plan.getVersionField();
+    IItemPlan versionField = plan.getVersionField();
     if (versionField != null) {
       // We assume the version field is Timestamp
       buff.append(",");
@@ -272,23 +272,23 @@ public class DatabaseTableCreator {
       buff.append(" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
     }
 
-    IFieldPlan entityLifeField = plan.getEntityLifeField();
+    IItemPlan entityLifeField = plan.getEntityLifeField();
     if (entityLifeField != null) {
       addObjectColumn(entityLifeField, schema, buff, "_");
     }
 
-    for (IFieldPlan p1 : plan.getKeyFields()) {
+    for (IItemPlan p1 : plan.getKeyFields()) {
       addObjectColumn(p1, schema, buff, "_");
     }
 
-    for (IObjectPlan p2 : plan.getDataFields()) {
+    for (INodePlan p2 : plan.getDataFields()) {
       addObjectColumn(p2, schema, buff, "_");
     }
 
-    List<IFieldPlan[]> constraints = plan.getUniqueConstraints();
+    List<IItemPlan[]> constraints = plan.getUniqueConstraints();
     if (constraints != null) {
       int c = 1;
-      for (IFieldPlan[] constraint : constraints) {
+      for (IItemPlan[] constraint : constraints) {
         buff.append(",");
         buff.append(NL);
         buff.append("CONSTRAINT ");
@@ -297,7 +297,7 @@ public class DatabaseTableCreator {
         buff.append(c);
         buff.append(" UNIQUE");
         String separator = "(";
-        for (IFieldPlan field : constraint) {
+        for (IItemPlan field : constraint) {
           buff.append(separator);
           buff.append(field.getName());
           separator = ",";
@@ -329,7 +329,7 @@ public class DatabaseTableCreator {
     buff.append(",");
     buff.append(NL);
 
-    for (IObjectPlan p1 : plan.getMemberPlans()) {
+    for (INodePlan p1 : plan.getMemberPlans()) {
       addObjectColumn (p1, schema, buff, "_");
     }
 
@@ -339,7 +339,7 @@ public class DatabaseTableCreator {
   }
 
   
-  public void createSingleTable(IFieldPlan plan, String schema, IEntityPlan<?> parentPlan) {
+  public void createSingleTable(IItemPlan plan, String schema, IEntityPlan<?> parentPlan) {
     SchemaTableName fqTableName = new SchemaTableName(schema, plan.getName());
     
     StringBuilder buff = new StringBuilder();
@@ -362,17 +362,17 @@ public class DatabaseTableCreator {
   }
 
   
-  private void addObjectColumn (IObjectPlan plan, String schema, StringBuilder buff, String partialName) {
+  private void addObjectColumn (INodePlan plan, String schema, StringBuilder buff, String partialName) {
     switch (plan.kind()) {
     case FIELD:
       buff.append(",");
       buff.append(NL);
-      addColumn(buff, partialName, (IFieldPlan)plan);
+      addColumn(buff, partialName, (IItemPlan)plan);
       break;
     case CLASS:
     case EMBEDDED:
       IClassPlan<?> classPlan = (IClassPlan<?>)plan;
-      for (IObjectPlan p : classPlan.getMemberPlans()) {
+      for (INodePlan p : classPlan.getMemberPlans()) {
         addObjectColumn(p, buff, partialName + "_" + plan.getName());
       }
       break;
@@ -393,33 +393,33 @@ public class DatabaseTableCreator {
       break;
     case REPEATING:
       IRepeatingPlan repeatingPlan = (IRepeatingPlan)plan;
-      IObjectPlan elemPlan = repeatingPlan.getElementPlan();
+      INodePlan elemPlan = repeatingPlan.getElementPlan();
       
       // No column in the parent table
 
       switch (elemPlan.kind()) {
       case FIELD:
-        IObjectPlan[] fx1 = {
+        INodePlan[] fx1 = {
             elemPlan,
         };
         createRepeatingTable(fx1, plan.getName(), schema, parentPlan);
         break;
       case CLASS:
       case EMBEDDED:
-        IObjectPlan[] fx2 = ((IClassPlan<?>)elemPlan).getMemberPlans();
+        INodePlan[] fx2 = ((IClassPlan<?>)elemPlan).getMemberPlans();
         createRepeatingTable(fx2, plan.getName(), schema, parentPlan);
         break;
       case INTERFACE:
         // TODO figure this out
         break;
       case REFERENCE:
-        IObjectPlan[] fx3 = {
+        INodePlan[] fx3 = {
             elemPlan,
         };
         createRepeatingTable(fx3, schema, parentPlan);
         break;
       case REPEATING:
-        IObjectPlan[] fx4 = new IObjectPlan[0];
+        INodePlan[] fx4 = new INodePlan[0];
         createRepeatingTable(fx4, schema, parentPlan);
       }
       break;
@@ -427,7 +427,7 @@ public class DatabaseTableCreator {
   }
   
   
-  private void addColumn(StringBuilder buff, String partialName, IFieldPlan plan) {
+  private void addColumn(StringBuilder buff, String partialName, IItemPlan plan) {
     IType<?> planType = plan.getType();
     String sqlType = planType.getSQLType();
     if (sqlType == null) {

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.pennyledger.object.plan.IClassPlan;
 import org.pennyledger.object.plan.IEntityPlan;
-import org.pennyledger.object.plan.impl.ClassPlan;
 import org.pennyledger.object.plan.impl.EntityPlan;
 
 public class EntityPlanFactory {
@@ -28,19 +27,4 @@ public class EntityPlanFactory {
     return (IEntityPlan<T>)getEntityPlan(value.getClass());
   }
   
-
-  @SuppressWarnings("unchecked")
-  public static <T> IClassPlan<T> getClassPlan (Class<T> klass) {
-    if (klass.isAnnotationPresent(Entity.class)) {
-      return getEntityPlan(klass);
-    } else {
-      IClassPlan<T> plan = (IClassPlan<T>)planCache.get(klass);
-      if (plan == null) {
-        plan = new ClassPlan<T>(klass);
-        planCache.put(klass, plan);
-      }
-      return plan;
-    }
-  }
-   
 }

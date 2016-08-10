@@ -82,12 +82,24 @@ public class ComponentConfiguration {
   private static Object getFieldValue(Class<?> type, String propertyValue) throws InstantiationException,
       IllegalAccessException, IllegalArgumentException, InvocationTargetException {
     Object value;
+    
     if (type.isEnum()) {
       value = getPropertyAsEnum(propertyValue, type);
     } else if (Path.class.isAssignableFrom(type)) {
       value = Paths.get(propertyValue);
     } else if (Pattern.class.isAssignableFrom(type)) {
       value = Pattern.compile(propertyValue);
+    } else if (Boolean.TYPE.isAssignableFrom(type)) {
+      switch (propertyValue.toLowerCase()) {
+      case "true" :
+        value = true;
+        break;
+      case "false" :
+        value = false;
+        break;
+      default :
+        throw new RuntimeException ("Expecting true or false for type: " + type.getCanonicalName());
+      }
     } else {
       try {
         Constructor<?> constructor = type.getDeclaredConstructor(String.class);

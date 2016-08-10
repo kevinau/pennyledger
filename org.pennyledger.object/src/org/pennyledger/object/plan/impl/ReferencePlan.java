@@ -5,19 +5,19 @@ import java.util.List;
 import org.pennyledger.object.Entity;
 import org.pennyledger.object.EntryMode;
 import org.pennyledger.object.plan.IEntityPlan;
-import org.pennyledger.object.plan.IFieldPlan;
-import org.pennyledger.object.plan.IObjectPlan;
+import org.pennyledger.object.plan.IItemPlan;
+import org.pennyledger.object.plan.INodePlan;
 import org.pennyledger.object.plan.IReferencePlan;
 import org.pennyledger.object.plan.PlanKind;
 
 
-public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
+public class ReferencePlan<T> extends FieldPlan implements IReferencePlan<T> {
 
   private final IEntityPlan<T> referencedPlan;
   private final boolean optional;
   
   
-  public ReferencePlan(IObjectPlan parent, String pathName, String label, Class<T> referencedClass, EntryMode entryMode, boolean optional) {
+  public ReferencePlan(INodePlan parent, String pathName, String label, Class<T> referencedClass, EntryMode entryMode, boolean optional) {
     super(parent, pathName, label, entryMode);
     if (!referencedClass.isAnnotationPresent(Entity.class)) {
       throw new IllegalArgumentException("Referenced class is not annotated with @Entity");
@@ -53,7 +53,7 @@ public class ReferencePlan<T> extends ObjectPlan implements IReferencePlan<T> {
 
 
   @Override
-  public void accumulateFieldPlans(List<IFieldPlan<?>> fieldPlans) {
+  public void accumulateFieldPlans(List<IItemPlan<?>> fieldPlans) {
     referencedPlan.accumulateFieldPlans(fieldPlans);
   }
 

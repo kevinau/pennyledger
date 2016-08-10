@@ -10,8 +10,8 @@ import org.pennyledger.object.NaturalKey;
 import org.pennyledger.object.UniqueConstraint;
 import org.pennyledger.object.plan.IClassPlan;
 import org.pennyledger.object.plan.IEntityPlan;
-import org.pennyledger.object.plan.IFieldPlan;
-import org.pennyledger.object.plan.IObjectPlan;
+import org.pennyledger.object.plan.IItemPlan;
+import org.pennyledger.object.plan.INodePlan;
 import org.pennyledger.object.plan.PlanKind;
 import org.pennyledger.object.type.IType;
 import org.pennyledger.object.type.builtin.EntityLifeType;
@@ -22,12 +22,12 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   private final Class<T> entityClass;
 
   private String entityName;
-  private IFieldPlan<?> idFieldPlan;
-  private IFieldPlan<?> versionFieldPlan;
-  private List<IFieldPlan<?>[]> uniqueConstraints;
-  private IFieldPlan<?>[] keyFields;
-  private IObjectPlan[] dataFields;
-  private IFieldPlan<?> lifeFieldPlan;
+  private IItemPlan<?> idFieldPlan;
+  private IItemPlan<?> versionFieldPlan;
+  private List<IItemPlan<?>[]> uniqueConstraints;
+  private IItemPlan<?>[] keyFields;
+  private INodePlan[] dataFields;
+  private IItemPlan<?> lifeFieldPlan;
 
   
   public EntityPlan (Class<T> entityClass) {
@@ -52,7 +52,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
 
 
   @Override
-  public IFieldPlan<?> getIdField () {
+  public IItemPlan<?> getIdField () {
     return idFieldPlan;
   }
   
@@ -67,7 +67,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
 //  }
   
   @Override
-  public IFieldPlan<?> getVersionField () {
+  public IItemPlan<?> getVersionField () {
     return versionFieldPlan;
   }
   
@@ -85,7 +85,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   
   
   @Override
-  public IFieldPlan<?> getEntityLifeField () {
+  public IItemPlan<?> getEntityLifeField () {
     return lifeFieldPlan;
   }
   
@@ -108,13 +108,13 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   
   
   @Override
-  public IFieldPlan<?>[] getKeyFields () {
+  public IItemPlan<?>[] getKeyFields () {
     return keyFields;
   }
   
   
   @Override
-  public IObjectPlan[] getDataFields () {
+  public INodePlan[] getDataFields () {
     return dataFields;
   }
 
@@ -126,31 +126,31 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   
   
   private void buildEntityFields () {
-    List<IFieldPlan<?>> memberPlans = new ArrayList<>();
+    List<IItemPlan<?>> memberPlans = new ArrayList<>();
     getAllFieldPlans(this, memberPlans);
     
-    List<IFieldPlan<?>> keyFields2 = new ArrayList<>();
+    List<IItemPlan<?>> keyFields2 = new ArrayList<>();
     NaturalKey keyAnn = entityClass.getAnnotation(NaturalKey.class);
     if (keyAnn != null) {
       for (String keyName : keyAnn.value()) {
-        IFieldPlan<?> plan = getFieldPlan(memberPlans, keyName);
+        IItemPlan<?> plan = getFieldPlan(memberPlans, keyName);
         keyFields2.add(plan);
       }
-      keyFields = keyFields2.toArray(new IFieldPlan[keyFields2.size()]);
+      keyFields = keyFields2.toArray(new IItemPlan[keyFields2.size()]);
     }
 
-    List<IFieldPlan<?>> dataFields2 = getDataFields(memberPlans, keyFields2);
+    List<IItemPlan<?>> dataFields2 = getDataFields(memberPlans, keyFields2);
     if (keyFields == null) {
-      keyFields = new IFieldPlan[1];
+      keyFields = new IItemPlan[1];
       keyFields[0] = dataFields2.get(0);
       dataFields2.remove(0);
     }
-    dataFields = dataFields2.toArray(new IFieldPlan[dataFields2.size()]);
+    dataFields = dataFields2.toArray(new IItemPlan[dataFields2.size()]);
   }
 
   
-  private static IFieldPlan<?> getFieldPlan (List<IFieldPlan<?>> fieldPlans, String name) {
-    for (IFieldPlan<?> plan : fieldPlans) {
+  private static IItemPlan<?> getFieldPlan (List<IItemPlan<?>> fieldPlans, String name) {
+    for (IItemPlan<?> plan : fieldPlans) {
       if (plan.getName().equals(name)) {
         return plan;
       }
@@ -159,11 +159,11 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   }
   
   
-  private static void getAllFieldPlans (IClassPlan<?> parent, List<IFieldPlan<?>> fieldPlans) {
-    for (IObjectPlan plan : parent.getMemberPlans()) {
+  private static void getAllFieldPlans (IClassPlan<?> parent, List<IItemPlan<?>> fieldPlans) {
+    for (INodePlan plan : parent.getMemberPlans()) {
       switch (plan.kind()) {
       case FIELD :
-        fieldPlans.add((IFieldPlan<?>)plan);
+        fieldPlans.add((IItemPlan<?>)plan);
         break;
       case CLASS :
       case EMBEDDED :
@@ -176,13 +176,13 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
   }
   
   
-  private List<IFieldPlan<?>> getDataFields (List<IFieldPlan<?>> memberPlans, List<IFieldPlan<?>> keyPlans) {
-    List<IFieldPlan<?>> dataFieldList = new ArrayList<>();
-    IFieldPlan<?> idFieldPlan2 = null;
+  private List<IItemPlan<?>> getDataFields (List<IItemPlan<?>> memberPlans, List<IItemPlan<?>> keyPlans) {
+    List<IItemPlan<?>> dataFieldList = new ArrayList<>();
+    IItemPlan<?> idFieldPlan2 = null;
     
-    for (IObjectPlan member : memberPlans) {
+    for (INodePlan member : memberPlans) {
       if (member.kind() == PlanKind.FIELD) {
-        IFieldPlan<?> fieldPlan = (IFieldPlan<?>)member;
+        IItemPlan<?> fieldPlan = (IItemPlan<?>)member;
         Id idann = fieldPlan.getAnnotation(Id.class);
         if (idann != null) {
           idFieldPlan = fieldPlan;
@@ -226,7 +226,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
 
 
   @Override
-  public List<IFieldPlan<?>[]> getUniqueConstraints() {
+  public List<IItemPlan<?>[]> getUniqueConstraints() {
     return uniqueConstraints;
   }
   
@@ -235,7 +235,7 @@ public class EntityPlan<T> extends ClassPlan<T> implements IEntityPlan<T> {
     UniqueConstraint[] ucAnnx = entityClass.getAnnotationsByType(UniqueConstraint.class);
     uniqueConstraints = new ArrayList<>(ucAnnx.length);
     for (UniqueConstraint ucAnn : ucAnnx) {
-      IFieldPlan<?>[] fields = new IFieldPlan[ucAnn.value().length];
+      IItemPlan<?>[] fields = new IItemPlan[ucAnn.value().length];
       int i = 0;
       for (String name : ucAnn.value()) {
         fields[i] = getMemberPlan(name);

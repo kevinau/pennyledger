@@ -1,12 +1,12 @@
 package org.pennyledger.object.plan;
 
-public interface IRepeatingPlan extends IObjectPlan {
+public interface IRepeatingPlan extends INodePlan {
 
   public int getMinOccurs();
   
   public int getMaxOccurs();
 
-  public IObjectPlan getElementPlan ();
+  public INodePlan getElementPlan ();
 
   public int getDimension();
 

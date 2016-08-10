@@ -1,13 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Report
-Bundle-SymbolicName: org.gyfor.report
+Bundle-SymbolicName: org.pennyledger.report
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Kevin Holloway
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;resolution:=optional,
  org.eclipse.jdt.annotation;bundle-version="[2.0.0,3.0.0)";resolution:=optional
-Export-Package: org.gyfor.report,
- org.gyfor.report.page,
- org.gyfor.report.page.pdf
-Import-Package: org.pennyledger.util
+Export-Package: org.pennyledger.report,
+ org.pennyledger.report.page,
+ org.pennyledger.report.page.pdf
+Import-Package: org.pennyledger.nio,
+ org.pennyledger.util

@@ -1,7 +1,7 @@
 package org.pennyledger.object.plan;
 
 
-public interface IReferencePlan<T> extends IObjectPlan {
+public interface IReferencePlan<T> extends INodePlan {
 
   public boolean isOptional();
 

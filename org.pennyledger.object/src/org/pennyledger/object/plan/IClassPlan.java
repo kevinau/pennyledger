@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 
-public interface IClassPlan<T> extends IObjectPlan {
+public interface IClassPlan<T> extends INodePlan {
 
   public Field getMemberField(String memberName);
 
-  public <X extends IObjectPlan> X getMemberPlan (String name);
+  public <X extends INodePlan> X getNodePlan (String name);
   
-  public <X extends IFieldPlan<?>> X getFieldPlan (String name);
+  public <X extends IItemPlan<?>> X getLeafPlan (String name);
   
   public Object getMemberValue (Object instance, String name);
 
@@ -19,7 +19,7 @@ public interface IClassPlan<T> extends IObjectPlan {
 
   public T newInstance ();
   
-  public IObjectPlan[] getMemberPlans ();
+  public INodePlan[] getMemberPlans ();
 
   public List<IRuntimeDefaultProvider> getRuntimeDefaultProviders();
 

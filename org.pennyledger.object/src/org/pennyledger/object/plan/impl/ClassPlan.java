@@ -37,8 +37,8 @@ import org.pennyledger.object.TypeFor;
 import org.pennyledger.object.UserEntryException;
 import org.pennyledger.object.Validation;
 import org.pennyledger.object.plan.IClassPlan;
-import org.pennyledger.object.plan.IFieldPlan;
-import org.pennyledger.object.plan.IObjectPlan;
+import org.pennyledger.object.plan.IItemPlan;
+import org.pennyledger.object.plan.INodePlan;
 import org.pennyledger.object.plan.IRuntimeDefaultProvider;
 import org.pennyledger.object.plan.IRuntimeFactoryProvider;
 import org.pennyledger.object.plan.IRuntimeImplementationProvider;
@@ -53,11 +53,13 @@ import org.pennyledger.object.type.IType;
 import org.pennyledger.util.CamelCase;
 
 
-public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
+public class ClassPlan<T> extends FieldPlan implements IClassPlan<T> {
 
+  private static Map<Class<?>, IClassPlan<?>> planCache = new HashMap<>(50);
+  
   private final Class<T> klass;
 
-  private final Map<String, IObjectPlan> memberPlans = new LinkedHashMap<>();
+  private final Map<String, INodePlan> memberPlans = new LinkedHashMap<>();
   private final Map<String, Field> memberFields = new HashMap<>();
 
   private List<IRuntimeTypeProvider> runtimeTypeProviders = new ArrayList<>(0);
@@ -71,12 +73,12 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   private Set<IValidationMethod> validationMethods = new TreeSet<IValidationMethod>();
 
   
-  public ClassPlan (Class<T> klass) {
+  private ClassPlan (Class<T> klass) {
     this (null, entityName(klass), entityLabel(klass), klass, entityEntryMode(klass));
   }
   
 
-  public ClassPlan (IObjectPlan parent, String pathName, String label, Class<T> klass, EntryMode entryMode) {
+  private ClassPlan (INodePlan parent, String pathName, String label, Class<T> klass, EntryMode entryMode) {
     super (parent, pathName, label, entryMode);
     this.klass = klass;
     
@@ -89,6 +91,28 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
     addClassFields (klass, true);
   }
   
+  
+  @SuppressWarnings("unchecked")
+  public static <T> IClassPlan<T> getClassPlan (Class<T> klass) {
+    IClassPlan<T> plan = (IClassPlan<T>)planCache.get(klass);
+    if (plan == null) {
+      plan = new ClassPlan<T>(klass);
+      planCache.put(klass, plan);
+    }
+    return plan;
+  }
+   
+  
+  @SuppressWarnings("unchecked")
+  public static <T> IClassPlan<T> getClassPlan (INodePlan parent, String pathName, String label, Class<T> klass, EntryMode entryMode) {
+    IClassPlan<T> plan = (IClassPlan<T>)planCache.get(klass);
+    if (plan == null) {
+      plan = new ClassPlan<T>(parent, pathName, label, klass, entryMode);
+      planCache.put(klass, plan);
+    }
+    return plan;
+  }
+   
   
   public void addClassFields (Class<?> klass, boolean include) {
     Field[] declaredFields = klass.getDeclaredFields();
@@ -209,7 +233,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 //        Field lastEntryField = lastEntryFields.get(field.getName());
 
         String name = field.getName();
-        IObjectPlan objectPlan = buildObjectPlan(this, field, name, label, field.getGenericType(), -1, entryMode, optional);
+        INodePlan objectPlan = buildObjectPlan(this, field, name, label, field.getGenericType(), -1, entryMode, optional);
         memberPlans.put(name, objectPlan);
         memberFields.put(name, field);
       }
@@ -226,8 +250,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   }
     
   
-  public static IObjectPlan buildObjectPlan (IObjectPlan parent, Field field, String name, String label, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
-    IObjectPlan objPlan;
+  public static INodePlan buildObjectPlan (INodePlan parent, Field field, String name, String label, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
+    INodePlan objPlan;
     
     if (fieldType instanceof GenericArrayType) {
       Type type1 = ((GenericArrayType)fieldType).getGenericComponentType();
@@ -261,8 +285,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
   
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  static IObjectPlan fieldPlanDetail (IObjectPlan parent, Field field, String name, String label, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
-    IObjectPlan objectPlan;
+  static INodePlan fieldPlanDetail (INodePlan parent, Field field, String name, String label, Type fieldType, int dimension, EntryMode entryMode, boolean optional) {
+    INodePlan objectPlan;
     
     // Is there a type declaration within the class
     Class<?> fieldClass = (Class<?>)fieldType;
@@ -273,7 +297,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
     // or does the field type match one of the build in field types
     IType type = BuiltinTypeRegistry.lookupType(fieldClass, formFieldAnn, columnAnn);
     if (type != null) {
-      objectPlan = new FieldPlan(parent, name, label, type, field, entryMode, optional);
+      objectPlan = new LeafPlan(parent, name, label, type, field, entryMode, optional);
     } else {
       // Is it a reference type (identified by the ManyToOne annotation).
       ManyToOne fkAnn = field.getAnnotation(ManyToOne.class);
@@ -313,18 +337,18 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   }
  
    
-  public static void walkClassPlan (Class<?> klass, WalkPlanTarget target) {
+  public void walkClassPlan (Class<?> klass, WalkPlanTarget target) {
     walkClassFields (klass, true, target);
   }
   
   
-  private static void walkClassFields (Class<?> klass, boolean include, WalkPlanTarget target) {
+  private void walkClassFields (Class<?> klass, boolean include, WalkPlanTarget target) {
     Field[] declaredFields = klass.getDeclaredFields();
     walkClassFields2 (klass, declaredFields, include, target);
   }
   
   
-  private static void walkClassFields2 (Class<?> klass, Field[] fields, boolean include, WalkPlanTarget target) {
+  private void walkClassFields2 (Class<?> klass, Field[] fields, boolean include, WalkPlanTarget target) {
     // Parse the class hierarchy recursively
     Class<?> superKlass = klass.getSuperclass();
     if (superKlass != null && !superKlass.equals(Object.class)) {
@@ -430,8 +454,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
       }
     }
     
-    FieldDependency xfieldDependency = new FieldDependency();
-    xfieldDependency.parseClass(klass.getName());
+    FieldDependency fieldDependency = new FieldDependency();
+    fieldDependency.parseClass(klass.getName());
 
     findTypeForAnnotations (klass, fields, fieldDependency);
     findLabelForAnnotations (klass, fields, fieldDependency);
@@ -471,8 +495,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   }
 
   
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  static void walkMemberPlanDetail (String name, Field field, int dimension, EntryMode entryMode, boolean optional, WalkPlanTarget target) {
+   static void walkMemberPlanDetail (String name, Field field, int dimension, EntryMode entryMode, boolean optional, WalkPlanTarget target) {
     // Is there a type declaration within the class
     Class<?> fieldClass = field.getType();
     FormField formFieldAnn = field.getAnnotation(FormField.class);
@@ -981,16 +1004,16 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
   
   @SuppressWarnings("unchecked")
   @Override
-  public <X extends IObjectPlan> X getMemberPlan(String name) {
+  public <X extends INodePlan> X getMemberPlan(String name) {
     return (X)memberPlans.get(name);
   }
 
 
   @Override
-  public IObjectPlan[] getMemberPlans() {
-    IObjectPlan[] mx = new IObjectPlan[memberPlans.size()];
+  public INodePlan[] getMemberPlans() {
+    INodePlan[] mx = new INodePlan[memberPlans.size()];
     int i = 0;
-    for (IObjectPlan m : memberPlans.values()) {
+    for (INodePlan m : memberPlans.values()) {
       mx[i++] = m;
     }
     return mx;
@@ -999,7 +1022,7 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
  
   @SuppressWarnings("unchecked")
   @Override
-  public <X extends IFieldPlan<?>> X getFieldPlan(String name) {
+  public <X extends IItemPlan<?>> X getFieldPlan(String name) {
     return (X)memberPlans.get(name);
   }
 
@@ -1018,11 +1041,11 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
       indent(level + 1);
       System.out.println(factoryProvider);
     }
-    for (Map.Entry<String, IObjectPlan> entry : memberPlans.entrySet()) {
+    for (Map.Entry<String, INodePlan> entry : memberPlans.entrySet()) {
       indent(level+ 1);
       System.out.println(entry.getKey() + ":");
-      IObjectPlan member = entry.getValue();
-      ((ObjectPlan)member).dump(level + 2);
+      INodePlan member = entry.getValue();
+      ((FieldPlan)member).dump(level + 2);
     }
   }
 
@@ -1034,8 +1057,8 @@ public class ClassPlan<T> extends ObjectPlan implements IClassPlan<T> {
 
 
   @Override
-  public void accumulateFieldPlans(List<IFieldPlan<?>> fieldPlans) {
-    for (IObjectPlan memberPlan : memberPlans.values()) {
+  public void accumulateFieldPlans(List<IItemPlan<?>> fieldPlans) {
+    for (INodePlan memberPlan : memberPlans.values()) {
       memberPlan.accumulateFieldPlans(fieldPlans);
     }
   }

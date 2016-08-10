@@ -5,33 +5,32 @@ import java.util.List;
 
 import org.pennyledger.object.EntryMode;
 import org.pennyledger.object.Occurs;
-import org.pennyledger.object.plan.IFieldPlan;
-import org.pennyledger.object.plan.IObjectPlan;
+import org.pennyledger.object.plan.IItemPlan;
+import org.pennyledger.object.plan.INodePlan;
 import org.pennyledger.object.plan.IRepeatingPlan;
 import org.pennyledger.object.plan.PlanKind;
 
-public class ListPlan extends ObjectPlan implements IRepeatingPlan {
+public class ListPlan extends FieldPlan implements IRepeatingPlan {
 
-  private final IObjectPlan elemPlan;
+  private final INodePlan elemPlan;
 
   private final int dimension;
   private final int minOccurs;
   private final int maxOccurs;  
   
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public ListPlan (Class<?> elemClass) {
     super (null, entityName(elemClass), entityLabel(elemClass), entityEntryMode(elemClass));
-    elemPlan = new ClassPlan(elemClass);
+    elemPlan = ClassPlan.getClassPlan(elemClass);
     this.dimension = 0;
     this.minOccurs = 0;
     this.maxOccurs = Integer.MAX_VALUE;
   }
   
   
-  public ListPlan (IObjectPlan parent, Field field, String name, String label, Class<?> elemClass, int dimension, EntryMode entryMode) {
+  public ListPlan (INodePlan parent, Field field, String name, String label, Class<?> elemClass, EntryMode entryMode, int dimension) {
     super (parent, name, label, entryMode);
     System.out.println("ListPlan " + name + "[" + dimension + "]");
-    elemPlan = ClassPlan.buildObjectPlan(this, field, name, label, elemClass, dimension, entryMode, false);
+    elemPlan = ClassPlan.getClassPlan(this, name, label, elemClass, entryMode);
     this.dimension = dimension;
     System.out.println("ListPlan... " + elemPlan);
     
@@ -57,7 +56,7 @@ public class ListPlan extends ObjectPlan implements IRepeatingPlan {
   
 
   @Override
-  public IObjectPlan getElementPlan () {
+  public INodePlan getElementPlan () {
     return elemPlan;
   }
   
@@ -94,7 +93,7 @@ public class ListPlan extends ObjectPlan implements IRepeatingPlan {
 
 
   @Override
-  public void accumulateFieldPlans(List<IFieldPlan<?>> fieldPlans) {
+  public void accumulateFieldPlans(List<IItemPlan<?>> fieldPlans) {
    elemPlan.accumulateFieldPlans(fieldPlans);
   }
 

@@ -1,105 +1,109 @@
 package org.pennyledger.object.plan.impl;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.List;
 
 import org.pennyledger.object.EntryMode;
-import org.pennyledger.object.plan.IFieldPlan;
-import org.pennyledger.object.plan.IObjectPlan;
+import org.pennyledger.object.Mode;
+import org.pennyledger.object.plan.INodePlan;
 import org.pennyledger.object.plan.PlanKind;
-import org.pennyledger.object.type.IType;
+import org.pennyledger.util.CamelCase;
 
-public class FieldPlan<T> extends ObjectPlan implements IFieldPlan<T> {
+public abstract class FieldPlan implements INodePlan {
 
-  private final IType<T> type;
+  private final INodePlan parent;
+  
+  private final String name;
+  
   private final Field field;
-  private final boolean nullable;
-  //private final Field lastEntryField;
-  //private final Object staticDefaultValue;
+  
+  private String staticLabel = "";
+  
+  private EntryMode staticMode = EntryMode.UNSPECIFIED;
   
   
-  public FieldPlan (IObjectPlan parent, String name, String label, IType<T> type, Field field, EntryMode entryMode, boolean nullable) {
-    super (parent, name, label, entryMode);
-    if (type == null) { 
-      throw new IllegalArgumentException("Type argument cannot be null");
+  protected static String entityName (Class<?> entityClass) {
+    String klassName = entityClass.getSimpleName();
+    return Character.toLowerCase(klassName.charAt(0)) + klassName.substring(1);
+  }
+  
+  
+  protected static String entityLabel (Class<?> entityClass) {
+    String klassName = entityClass.getSimpleName();
+    return CamelCase.toSentence(klassName);
+  }
+  
+  
+  protected static EntryMode entityEntryMode (Class<?> entityClass) {
+    EntryMode entryMode = EntryMode.UNSPECIFIED;
+    Mode modeAnn = entityClass.getAnnotation(Mode.class);
+    if (modeAnn != null) {
+      entryMode = modeAnn.value();
     }
-    this.type = type;
+    return entryMode;
+  }
+  
+  
+  public FieldPlan (INodePlan parent, String name, Field field, String label, EntryMode entryMode) {
+    if (name == null) {
+      throw new IllegalArgumentException("Name cannot be null");
+    }
+    if (field == null) {
+      throw new IllegalArgumentException("Field cannot be null");
+    }
+    this.parent = parent;
+    this.name = name;
     this.field = field;
-    this.nullable = nullable;
-    //this.lastEntryField = lastEntryField;
-    //this.staticDefaultValue = staticDefaultValue;
-  }
-  
-
-  @Override
-  public IType<T> getType () {
-    return type;
+    this.staticLabel = label;
+    this.staticMode = entryMode;
   }
   
   
   @Override
-  public boolean isNullable () {
-    return nullable;
-  }
-  
-  
-//  public Field getLastEntryField () {
-//    return lastEntryField;
-//  }
-
-
-//  @Override
-//  public Object getStaticDefaultValue () {
-//    return staticDefaultValue;
-//  }
-
-
-  @Override
-  public void dump (int level) {
-    indent(level);
-    System.out.println("FieldPlan("  + type + ",nullable=" + nullable + "," + super.toString() + ")");
-  }
-  
-  
-//  @SuppressWarnings("unchecked")
-//  @Override
-//  public <X> X newInstance () {
-//    return (X)staticDefaultValue;
-//  }
-
-  @Override
-  public String toString() {
-    return "FieldPlan[type=" + type + "," + super.toString() + "]";
+  public INodePlan getParent() {
+    return parent;
   }
   
   
   @Override
-  public PlanKind kind() {
-    return PlanKind.FIELD;
-  }
-
-
-//  @Override
-//  public IObjectModel buildModel(IForm<?> form, IObjectModel parent, IContainerReference container) {
-//    return new FieldModel(form, parent, container, this);
-//  }
-//
-//  @Override
-//  public Object newValue () {
-//    return type.newValue();
-//  }
-
-
-  @Override
-  public <A extends Annotation> A getAnnotation(Class<A> klass) {
-    return field.getAnnotation(klass);
+  public String getName () {
+    return name;
   }
 
 
   @Override
-  public void accumulateFieldPlans(List<IFieldPlan<?>> fieldPlans) {
-    fieldPlans.add(this);
+  public Field getField () {
+    return field;
+  }
+  
+  
+  @Override
+  public String getDeclaredLabel () {
+    return staticLabel;
+  }
+  
+
+  @Override
+  public EntryMode getDeclaredMode () {
+    return staticMode;
+  }
+ 
+  
+  @Override 
+  public void dump () {
+    dump (0);
+  }
+  
+  
+  @Override
+  public abstract void dump (int level);
+
+
+  @Override
+  public abstract PlanKind kind();
+  
+  @Override
+  public String toString () {
+    return "FieldPlan(" + name + ",'" + staticLabel + "'," + staticMode + ")";
   }
 
 }
