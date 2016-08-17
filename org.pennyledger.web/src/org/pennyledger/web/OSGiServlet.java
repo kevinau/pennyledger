@@ -1,12 +1,9 @@
 package org.pennyledger.web;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +72,8 @@ public class OSGiServlet extends HttpServlet {
       throw new RuntimeException("'alias' property must start with an slash (/)");
     }
     
+    bundleContext = context.getBundleContext();
+    
     // Build new dictionary for servlets
     ////Dictionary<String, String> initProps = new Hashtable<String, String>();
     ////for (Map.Entry<String, Object> entry : props.entrySet()) {
@@ -94,6 +93,7 @@ public class OSGiServlet extends HttpServlet {
   
   protected void deactivate() {
     httpService.unregister(alias);
+    bundleContext = null;
   }
 
 
@@ -110,19 +110,21 @@ public class OSGiServlet extends HttpServlet {
   }
 
   
-  public File getResourceFile (String resourcePath) throws FileNotFoundException {
-    File resourceFile = null;
+  public InputStream getResourceFile (String resourcePath) throws FileNotFoundException {
+    InputStream resourceStream = null;
     Bundle bundle = bundleContext.getBundle();
     URL resourceURL = bundle.getResource(resourcePath);
     if (resourceURL == null) {
       throw new FileNotFoundException(resourcePath);
     }
     try {
-      resourceFile = new File(resourceURL.toURI());
-    } catch (URISyntaxException ex) {
+      int n = resourceURL.openConnection().getContentLength();
+      System.out.println(resourcePath + "...................." + n);
+      resourceStream = resourceURL.openStream();
+    } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
-    return resourceFile;
+    return resourceStream;
   }
   
   
@@ -161,17 +163,16 @@ public class OSGiServlet extends HttpServlet {
 //  }
 
 
-  public static void writeResourceFile (HttpServletResponse response, File resourceFile) throws ServletException {
-    try {
-      if (!resourceFile.exists()) {
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        return;
-      }
-      InputStream inputStream = new FileInputStream(resourceFile);
-      
-      String resourceName = resourceFile.getName();
-      int j = resourceName.lastIndexOf('.');
-      String extn = resourceName.substring(j);
+  public void writeResourceFile (HttpServletResponse response, String resourcePath) throws ServletException {
+    Bundle bundle = bundleContext.getBundle();
+    URL resourceURL = bundle.getResource(resourcePath);
+    if (resourceURL == null) {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
+    try (InputStream resourceStream = resourceURL.openStream()) {
+      int j = resourcePath.lastIndexOf('.');
+      String extn = resourcePath.substring(j);
       MimeType mimeType = mimeTypes.get(extn);
       if (mimeType != null) {
         response.setContentType(mimeType.getMimeCode());
@@ -181,25 +182,18 @@ public class OSGiServlet extends HttpServlet {
 //      }
       }
       
-      int fileLength = (int)resourceFile.length();
-//      int written = 0;
+      int fileLength = resourceURL.openConnection().getContentLength();
       response.setContentLength(fileLength);
       
       OutputStream out = response.getOutputStream();
       byte[] buffer = new byte[BUFFER_SIZE];
-      int n = inputStream.read(buffer);
+      int n = resourceStream.read(buffer);
       while (n > 0) {
         out.write(buffer, 0, n);
-//          written += n;
-        n = inputStream.read(buffer);
+        n = resourceStream.read(buffer);
       }
       out.flush();
-      inputStream.close();
-
       response.setStatus(HttpServletResponse.SC_OK);
-      return;
-    } catch (FileNotFoundException ex) {
-      // Do nothing.  Let the standard servlet handle it
     } catch (IOException ex) {
       throw new ServletException(ex);
     }
@@ -211,10 +205,8 @@ public class OSGiServlet extends HttpServlet {
     if (request.getMethod().equals("GET")) {
       String pathInfo = request.getPathInfo();
       if (pathInfo != null && pathInfo.startsWith("/resources/")) {
-        // It is a resource type
-        String resourceName = pathInfo.substring(1);
-        File resourceFile = getResourceFile(resourceName);
-        writeResourceFile (response, resourceFile);
+        String resourcePath = pathInfo.substring(1);
+        writeResourceFile (response, resourcePath);
         return;
       }
     }

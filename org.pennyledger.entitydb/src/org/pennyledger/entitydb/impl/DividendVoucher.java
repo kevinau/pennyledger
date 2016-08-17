@@ -12,7 +12,7 @@ import org.pennyledger.db.IPreparedStatement;
 import org.pennyledger.db.SpecifiedDatabase;
 import org.pennyledger.math.Decimal;
 import org.pennyledger.object.Entity;
-import org.pennyledger.object.FormField;
+import org.pennyledger.object.ItemField;
 import org.pennyledger.object.value.TimestampValue;
 import org.pennyledger.sql.dialect.IDialect;
 import org.pennyledger.sql.dialect.derby.DerbyEmbeddedDialect;
@@ -31,7 +31,7 @@ public class DividendVoucher {
   private int companyYear;
   private LocalDate accountingYearEnd;
   
-  @FormField(length=10)
+  @ItemField(length=10)
   private String dividendType;
   private Decimal dividendPerShare;
   private int shares;
@@ -39,15 +39,15 @@ public class DividendVoucher {
   private Decimal taxCredit;
   private Decimal totalDividend;
 
-  @FormField(length=30)
+  @ItemField(length=30)
   private String name;
-  @FormField(length=30)
+  @ItemField(length=30)
   private String address;
-  @FormField(length=30)
+  @ItemField(length=30)
   private String town;
   private String postcode;
 
-  @FormField(length=4)
+  @ItemField(length=4)
   private String shareholderCode;
   
   public DividendVoucher () {

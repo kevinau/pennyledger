@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PennyLedger Pebble implementation of template service
+Bundle-SymbolicName: org.pennyledger.template.pebble
+Bundle-Version: 1.0.0
+Bundle-ClassPath: lib/coverity-escapers-1.1.jar,
+ lib/guava-16.0.1.jar,
+ lib/pebble-2.2.2.jar,
+ .
+Bundle-Vendor: Kevin Holloway
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.osgi.framework;version="1.8.0",
+ org.osgi.service.component;version="1.2.2",
+ org.pennyledger.template,
+ org.slf4j;version="1.7.2"
+Service-Component: OSGI-INF/org.pennyledger.template.pebble.PebbleTemplateService.xml
+Bundle-ActivationPolicy: lazy

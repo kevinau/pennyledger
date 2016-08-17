@@ -2,11 +2,14 @@ package org.pennyledger.template.thymeleaf;
 
 import java.io.Writer;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Set;
 
 import org.pennyledger.template.ITemplate;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.IWebContext;
 
-public class ThymeleafTemplate implements ITemplate {
+public class ThymeleafTemplate implements ITemplate, IWebContext {
 
   private ThymeleafTemplateService templateService;
   private URL templateURL;

@@ -26,8 +26,6 @@ table th {
     <h1>About PennyLedger</h1>
     <p>PennyLedger was written by Kevin Holloway (kholloway@geckosoftware.com.au)</p>
     <p>Hello there!</p>
-    <p th:text="${docbase}">Document base: ??</p>
-    <p th:text="${requestParams}">Request parameters</p>
-    <p th:each="rp : ${requestParams}" th:text="${rp}">Request param ??</p>
+    <p>Document base: {{docbase}}</p>
   </body>
 </html>

@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Core functionality
+Bundle-Name: PennyLedger core functionality
 Bundle-SymbolicName: org.pennyledger.core
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.0
 Export-Package: org.pennyledger.math,
  org.pennyledger.nio,
  org.pennyledger.text,

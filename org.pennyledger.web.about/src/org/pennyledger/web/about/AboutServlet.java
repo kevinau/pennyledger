@@ -90,7 +90,7 @@ public class AboutServlet extends OSGiServlet {
       throw new RuntimeException("No template for this servlet");
     }
     
-    template.setParameter("docbase", getAlias().substring(1) + "/");
+    template.setParameter("docbase", getAlias());
     Map<String, String> requests = new HashMap<>();
     for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements(); ) {
       String name = e.nextElement();
