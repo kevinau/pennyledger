@@ -20,7 +20,7 @@ Import-Package: javax.servlet;version="2.6.0",
  org.osgi.service.http;version="1.2.1",
  org.osgi.service.http.context;version="1.0.0",
  org.pennyledger.template,
- org.pennyledger.web,
  org.slf4j;version="1.7.2"
-Service-Component: OSGI-INF/org.pennyledger.web.about.AboutServlet.xml
+Service-Component: OSGI-INF/org.pennyledger.web.about.AboutServlet.xml,
+ OSGI-INF/org.pennyledger.web.about.AboutServlet2.xml
 Bundle-ActivationPolicy: lazy

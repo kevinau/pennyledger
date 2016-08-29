@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PennyLedger Pebble implementation of template service
-Bundle-SymbolicName: org.pennyledger.template.pebble
+Bundle-Name: PennyLedger: Pebble implementation of template service
+Bundle-SymbolicName: org.pennyledger.template.pebble;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/coverity-escapers-1.1.jar,
  lib/guava-16.0.1.jar,

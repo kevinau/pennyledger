@@ -38,12 +38,6 @@ public class ComponentConfiguration {
               propertyName = field.getName();
             }
             Class<?> fieldClass = field.getType();
-//            System.out.println(">>>> " + fieldClass);
-//            System.out.println(">>>> " + List.class);
-//            System.out.println(">>>> " + List.class.isAssignableFrom(fieldClass));
-//            System.out.println(">>>> " + fieldClass.isAssignableFrom(List.class));
-//            System.out.println(">>>> " + fieldClass.isAssignableFrom(List.class));
-
             if (List.class.isAssignableFrom(fieldClass)) {
               // The list is assumed to be a list of String
               ArrayList<String> list = new ArrayList<>();

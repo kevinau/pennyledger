@@ -8,6 +8,8 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
 import org.pennyledger.template.ITemplate;
 import org.pennyledger.template.ITemplateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.error.PebbleException;
@@ -17,8 +19,11 @@ import com.mitchellbosecke.pebble.loader.Loader;
 @Component(configurationPolicy=ConfigurationPolicy.IGNORE)
 public class PebbleTemplateService implements ITemplateService {
 
+  private static final Logger logger = LoggerFactory.getLogger(PebbleTemplateService.class);
+
   @Activate
   protected void activate (ComponentContext componentContext) {
+    logger.info("Activate " + this.getClass());  
   }
 
   

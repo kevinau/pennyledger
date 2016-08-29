@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PennyLedger template service
+Bundle-Name: PennyLedger: template service
 Bundle-SymbolicName: org.pennyledger.template
 Bundle-Version: 1.0.0
 Bundle-Vendor: Kevin Holloway

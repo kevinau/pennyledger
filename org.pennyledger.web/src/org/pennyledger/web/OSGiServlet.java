@@ -71,6 +71,7 @@ public class OSGiServlet extends HttpServlet {
     if (!alias.startsWith("/")) {
       throw new RuntimeException("'alias' property must start with an slash (/)");
     }
+    logger.info("Registering servlet: {}, {}", alias, this.getClass().getSimpleName());
     
     bundleContext = context.getBundleContext();
     
@@ -81,10 +82,9 @@ public class OSGiServlet extends HttpServlet {
     ////}
     
     // Register the servlet
-    logger.info("Registering servlet: {}, {}", alias, this.getClass().getSimpleName());
     try {
       httpService.registerServlet(alias, this, context.getProperties(), null);
-      System.err.println("/about registered");
+      logger.info("Resistration OK: {}, {}", alias, this.getClass().getSimpleName());
     } catch (ServletException | NamespaceException ex) {
       throw new RuntimeException(ex);
     }  
