@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PennyLedger about
+Bundle-Name: PennyLedger: about
 Bundle-SymbolicName: org.pennyledger.about
 Bundle-Version: 1.0.1
 Bundle-Vendor: Kevin Holloway
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Service-Component: OSGI-INF/org.pennyledger.about.AboutCommand.xml,
  OSGI-INF/org.pennyledger.about.AboutThisProgram.xml,
  OSGI-INF/org.pennyledger.about.ConfiguredAbout.xml
@@ -13,3 +12,4 @@ Import-Package: org.osgi.framework;version="1.8.0",
  org.slf4j;version="1.7.2"
 Bundle-Category: pennyledger
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
